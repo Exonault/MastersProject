@@ -12,9 +12,9 @@ public class User : IdentityUser
     
     public List<Category> Categories { get; set; }
 
-    public List<Transaction> Transactions { get; set; }
+    public List<PersonalTransaction> Transactions { get; set; }
 
     public List<RecurringTransaction> RecurringTransactions { get; set; }
 
-    public Family Family { get; set; }
+    public Family? Family { get; set; }
 }

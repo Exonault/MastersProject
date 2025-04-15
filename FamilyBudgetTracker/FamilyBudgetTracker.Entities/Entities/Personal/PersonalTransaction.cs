@@ -1,6 +1,6 @@
 ﻿namespace FamilyBudgetTracker.Entities.Entities.Personal;
 
-public class Transaction
+public class PersonalTransaction
 {
     public int Id { get; set; }
 

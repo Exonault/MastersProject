@@ -27,6 +27,19 @@ namespace FamilyBudgetTracker.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Family",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Family", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -54,7 +67,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     RefreshToken = table.Column<string>(type: "text", nullable: true),
                     RefreshTokenExpiry = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FamilyId = table.Column<int>(type: "integer", nullable: false),
+                    FamilyId = table.Column<int>(type: "integer", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -75,6 +88,28 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Family_FamilyId",
+                        column: x => x.FamilyId,
+                        principalTable: "Family",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FamilyCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Icon = table.Column<string>(type: "text", nullable: true),
+                    Type = table.Column<string>(type: "text", nullable: false),
+                    Limit = table.Column<decimal>(type: "numeric", nullable: true),
+                    FamilyId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FamilyCategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FamilyCategories_Family_FamilyId",
                         column: x => x.FamilyId,
                         principalTable: "Family",
                         principalColumn: "Id",
@@ -174,7 +209,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Icon = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
                     Limit = table.Column<decimal>(type: "numeric", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: false)
                 },
@@ -188,7 +223,42 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-            
+
+            migrationBuilder.CreateTable(
+                name: "FamilyTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    TransactionDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    CategoryId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    FamilyId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FamilyTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FamilyTransactions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FamilyTransactions_FamilyCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "FamilyCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FamilyTransactions_Family_FamilyId",
+                        column: x => x.FamilyId,
+                        principalTable: "Family",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateTable(
                 name: "RecurringTransactions",
                 columns: table => new
@@ -248,77 +318,6 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-            
-              migrationBuilder.CreateTable(
-                  name: "Family",
-                  columns: table => new
-                  { 
-                      Id = table.Column<int>(type: "integer", nullable: false)
-                          .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                      Name = table.Column<string>(type: "text", nullable: false)
-                  },
-                  constraints: table =>
-                  {
-                      table.PrimaryKey("PK_Family", x => x.Id);
-                  });
-              
-              migrationBuilder.CreateTable(
-                  name: "FamilyCategories",
-                  columns: table => new
-                  {
-                      Id = table.Column<int>(type: "integer", nullable: false)
-                          .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                      Name = table.Column<string>(type: "text", nullable: false),
-                      Icon = table.Column<string>(type: "text", nullable: true),
-                      Type = table.Column<int>(type: "integer", nullable: false),
-                      Limit = table.Column<decimal>(type: "numeric", nullable: true),
-                      FamilyId = table.Column<int>(type: "integer", nullable: false)
-                  },
-                  constraints: table =>
-                  {
-                      table.PrimaryKey("PK_FamilyCategories", x => x.Id);
-                      table.ForeignKey(
-                          name: "FK_FamilyCategories_Family_FamilyId",
-                          column: x => x.FamilyId,
-                          principalTable: "Family",
-                          principalColumn: "Id",
-                          onDelete: ReferentialAction.Cascade);
-                  });
-              
-              migrationBuilder.CreateTable(
-                  name: "FamilyTransactions",
-                  columns: table => new
-                  {
-                      Id = table.Column<int>(type: "integer", nullable: false)
-                          .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                      Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                      Description = table.Column<string>(type: "text", nullable: false),
-                      TransactionDate = table.Column<DateOnly>(type: "date", nullable: false),
-                      CategoryId = table.Column<int>(type: "integer", nullable: false),
-                      UserId = table.Column<string>(type: "text", nullable: true),
-                      FamilyId = table.Column<int>(type: "integer", nullable: false)
-                  },
-                  constraints: table =>
-                  {
-                      table.PrimaryKey("PK_FamilyTransactions", x => x.Id);
-                      table.ForeignKey(
-                          name: "FK_FamilyTransactions_AspNetUsers_UserId",
-                          column: x => x.UserId,
-                          principalTable: "AspNetUsers",
-                          principalColumn: "Id");
-                      table.ForeignKey(
-                          name: "FK_FamilyTransactions_FamilyCategories_CategoryId",
-                          column: x => x.CategoryId,
-                          principalTable: "FamilyCategories",
-                          principalColumn: "Id",
-                          onDelete: ReferentialAction.Cascade);
-                      table.ForeignKey(
-                          name: "FK_FamilyTransactions_Family_FamilyId",
-                          column: x => x.FamilyId,
-                          principalTable: "Family",
-                          principalColumn: "Id",
-                          onDelete: ReferentialAction.Cascade);
-                  });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

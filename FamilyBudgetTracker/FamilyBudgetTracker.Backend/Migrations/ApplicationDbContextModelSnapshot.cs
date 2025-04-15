@@ -60,8 +60,9 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -126,8 +127,9 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -138,6 +140,40 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.PersonalTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("TransactionDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.RecurringTransaction", b =>
@@ -180,40 +216,6 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("RecurringTransactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateOnly>("TransactionDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Transactions");
-                });
-
             modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -233,7 +235,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("FamilyId")
+                    b.Property<int?>("FamilyId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("LockoutEnabled")
@@ -468,6 +470,25 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.PersonalTransaction", b =>
+                {
+                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Personal.Category", "Category")
+                        .WithMany("Transactions")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", "User")
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.RecurringTransaction", b =>
                 {
                     b.HasOne("FamilyBudgetTracker.Entities.Entities.Personal.Category", "Category")
@@ -487,32 +508,11 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.Transaction", b =>
-                {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Personal.Category", "Category")
-                        .WithMany("Transactions")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", "User")
-                        .WithMany("Transactions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.User", b =>
                 {
                     b.HasOne("FamilyBudgetTracker.Entities.Entities.Familial.Family", "Family")
                         .WithMany("FamilyMembers")
-                        .HasForeignKey("FamilyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FamilyId");
 
                     b.Navigation("Family");
                 });

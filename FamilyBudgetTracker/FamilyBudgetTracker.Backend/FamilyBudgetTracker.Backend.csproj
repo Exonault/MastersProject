@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
-<!--        <PackageReference Include="FluentAssertions" Version="[7.2.0]" />-->
         <PackageReference Include="FluentValidation" Version="11.11.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
@@ -28,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Configuration\" />
+      <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>

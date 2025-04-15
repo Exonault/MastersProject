@@ -16,7 +16,7 @@ public class Category
 
     public User User { get; set; }
 
-    public List<Transaction> Transactions { get; set; }
+    public List<PersonalTransaction> Transactions { get; set; }
 
     public List<RecurringTransaction> RecurringTransactions { get; set; }
 }

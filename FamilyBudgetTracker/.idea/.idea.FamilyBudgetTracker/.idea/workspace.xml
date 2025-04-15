@@ -10,36 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dbeffaf3-1f64-40ad-84a1-a234ed1718e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/httpRequests/http-requests-log.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/ApplicationDbContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/DbContextConstants.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250413150223_Initial.Designer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250413150223_Initial.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Properties/launchSettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/appsettings.Development.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/appsettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Common/CategoryType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Familial/Family.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Familial/FamilyCategory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Familial/FamilyTransaction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Category.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/RecurringTransaction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Transaction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/User.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/FamilyBudgetTracker.Entities.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Test/FamilyBudgetTracker.Test.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Test/UnitTest1.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.sln" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/global.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyCategoryConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyTransactionConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Personal/CategoryConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Personal/RecurringTransactionConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Personal/TransactionConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/ApplicationDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/DbContextConstants.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250413150223_Initial.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250413150223_Initial.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Category.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Category.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/PersonalTransaction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Test/FamilyBudgetTracker.Test.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Test/FamilyBudgetTracker.Test.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,6 +188,32 @@
           <line>149</line>
           <properties documentPath="C:\Users\krist\Desktop\Master Thesis\MastersProject\FamilyBudgetTracker\FamilyBudgetTracker.Backend\Migrations\20250413131651_Initial.cs" containingFunctionPresentation="Lambda expression inside Method 'Up'" />
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.cs</url>
+          <line>37</line>
+          <properties documentPath="C:\Users\krist\Desktop\Master Thesis\MastersProject\FamilyBudgetTracker\FamilyBudgetTracker.Backend\Migrations\20250415183331_Initial.cs" containingFunctionPresentation="Lambda expression inside Method 'Up'">
+            <startOffsets>
+              <option value="1555" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1556" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.cs</url>
+          <line>129</line>
+          <properties documentPath="C:\Users\krist\Desktop\Master Thesis\MastersProject\FamilyBudgetTracker\FamilyBudgetTracker.Backend\Migrations\20250415183331_Initial.cs" containingFunctionPresentation="Lambda expression inside Method 'Up'">
+            <startOffsets>
+              <option value="6942" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6943" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

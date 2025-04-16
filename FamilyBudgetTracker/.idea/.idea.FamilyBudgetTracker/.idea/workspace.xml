@@ -10,23 +10,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dbeffaf3-1f64-40ad-84a1-a234ed1718e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyCategoryConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyTransactionConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Personal/CategoryConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Personal/RecurringTransactionConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/Configuration/Personal/TransactionConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FamilyBudgetTracker/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/ApplicationDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Data/DbContextConstants.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250413150223_Initial.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.Designer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250413150223_Initial.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Backend/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Category.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Category.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/Personal/PersonalTransaction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/User.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FamilyBudgetTracker.Test/FamilyBudgetTracker.Test.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FamilyBudgetTracker.Test/FamilyBudgetTracker.Test.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/.idea/.idea.FamilyBudgetTracker/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/.idea/.idea.FamilyBudgetTracker/.idea/httpRequests/http-requests-log.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/.idea/.idea.FamilyBudgetTracker/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/.idea/.idea.FamilyBudgetTracker/.idea/projectSettingsUpdater.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/.idea/.idea.FamilyBudgetTracker/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/.idea/.idea.FamilyBudgetTracker/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Data/ApplicationDbContext.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyCategoryConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Data/Configuration/Familial/FamilyTransactionConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Data/Configuration/Personal/CategoryConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Data/Configuration/Personal/RecurringTransactionConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Data/Configuration/Personal/TransactionConfiguration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Migrations/20250415183331_Initial.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/Properties/launchSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/appsettings.Development.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Backend/appsettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/Common/CategoryType.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/Familial/Family.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/Familial/FamilyCategory.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/Familial/FamilyTransaction.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/Personal/Category.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/Personal/PersonalTransaction.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/Personal/RecurringTransaction.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/Entities/User.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Entities/FamilyBudgetTracker.Entities.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Test/FamilyBudgetTracker.Test.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.Test/UnitTest1.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/FamilyBudgetTracker.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FamilyBudgetTracker/global.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +59,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -57,9 +74,11 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d33933b22cd4f80aefcb220a63d9efc2db200/0b/b0f991f9/ScalarTheme.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/FamilyBudgetTracker.Entities/Entities/User.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/krist/Desktop/Master Thesis/MastersProject/FamilyBudgetTracker/FamilyBudgetTracker.Backend/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/krist/Desktop/Master Thesis/MastersProject/FamilyBudgetTracker/FamilyBudgetTracker.Backend/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/krist/Desktop/Master Thesis/MastersProject/FamilyBudgetTracker/FamilyBudgetTracker.Backend/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/krist/Desktop/Master Thesis/MastersProject/FamilyBudgetTracker/FamilyBudgetTracker.Backend/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/krist/Desktop/Master Thesis/MastersProject/FamilyBudgetTracker/FamilyBudgetTracker.Backend/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="HttpClientSelectedEnvironments">
     <file url="file://$USER_HOME$/AppData/Local/Temp/whats-new-dir/whats-new.http" environment="test" />
@@ -73,8 +92,9 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="Toolset" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -100,14 +120,11 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.FamilyBudgetTracker.Backend: http">
-    <configuration name="FamilyBudgetTracker.Backend | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.http" executionIdentifier="#1" runType="Run single request">
-      <method v="2" />
-    </configuration>
     <configuration name="FamilyBudgetTracker.Backend: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/FamilyBudgetTracker.Backend/FamilyBudgetTracker.Backend.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net9.0" />
@@ -138,11 +155,6 @@
         <option name="Build" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="HTTP Request.FamilyBudgetTracker.Backend | #1" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -159,12 +171,25 @@
       <workItem from="1744539466758" duration="5920000" />
       <workItem from="1744546590287" duration="7623000" />
       <workItem from="1744554964759" duration="1857000" />
+      <workItem from="1744815065354" duration="1270000" />
+      <workItem from="1744821613365" duration="8449000" />
+      <workItem from="1744830189108" duration="87000" />
     </task>
+    <task id="LOCAL-00001" summary="Database creation">
+      <option name="closed" value="true" />
+      <created>1744743094753</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1744743094753</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -178,7 +203,12 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+    </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Database creation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Database creation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -215,7 +245,23 @@
           </properties>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="5" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="6" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="7" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -1,4 +1,7 @@
 using FamilyBudgetTracker.Backend.Data;
+using FamilyBudgetTracker.Backend.Endpoints;
+using FamilyBudgetTracker.Backend.ExceptionHandlers;
+using FamilyBudgetTracker.Backend.Extensions;
 using FamilyBudgetTracker.Entities.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +54,15 @@ builder.Services.AddIdentity<User, IdentityRole>(options => { options.User.Requi
 //         p => { p.RequireClaim(AppConstants.ClaimTypes.ClaimRoleType, AppConstants.ClaimNames.UserRoleClaimName); });
 // });
 
+
+//For custom exception handlers -> https://www.milanjovanovic.tech/blog/global-error-handling-in-aspnetcore-8
+//builder.Services.AddExceptionHandler<>();
+
+//Global exception handler should be last
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddCategoryServices();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -68,4 +80,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.MapPersonalEndpoints();
+
 app.UseHttpsRedirection();
+
+app.Run();

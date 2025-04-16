@@ -5,9 +5,9 @@ namespace FamilyBudgetTracker.Backend.ExceptionHandlers;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<GlobalExceptionHandler> _logger;
 
-    public GlobalExceptionHandler(ILogger logger)
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
     {
         _logger = logger;
     }

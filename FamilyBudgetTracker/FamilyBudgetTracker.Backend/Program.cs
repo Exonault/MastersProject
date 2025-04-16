@@ -61,6 +61,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options => { options.User.Requi
 //Global exception handler should be last
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.AddProblemDetails();
+
 builder.Services.AddCategoryServices();
 
 var app = builder.Build();
@@ -81,6 +83,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapPersonalEndpoints();
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

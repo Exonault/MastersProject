@@ -6,7 +6,7 @@ public static class MapEndpoints
 {
     public static void MapPersonalEndpoints(this WebApplication app)
     {
-        var personalGroup = app.MapGroup("/personal");
+        var personalGroup = app.MapGroup("personal");
         
         personalGroup.MapCategoryEndpoints();
     }

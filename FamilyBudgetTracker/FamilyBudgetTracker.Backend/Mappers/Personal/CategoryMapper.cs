@@ -9,22 +9,22 @@ public static class CategoryMapper
 {
     public static Category ToCategory(this CreateCategoryRequest request)
     {
-        CategoryType type;
-        try
-        {
-            type = (CategoryType)Enum.Parse(typeof(CategoryType), request.Type);
-        }
-        catch (Exception e)
-        {
-            throw new MappingException("Type is not 'Income' or 'Expense'.");
-        }
-
-
         return new Category()
         {
             Name = request.Name,
             Icon = request.Icon,
-            Type = type,
+            Type = Enum.Parse<CategoryType>(request.Type),
+            Limit = request.Limit,
+        };
+    }
+
+    public static Category ToCategory(this UpdateCategoryRequest request)
+    {
+        return new Category()
+        {
+            Name = request.Name,
+            Icon = request.Icon,
+            Type = Enum.Parse<CategoryType>(request.Type),
             Limit = request.Limit,
         };
     }

@@ -7,11 +7,9 @@ namespace FamilyBudgetTracker.Backend.Endpoints.User;
 
 public static class UserEndpoint
 {
-    public static void MapUserEndpoints(this WebApplication app)
+    public static void MapUserEndpoints(this RouteGroupBuilder group)
     {
-        var userGroup = app.MapGroup("user");
-
-        userGroup.MapPost("register/", Register)
+        group.MapPost("register/", Register)
             .AllowAnonymous()
             .Produces(StatusCodes.Status200OK, typeof(RegisterResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
@@ -21,7 +19,7 @@ public static class UserEndpoint
             .WithSummary("Register a user")
             .WithOpenApi();
 
-        userGroup.MapPost("login/", Login)
+        group.MapPost("login/", Login)
             .AllowAnonymous()
             .Produces(StatusCodes.Status200OK, typeof(LoginResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
@@ -30,7 +28,7 @@ public static class UserEndpoint
             .WithSummary("Log a user in the system")
             .WithOpenApi();
 
-        userGroup.MapPost("refresh/", Refresh)
+        group.MapPost("refresh/", Refresh)
             .AllowAnonymous()
             .Produces(StatusCodes.Status200OK, typeof(LoginResponse), "application/json")
             .Produces(StatusCodes.Status404NotFound)
@@ -38,7 +36,7 @@ public static class UserEndpoint
             .WithSummary("Refresh user tokens")
             .WithOpenApi();
 
-        userGroup.MapDelete("revoke/", Revoke)
+        group.MapDelete("revoke/", Revoke)
             .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)

@@ -9,6 +9,4 @@ public class UpdateCategoryRequest
     public string Type { get; set; } = string.Empty;
 
     public decimal? Limit { get; set; } 
-
-    public string UserId { get; set; } = string.Empty;
 }

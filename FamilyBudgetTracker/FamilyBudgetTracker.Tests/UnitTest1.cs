@@ -1,4 +1,4 @@
-namespace FamilyBudgetTracker.Test;
+namespace FamilyBudgetTracker.Tests;
 
 public class Tests
 {

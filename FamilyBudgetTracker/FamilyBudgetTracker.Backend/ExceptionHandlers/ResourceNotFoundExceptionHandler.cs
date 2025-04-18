@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyBudgetTracker.Backend.ExceptionHandlers;
 
-public class MappingExceptionHandler : IExceptionHandler
+public class ResourceNotFoundExceptionHandler : IExceptionHandler
 {
-    private readonly ILogger<MappingExceptionHandler> _logger;
+    private readonly ILogger<ResourceNotFoundExceptionHandler> _logger;
 
-    public MappingExceptionHandler(ILogger<MappingExceptionHandler> logger)
+    public ResourceNotFoundExceptionHandler(ILogger<ResourceNotFoundExceptionHandler> logger)
     {
         _logger = logger;
     }
@@ -16,18 +16,18 @@ public class MappingExceptionHandler : IExceptionHandler
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not MappingException mappingException)
+        if (exception is not ResourceNotFoundException resourceNotFoundException)
         {
             return false;
         }
 
-        _logger.LogError(mappingException, "Exception occurred: {Message}", mappingException.Message);
+        _logger.LogError(resourceNotFoundException, "Exception occurred: {Message}", resourceNotFoundException.Message);
 
         var problemDetails = new ProblemDetails()
         {
-            Status = StatusCodes.Status400BadRequest,
-            Title = "Bad Request",
-            Detail = mappingException.Message
+            Status = StatusCodes.Status404NotFound,
+            Title = "Not found",
+            Detail = resourceNotFoundException.Message
         };
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;

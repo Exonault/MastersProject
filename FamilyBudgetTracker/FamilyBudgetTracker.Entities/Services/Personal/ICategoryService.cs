@@ -11,7 +11,7 @@ public interface ICategoryService
     Task DeleteCategory(int id, string userId);
 
 
-    Task<CategoryResponse> GetCategory(int id);
+    Task<CategoryResponse> GetCategory(int id, string userId);
 
     Task<List<CategoryResponse>> GetCategoriesForUser(string userId);
 }

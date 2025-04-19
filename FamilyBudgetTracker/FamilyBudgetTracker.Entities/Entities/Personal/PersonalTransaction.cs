@@ -1,6 +1,4 @@
-﻿using FamilyBudgetTracker.Entities.Entities.Common;
-
-namespace FamilyBudgetTracker.Entities.Entities.Personal;
+﻿namespace FamilyBudgetTracker.Entities.Entities.Personal;
 
 public class PersonalTransaction
 {

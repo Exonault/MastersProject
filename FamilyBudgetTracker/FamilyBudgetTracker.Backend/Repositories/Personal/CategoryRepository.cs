@@ -34,7 +34,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category?> GetCategoryById(int id)
     {
-        return await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+        return await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<List<Category>> GetAllCategoriesForUser(string userId)

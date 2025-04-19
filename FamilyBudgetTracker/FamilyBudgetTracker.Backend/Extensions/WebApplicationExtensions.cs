@@ -16,6 +16,7 @@ public static class WebApplicationExtensions
         var personalGroup = app.MapGroup("personal");
 
         personalGroup.MapCategoryEndpoints();
+        personalGroup.MapPersonalTransactionEndpoints();
     }
 
     private static void MapUserEndpoints(this WebApplication app)

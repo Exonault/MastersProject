@@ -113,7 +113,7 @@ public class CategoryService : ICategoryService
         await _categoryRepository.DeleteCategory(category);
     }
 
-    public async Task<CategoryResponse> GetCategory(int id)
+    public async Task<CategoryResponse> GetCategory(int id, string userId)
     {
         Category? category = await _categoryRepository.GetCategoryById(id);
 
@@ -121,6 +121,12 @@ public class CategoryService : ICategoryService
         {
             throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
         }
+        
+        if (category.User.Id != userId)
+        {
+            throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
+        }
+
 
         CategoryResponse response = category.ToCategoryResponse();
 

@@ -6,10 +6,11 @@ using FamilyBudgetTracker.Backend.Repositories;
 using FamilyBudgetTracker.Backend.Repositories.Personal;
 using FamilyBudgetTracker.Backend.Services;
 using FamilyBudgetTracker.Backend.Services.Personal;
-using FamilyBudgetTracker.Backend.Validation.Personal;
+using FamilyBudgetTracker.Backend.Validation.Personal.Category;
+using FamilyBudgetTracker.Backend.Validation.Personal.PersonalTransaction;
 using FamilyBudgetTracker.Entities.Contracts.Personal.Category;
+using FamilyBudgetTracker.Entities.Contracts.Personal.Transaction;
 using FamilyBudgetTracker.Entities.Entities;
-using FamilyBudgetTracker.Entities.Entities.Personal;
 using FamilyBudgetTracker.Entities.Repositories;
 using FamilyBudgetTracker.Entities.Repositories.Personal;
 using FamilyBudgetTracker.Entities.Services;
@@ -29,6 +30,7 @@ public static class ServiceCollectionExtensions
         services.AddProblemDetails();
 
         services.AddExceptionHandler<InvalidEmailExceptionHandler>();
+        services.AddExceptionHandler<InvalidOperationExceptionHandler>();
         services.AddExceptionHandler<UserAlreadyRegisteredExceptionHandler>();
         services.AddExceptionHandler<UserNotFoundExceptionHandler>();
         services.AddExceptionHandler<MappingExceptionHandler>();
@@ -39,9 +41,18 @@ public static class ServiceCollectionExtensions
 
     public static void AddApplicationServices(this IServiceCollection services)
     {
-        services.AddCategoryServices();
         services.AddUserServices();
+
+        services.AddCategoryServices();
+        services.AddPersonalTransactionServices();
     }
+
+    private static void AddUserServices(this IServiceCollection services)
+    {
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserService, UserService>();
+    }
+
 
     private static void AddCategoryServices(this IServiceCollection services)
     {
@@ -52,10 +63,14 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateCategoryRequest>, UpdateCategoryRequestValidator>();
     }
 
-    private static void AddUserServices(this IServiceCollection services)
+
+    private static void AddPersonalTransactionServices(this IServiceCollection services)
     {
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IPersonalTransactionRepository, PersonalTransactionRepository>();
+        services.AddScoped<IPersonalTransactionService, PersonalTransactionService>();
+
+        services.AddScoped<IValidator<CreatePersonalTransactionRequest>, CreatePersonalTransactionValidator>();
+        services.AddScoped<IValidator<UpdatePersonalTransactionRequest>, UpdatePersonalTransactionValidator>();
     }
 
     public static void AddApplicationAuthenticationServices(this IServiceCollection service,
@@ -94,6 +109,8 @@ public static class ServiceCollectionExtensions
                 {
                     p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
                         ApplicationConstants.ClaimNames.AdminRoleClaimName);
+
+                    p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
                 });
 
             options.AddPolicy(ApplicationConstants.PolicyNames.UserRolePolicyName,
@@ -101,6 +118,8 @@ public static class ServiceCollectionExtensions
                 {
                     p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
                         ApplicationConstants.ClaimNames.UserRoleClaimName);
+
+                    p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
                 });
         });
     }

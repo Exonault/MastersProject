@@ -8,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 //Open API documentation
-builder.Services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
+builder.Services.AddOpenApi("v1", options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    // TODO do schema grouping
+});
+
 
 //Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -11,8 +11,10 @@ public static class CategoryMessages
     public static readonly string TypeMustBe = $"Type must be one of the following: " +
                                                $"{string.Join(",", CategoryConstants.Types)}";
     
-    public const string DeleteImpossible = "You can't delete this category";
+    public const string DeleteImpossible = "You can not delete this category";
 
 
     public const string NoCategoryFound = "Category with id does not exist";
+
+    public const string CategoryIsNotFromTheUser = "Category is not one from the user";
 }

@@ -1,14 +1,13 @@
-using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Constants.Personal;
 using FamilyBudgetTracker.Backend.Messages.Personal;
 using FamilyBudgetTracker.Entities.Contracts.Personal.Category;
 using FluentValidation;
 
-namespace FamilyBudgetTracker.Backend.Validation.Personal;
+namespace FamilyBudgetTracker.Backend.Validation.Personal.Category;
 
-public class CreateCategoryRequestValidator: AbstractValidator<CreateCategoryRequest>
+public class UpdateCategoryRequestValidator : AbstractValidator<UpdateCategoryRequest>
 {
-    public CreateCategoryRequestValidator()
+    public UpdateCategoryRequestValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()

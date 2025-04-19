@@ -1,0 +1,18 @@
+using System.Security.Claims;
+using FamilyBudgetTracker.Backend.Constants;
+
+namespace FamilyBudgetTracker.Backend.Util;
+
+public static class UserUtil
+{
+    public static string GetUserIdFromAuth(this HttpContext httpContext)
+    {
+        ClaimsPrincipal user = httpContext.User;
+
+        string userId = user.Claims
+            .First(c => c.Type == ApplicationConstants.ClaimTypes.ClaimUserIdType)
+            .Value;
+
+        return userId;
+    }
+}

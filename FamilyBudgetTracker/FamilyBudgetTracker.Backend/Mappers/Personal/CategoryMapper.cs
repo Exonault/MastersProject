@@ -9,7 +9,7 @@ public static class CategoryMapper
 {
     public static Category ToCategory(this CreateCategoryRequest request)
     {
-        return new Category()
+        return new Category
         {
             Name = request.Name,
             Icon = request.Icon,
@@ -20,7 +20,7 @@ public static class CategoryMapper
 
     public static Category ToCategory(this UpdateCategoryRequest request)
     {
-        return new Category()
+        return new Category
         {
             Name = request.Name,
             Icon = request.Icon,
@@ -31,7 +31,7 @@ public static class CategoryMapper
 
     public static CategoryResponse ToCategoryResponse(this Category category)
     {
-        return new CategoryResponse()
+        return new CategoryResponse
         {
             Id = category.Id,
             Name = category.Name,

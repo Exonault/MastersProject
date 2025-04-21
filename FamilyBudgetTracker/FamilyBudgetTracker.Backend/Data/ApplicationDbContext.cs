@@ -29,6 +29,8 @@ public class ApplicationDbContext : IdentityDbContext<User>
         base.OnModelCreating(builder);
         
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        
+        SeedAspNetRolesTable(builder);
 
         builder.Entity<User>()
             .HasMany(u => u.Transactions)
@@ -54,7 +56,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
     private void SeedAspNetRolesTable(ModelBuilder builder)
     {
         builder.Entity<IdentityRole>()
-            .HasData(new IdentityRole("Admin") {Id = "3187bce0-f9a9-48fb-adb6-36cea86dfb16", NormalizedName = "ADMIN" },
-                new IdentityRole("User") {Id = "284b3a5c-4235-4b01-ba23-09f2f6f9737c", NormalizedName = "USER" });
+            .HasData(new IdentityRole("Admin") {Id = "admin", NormalizedName = "ADMIN" },
+                new IdentityRole("User") {Id = "user", NormalizedName = "USER" },
+                new IdentityRole("FamilyAdmin") {Id = "familyAdmin", NormalizedName = "FAMILYADMIN" },
+                new IdentityRole("FamilyUser") {Id = "familyUser", NormalizedName = "FAMILYUSER" });
     }
 }

@@ -32,14 +32,9 @@ public class UserService : IUserService
 
      public async Task<RegisterResponse> RegisterAccount(RegisterRequest request)
     {
-         if (request is null)
-         {
-             throw new ArgumentException(UserMessages.ValidationMessages.EmptyRequest);
-         }
+         User? userByEmail = await _repository.GetByEmail(request.Email);
 
-         User? userByName = await _repository.GetByName(request.UserName);
-
-         if (userByName is not null)
+         if (userByEmail is not null)
          {
              throw new UserAlreadyRegisteredException(UserMessages.ValidationMessages.AlreadyRegistered);
          }
@@ -56,11 +51,13 @@ public class UserService : IUserService
          if (!identityResult.Succeeded)
          {
              List<string> errors = identityResult.Errors.Select(e => e.Description).ToList();
-             RegisterResponse failedResponse = new RegisterResponse(){
+             
+             RegisterResponse failedResponse = new RegisterResponse{
                  Message = UserMessages.ValidationMessages.RegisterFailed, 
                  Errors = errors,
                  Successful = false,
              };
+             
              return failedResponse;
          }
 
@@ -82,12 +79,7 @@ public class UserService : IUserService
 
     public async Task<LoginResponse> LoginAccount(LoginRequest request)
     {
-        if (request is null)
-        {
-            throw new ArgumentException(UserMessages.ValidationMessages.EmptyRequest);
-        }
-
-        User? user = await _repository.GetByName(request.UserName);
+        User? user = await _repository.GetByEmail(request.Email);
 
         if (user is null)
         {
@@ -98,7 +90,7 @@ public class UserService : IUserService
 
         if (!checkPassword)
         {
-            throw new InvalidEmailPasswordException(UserMessages.ValidationMessages.InvalidUsernamePassword);
+            throw new InvalidEmailPasswordException(UserMessages.ValidationMessages.InvalidEmailPassword);
         }
 
         List<string> roles = await _repository.GetAllRoles(user);
@@ -173,7 +165,7 @@ public class UserService : IUserService
     private string GenerateToken(string userName, string id, List<string> roles)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(AuthMessages.SecretNotConfigured);
+        string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(ApplicationMessages.SecretNotConfigured);
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
         List<Claim> claims =
@@ -222,7 +214,7 @@ public class UserService : IUserService
 
     private ClaimsPrincipal? GetUserFromExpiredToken(string token)
     {
-        string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(AuthMessages.SecretNotConfigured);
+        string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(ApplicationMessages.SecretNotConfigured);
 
         TokenValidationParameters validation = new TokenValidationParameters()
         {

@@ -19,6 +19,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.Extensions;
 
@@ -35,6 +36,7 @@ public static class ServiceCollectionExtensions
         services.AddExceptionHandler<UserNotFoundExceptionHandler>();
         services.AddExceptionHandler<MappingExceptionHandler>();
         services.AddExceptionHandler<ValidationExceptionHandler>();
+        services.AddExceptionHandler<BadHttpRequestExceptionHandler>();
 //Global exception handler should be last
         services.AddExceptionHandler<GlobalExceptionHandler>();
     }
@@ -45,6 +47,9 @@ public static class ServiceCollectionExtensions
 
         services.AddCategoryServices();
         services.AddPersonalTransactionServices();
+
+        services.AddValidatorsFromAssemblyContaining<Program>();
+        services.AddFluentValidationAutoValidation();
     }
 
     private static void AddUserServices(this IServiceCollection services)
@@ -58,9 +63,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ICategoryService, CategoryService>();
-
-        services.AddScoped<IValidator<CreateCategoryRequest>, CreateCategoryRequestValidator>();
-        services.AddScoped<IValidator<UpdateCategoryRequest>, UpdateCategoryRequestValidator>();
     }
 
 
@@ -68,15 +70,21 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IPersonalTransactionRepository, PersonalTransactionRepository>();
         services.AddScoped<IPersonalTransactionService, PersonalTransactionService>();
-
-        services.AddScoped<IValidator<CreatePersonalTransactionRequest>, CreatePersonalTransactionValidator>();
-        services.AddScoped<IValidator<UpdatePersonalTransactionRequest>, UpdatePersonalTransactionValidator>();
     }
 
     public static void AddApplicationAuthenticationServices(this IServiceCollection service,
         ConfigurationManager configuration)
     {
-        service.AddIdentity<User, IdentityRole>(options => { options.User.RequireUniqueEmail = true; })
+        service.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+
+                options.Password.RequiredLength = 3;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+            })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddRoles<IdentityRole>()
             .AddSignInManager();

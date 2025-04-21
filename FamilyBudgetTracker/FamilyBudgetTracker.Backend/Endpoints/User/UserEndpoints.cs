@@ -2,6 +2,7 @@ using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Entities.Contracts.User;
 using FamilyBudgetTracker.Entities.Services;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.Endpoints.User;
 
@@ -16,6 +17,7 @@ public static class UserEndpoint
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status500InternalServerError)
+            .AddFluentValidationAutoValidation()
             .WithSummary("Register a user")
             .WithOpenApi();
 
@@ -25,6 +27,7 @@ public static class UserEndpoint
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
+            .AddFluentValidationAutoValidation()
             .WithSummary("Log a user in the system")
             .WithOpenApi();
 
@@ -33,6 +36,7 @@ public static class UserEndpoint
             .Produces(StatusCodes.Status200OK, typeof(LoginResponse), "application/json")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
+            .AddFluentValidationAutoValidation()
             .WithSummary("Refresh user tokens")
             .WithOpenApi();
 
@@ -48,6 +52,12 @@ public static class UserEndpoint
     private static async Task<IResult> Register([FromBody] RegisterRequest request, IUserService service)
     {
         RegisterResponse response = await service.RegisterAccount(request);
+
+        if (!response.Successful)
+        {
+            return TypedResults.BadRequest(response.Errors);
+        }
+
         return Results.Ok(response);
     }
 

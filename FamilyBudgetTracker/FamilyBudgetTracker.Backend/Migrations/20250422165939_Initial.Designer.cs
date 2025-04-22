@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FamilyBudgetTracker.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250421123051_AddedRoles")]
-    partial class AddedRoles
+    [Migration("20250422165939_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Familial.Family", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.Family", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +42,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("Family");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Familial.FamilyCategory", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,7 +74,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("FamilyCategories");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Familial.FamilyTransaction", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyTransaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,7 +112,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("FamilyTransactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.Category", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -145,7 +145,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.PersonalTransaction", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.PersonalTransaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,7 +179,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.RecurringTransaction", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.RecurringTransaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -206,6 +206,10 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -219,7 +223,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("RecurringTransactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.User", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -452,9 +456,9 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Familial.FamilyCategory", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyCategory", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Familial.Family", "Family")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.Familial.Family", "Family")
                         .WithMany("Categories")
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -463,21 +467,21 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("Family");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Familial.FamilyTransaction", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyTransaction", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Familial.FamilyCategory", "Category")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Familial.Family", "Family")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.Familial.Family", "Family")
                         .WithMany("Transactions")
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", "User")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
@@ -488,9 +492,9 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.Category", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.Category", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", "User")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", "User")
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -499,15 +503,15 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.PersonalTransaction", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.PersonalTransaction", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Personal.Category", "Category")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.Personal.Category", "Category")
                         .WithMany("Transactions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", "User")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", "User")
                         .WithMany("Transactions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -518,15 +522,15 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.RecurringTransaction", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.RecurringTransaction", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Personal.Category", "Category")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.Personal.Category", "Category")
                         .WithMany("RecurringTransactions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", "User")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", "User")
                         .WithMany("RecurringTransactions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -537,9 +541,9 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.User", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.User", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.Familial.Family", "Family")
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.Familial.Family", "Family")
                         .WithMany("FamilyMembers")
                         .HasForeignKey("FamilyId");
 
@@ -557,7 +561,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", null)
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -566,7 +570,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", null)
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -581,7 +585,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", null)
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -590,14 +594,14 @@ namespace FamilyBudgetTracker.Backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Entities.Entities.User", null)
+                    b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Familial.Family", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.Family", b =>
                 {
                     b.Navigation("Categories");
 
@@ -606,14 +610,14 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.Personal.Category", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.Category", b =>
                 {
                     b.Navigation("RecurringTransactions");
 
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Entities.Entities.User", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.User", b =>
                 {
                     b.Navigation("Categories");
 

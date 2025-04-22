@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace FamilyBudgetTracker.Backend.Migrations
 {
     /// <inheritdoc />
@@ -267,6 +269,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     NextExecutionDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
@@ -317,6 +320,17 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "admin", null, "Admin", "ADMIN" },
+                    { "familyAdmin", null, "FamilyAdmin", "FAMILYADMIN" },
+                    { "familyUser", null, "FamilyUser", "FAMILYUSER" },
+                    { "user", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

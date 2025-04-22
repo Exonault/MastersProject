@@ -1,6 +1,6 @@
 ﻿using FamilyBudgetTracker.Backend.Data;
-using FamilyBudgetTracker.Entities.Entities.Personal;
-using FamilyBudgetTracker.Entities.Repositories.Personal;
+using FamilyBudgetTracker.BE.Commons.Entities.Personal;
+using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyBudgetTracker.Backend.Repositories.Personal;

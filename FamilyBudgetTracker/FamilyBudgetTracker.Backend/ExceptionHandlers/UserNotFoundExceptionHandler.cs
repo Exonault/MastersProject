@@ -1,4 +1,4 @@
-using FamilyBudgetTracker.Entities.Exceptions;
+using FamilyBudgetTracker.BE.Commons.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 

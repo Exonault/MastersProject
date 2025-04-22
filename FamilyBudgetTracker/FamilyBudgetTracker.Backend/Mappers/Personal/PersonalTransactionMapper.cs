@@ -1,5 +1,5 @@
-using FamilyBudgetTracker.Entities.Contracts.Personal.Transaction;
-using FamilyBudgetTracker.Entities.Entities.Personal;
+using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
+using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 
 namespace FamilyBudgetTracker.Backend.Mappers.Personal;
 
@@ -36,7 +36,7 @@ public static class PersonalTransactionMapper
             Description = transaction.Description,
             TransactionDate = transaction.TransactionDate,
             Category = transaction.Category.ToCategoryResponse(),
-            UserId = transaction.User.Id
+            // UserId = transaction.User.Id
         };
     }
 }

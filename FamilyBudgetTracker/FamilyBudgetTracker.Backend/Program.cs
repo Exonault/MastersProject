@@ -11,7 +11,6 @@ var configuration = builder.Configuration;
 builder.Services.AddOpenApi("v1", options =>
 {
     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-    // TODO do schema grouping
 });
 
 

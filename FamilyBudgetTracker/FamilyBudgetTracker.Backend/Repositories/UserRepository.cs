@@ -1,5 +1,5 @@
-using FamilyBudgetTracker.Entities.Entities;
-using FamilyBudgetTracker.Entities.Repositories;
+using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace FamilyBudgetTracker.Backend.Repositories;
@@ -50,7 +50,6 @@ public class UserRepository : IUserRepository
         IList<string> rolesAsync = await _userManager.GetRolesAsync(user);
 
         return rolesAsync.ToList();
-
     }
 
     public async Task UpdateUser(User user)

@@ -1,6 +1,6 @@
 using FamilyBudgetTracker.Backend.Util;
-using FamilyBudgetTracker.Entities.Contracts.Personal.Transaction;
-using FamilyBudgetTracker.Entities.Services.Personal;
+using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
+using FamilyBudgetTracker.BE.Commons.Services.Personal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyBudgetTracker.Backend.Endpoints.Personal;

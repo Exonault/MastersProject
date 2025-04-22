@@ -4,11 +4,11 @@ using System.Security.Cryptography;
 using System.Text;
 using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Messages;
-using FamilyBudgetTracker.Entities.Contracts.User;
-using FamilyBudgetTracker.Entities.Entities;
-using FamilyBudgetTracker.Entities.Exceptions;
-using FamilyBudgetTracker.Entities.Repositories;
-using FamilyBudgetTracker.Entities.Services;
+using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Exceptions;
+using FamilyBudgetTracker.BE.Commons.Repositories;
+using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Entities.Contracts.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 

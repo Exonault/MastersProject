@@ -1,7 +1,6 @@
-﻿using FamilyBudgetTracker.Entities.Contracts.Personal.Category;
-using FamilyBudgetTracker.Entities.Entities.Common;
-using FamilyBudgetTracker.Entities.Entities.Personal;
-using FamilyBudgetTracker.Entities.Exceptions;
+﻿using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Category;
+using FamilyBudgetTracker.BE.Commons.Entities.Common;
+using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 
 namespace FamilyBudgetTracker.Backend.Mappers.Personal;
 
@@ -38,7 +37,7 @@ public static class CategoryMapper
             Icon = category.Icon,
             Limit = category.Limit,
             Type = category.Type.ToString(),
-            UserId = category.User.Id
+            // UserId = category.User.Id
         };
     }
 }

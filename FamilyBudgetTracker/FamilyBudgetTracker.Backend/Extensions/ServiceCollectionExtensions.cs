@@ -6,15 +6,11 @@ using FamilyBudgetTracker.Backend.Repositories;
 using FamilyBudgetTracker.Backend.Repositories.Personal;
 using FamilyBudgetTracker.Backend.Services;
 using FamilyBudgetTracker.Backend.Services.Personal;
-using FamilyBudgetTracker.Backend.Validation.Personal.Category;
-using FamilyBudgetTracker.Backend.Validation.Personal.PersonalTransaction;
-using FamilyBudgetTracker.Entities.Contracts.Personal.Category;
-using FamilyBudgetTracker.Entities.Contracts.Personal.Transaction;
-using FamilyBudgetTracker.Entities.Entities;
-using FamilyBudgetTracker.Entities.Repositories;
-using FamilyBudgetTracker.Entities.Repositories.Personal;
-using FamilyBudgetTracker.Entities.Services;
-using FamilyBudgetTracker.Entities.Services.Personal;
+using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Repositories;
+using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
+using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Commons.Services.Personal;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -43,11 +39,19 @@ public static class ServiceCollectionExtensions
 
     public static void AddApplicationServices(this IServiceCollection services)
     {
+        //User services
         services.AddUserServices();
 
+        //Personal services
         services.AddCategoryServices();
         services.AddPersonalTransactionServices();
-
+        services.AddRecurringTransactionServices();
+        
+        //Family services
+        //TODO
+        
+        
+        //Application services
         services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddFluentValidationAutoValidation();
     }
@@ -70,6 +74,12 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IPersonalTransactionRepository, PersonalTransactionRepository>();
         services.AddScoped<IPersonalTransactionService, PersonalTransactionService>();
+    }
+
+    private static void AddRecurringTransactionServices(this IServiceCollection services)
+    {
+        services.AddScoped<IRecurringTransactionRepository, RecurringTransactionRepository>();
+        services.AddScoped<IRecurringTransactionService, RecurringTransactionService>();
     }
 
     public static void AddApplicationAuthenticationServices(this IServiceCollection service,

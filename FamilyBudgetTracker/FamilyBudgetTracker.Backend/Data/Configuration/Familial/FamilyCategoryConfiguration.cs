@@ -1,5 +1,5 @@
-﻿using FamilyBudgetTracker.Entities.Entities.Common;
-using FamilyBudgetTracker.Entities.Entities.Familial;
+﻿using FamilyBudgetTracker.BE.Commons.Entities.Common;
+using FamilyBudgetTracker.BE.Commons.Entities.Familial;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

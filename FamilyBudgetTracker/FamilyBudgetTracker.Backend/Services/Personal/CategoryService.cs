@@ -1,15 +1,14 @@
 ﻿using FamilyBudgetTracker.Backend.Mappers.Personal;
 using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.Backend.Messages.Personal;
-using FamilyBudgetTracker.Entities.Contracts.Personal.Category;
-using FamilyBudgetTracker.Entities.Entities;
-using FamilyBudgetTracker.Entities.Entities.Personal;
-using FamilyBudgetTracker.Entities.Exceptions;
-using FamilyBudgetTracker.Entities.Repositories;
-using FamilyBudgetTracker.Entities.Repositories.Personal;
-using FamilyBudgetTracker.Entities.Services.Personal;
+using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Category;
+using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Entities.Personal;
+using FamilyBudgetTracker.BE.Commons.Exceptions;
+using FamilyBudgetTracker.BE.Commons.Repositories;
+using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
+using FamilyBudgetTracker.BE.Commons.Services.Personal;
 using FluentValidation;
-using FluentValidation.Results;
 
 namespace FamilyBudgetTracker.Backend.Services.Personal;
 

@@ -6,7 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1D743532-2A3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{92AF045D-CEFB-4F9D-9FDE-53C163F45C90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Entities", "FamilyBudgetTracker.Entities\FamilyBudgetTracker.Entities.csproj", "{3B80E595-9AE5-455F-8E0A-F1362F642CB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.BE.Commons", "FamilyBudgetTracker.BE.Commons\FamilyBudgetTracker.BE.Commons.csproj", "{3B80E595-9AE5-455F-8E0A-F1362F642CB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Tests", "FamilyBudgetTracker.Tests\FamilyBudgetTracker.Tests.csproj", "{18FC6AE3-25D5-42DD-860A-3EA5FE910287}"
 EndProject

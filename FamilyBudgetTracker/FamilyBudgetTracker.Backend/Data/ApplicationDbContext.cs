@@ -1,6 +1,6 @@
-﻿using FamilyBudgetTracker.Entities.Entities;
-using FamilyBudgetTracker.Entities.Entities.Familial;
-using FamilyBudgetTracker.Entities.Entities.Personal;
+﻿using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Entities.Familial;
+using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

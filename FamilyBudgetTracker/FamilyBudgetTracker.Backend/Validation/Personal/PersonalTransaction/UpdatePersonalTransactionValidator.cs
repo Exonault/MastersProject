@@ -1,5 +1,5 @@
 using FamilyBudgetTracker.Backend.Messages.Personal;
-using FamilyBudgetTracker.Entities.Contracts.Personal.Transaction;
+using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
 using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Validation.Personal.PersonalTransaction;

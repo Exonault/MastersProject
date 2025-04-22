@@ -1,4 +1,4 @@
-﻿using FamilyBudgetTracker.Entities.Entities.Personal;
+﻿using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

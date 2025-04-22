@@ -1,9 +1,9 @@
 using FamilyBudgetTracker.Backend.Services.Personal;
-using FamilyBudgetTracker.Entities.Contracts.Personal.Category;
-using FamilyBudgetTracker.Entities.Entities;
-using FamilyBudgetTracker.Entities.Exceptions;
-using FamilyBudgetTracker.Entities.Repositories;
-using FamilyBudgetTracker.Entities.Repositories.Personal;
+using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Category;
+using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Exceptions;
+using FamilyBudgetTracker.BE.Commons.Repositories;
+using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
 using FluentValidation;
 using NSubstitute;
 

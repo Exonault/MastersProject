@@ -1,6 +1,6 @@
 using FamilyBudgetTracker.Backend.Constants;
-using FamilyBudgetTracker.Entities.Contracts.User;
-using FamilyBudgetTracker.Entities.Services;
+using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Entities.Contracts.User;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 

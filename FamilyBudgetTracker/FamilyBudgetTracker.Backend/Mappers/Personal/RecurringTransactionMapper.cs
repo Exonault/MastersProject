@@ -14,7 +14,6 @@ public static class RecurringTransactionMapper
             Description = request.Description,
             Type = Enum.Parse<RecurringType>(request.Type),
             StartDate = request.StartDate,
-            NextExecutionDate = request.NextExecutionDate,
             EndDate = request.EndDate,
         };
     }
@@ -28,7 +27,6 @@ public static class RecurringTransactionMapper
             Description = request.Description,
             Type = Enum.Parse<RecurringType>(request.Type),
             StartDate = request.StartDate,
-            NextExecutionDate = request.NextExecutionDate,
             EndDate = request.EndDate,
         };
     }

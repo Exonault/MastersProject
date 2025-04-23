@@ -6,7 +6,7 @@ public class PersonalTransaction
 
     public decimal Amount { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public DateOnly TransactionDate { get; set; }
 

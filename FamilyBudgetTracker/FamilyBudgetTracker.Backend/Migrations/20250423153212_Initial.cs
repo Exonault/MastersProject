@@ -300,7 +300,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     TransactionDate = table.Column<DateOnly>(type: "date", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false)

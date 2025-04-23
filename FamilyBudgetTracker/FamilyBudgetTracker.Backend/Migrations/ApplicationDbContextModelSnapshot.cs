@@ -157,7 +157,6 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateOnly>("TransactionDate")

@@ -5,6 +5,8 @@ namespace FamilyBudgetTracker.Backend.Services.Personal;
 
 public class RecurringTransactionService : IRecurringTransactionService
 {
+    
+    //TODO for all: calculate the NextExecutionDate 
     public Task CreateRecurringTransaction(CreateRecurringTransactionRequest request, string userId)
     {
         throw new NotImplementedException();

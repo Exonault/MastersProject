@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Validation.Personal.PersonalTransaction;
 
-public class UpdatePersonalTransactionValidator : AbstractValidator<UpdatePersonalTransactionRequest>
+public class CreatePersonalTransactionRequestValidator : AbstractValidator<CreatePersonalTransactionRequest>
 {
-    public UpdatePersonalTransactionValidator()
+    public CreatePersonalTransactionRequestValidator()
     {
         RuleFor(x => x.Amount)
             .NotEmpty()
@@ -16,9 +16,9 @@ public class UpdatePersonalTransactionValidator : AbstractValidator<UpdatePerson
             .PrecisionScale(int.MaxValue, 2, true)
             .WithMessage(PersonalTransactionMessages.AmountValueMessage);
 
-        RuleFor(x => x.Description)
-            .NotEmpty()
-            .WithMessage(PersonalTransactionMessages.DescriptionRequired);
+        // RuleFor(x => x.Description)
+        //     .NotEmpty()
+        //     .WithMessage(PersonalTransactionMessages.DescriptionRequired);
 
         RuleFor(x => x.TransactionDate)
             .NotEmpty()

@@ -24,8 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FamilyBudgetTracker.Backend\FamilyBudgetTracker.Backend.csproj" />
-      <ProjectReference Include="..\FamilyBudgetTracker.BE.Commons\FamilyBudgetTracker.BE.Commons.csproj" />
+      <ProjectReference Include="..\..\src\FamilyBudgetTracker.Backend\FamilyBudgetTracker.Backend.csproj" />
     </ItemGroup>
 
 </Project>

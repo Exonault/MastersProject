@@ -24,7 +24,7 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
             .WithMessage(UserMessages.ValidationMessages.PasswordRequired);
 
         RuleFor(x => x.Admin)
-            .NotEmpty()
+            .NotNull()
             .WithMessage(UserMessages.ValidationMessages.AdminRequired);
 
         RuleFor(p => p.Password)

@@ -32,7 +32,7 @@ public static class RecurringTransactionMapper
     }
 
 
-    public static RecurringTransactionResponse ToRecurringTransaction(this RecurringTransaction transaction)
+    public static RecurringTransactionResponse ToRecurringTransactionResponse(this RecurringTransaction transaction)
     {
         return new RecurringTransactionResponse
         {

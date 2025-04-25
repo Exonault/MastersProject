@@ -16,17 +16,12 @@ public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
-    // private readonly IValidator<CreateCategoryRequest> _createCategoryValidator;
-    // private readonly IValidator<UpdateCategoryRequest> _updateCategoryValidator;
+  
 
-    public CategoryService(ICategoryRepository categoryRepository, IUserRepository userRepository,
-        IValidator<CreateCategoryRequest> createCategoryValidator,
-        IValidator<UpdateCategoryRequest> updateCategoryValidator)
+    public CategoryService(ICategoryRepository categoryRepository, IUserRepository userRepository)
     {
         _categoryRepository = categoryRepository;
         _userRepository = userRepository;
-        // _createCategoryValidator = createCategoryValidator;
-        // _updateCategoryValidator = updateCategoryValidator;
     }
 
     public async Task CreateCategory(CreateCategoryRequest request, string userId)
@@ -38,15 +33,7 @@ public class CategoryService : ICategoryService
         {
             throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
         }
-
-        //validate
-        // ValidationResult validationResult = await _createCategoryValidator.ValidateAsync(request);
-        //
-        // if (!validationResult.IsValid)
-        // {
-        //     throw new ValidationException(validationResult.Errors);
-        // }
-
+        
         //map
         Category category = request.ToCategory();
 
@@ -70,13 +57,6 @@ public class CategoryService : ICategoryService
         {
             throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
         }
-        //
-        // ValidationResult validationResult = await _updateCategoryValidator.ValidateAsync(request);
-        //
-        // if (!validationResult.IsValid)
-        // {
-        //     throw new ValidationException(validationResult.Errors);
-        // }
 
         Category updatedCategory = request.ToCategory();
         updatedCategory.Id = category.Id;

@@ -39,4 +39,16 @@ public static class PersonalTransactionMapper
             // UserId = transaction.User.Id
         };
     }
+
+    public static PersonalTransaction ToPersonalTransaction(this RecurringTransaction recurringTransaction)
+    {
+        return new PersonalTransaction
+        {
+            Amount = recurringTransaction.Amount,
+            Description = recurringTransaction.Description,
+            TransactionDate = recurringTransaction.NextExecutionDate,
+            Category = recurringTransaction.Category,
+            User = recurringTransaction.User
+        };
+    }
 }

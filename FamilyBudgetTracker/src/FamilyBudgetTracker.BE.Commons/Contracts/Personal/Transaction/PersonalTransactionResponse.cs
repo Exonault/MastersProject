@@ -12,7 +12,7 @@ public class PersonalTransactionResponse
     public decimal Amount { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     [JsonPropertyName("transactionDate")]
     public DateOnly TransactionDate { get; set; }

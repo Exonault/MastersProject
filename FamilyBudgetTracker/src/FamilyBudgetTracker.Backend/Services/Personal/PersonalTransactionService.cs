@@ -15,20 +15,14 @@ namespace FamilyBudgetTracker.Backend.Services.Personal;
 public class PersonalTransactionService : IPersonalTransactionService
 {
     private readonly IPersonalTransactionRepository _transactionRepository;
-    // private readonly IValidator<CreatePersonalTransactionRequest> _createTransactionValidator;
-    // private readonly IValidator<UpdatePersonalTransactionRequest> _updateTransactionValidator;
     private readonly IUserRepository _userRepository;
     private readonly ICategoryRepository _categoryRepository;
 
 
     public PersonalTransactionService(IPersonalTransactionRepository transactionRepository,
-        IValidator<CreatePersonalTransactionRequest> createTransactionValidator,
-        IValidator<UpdatePersonalTransactionRequest> updateTransactionValidator, IUserRepository userRepository,
-        ICategoryRepository categoryRepository)
+        IUserRepository userRepository, ICategoryRepository categoryRepository)
     {
         _transactionRepository = transactionRepository;
-        // _createTransactionValidator = createTransactionValidator;
-        // _updateTransactionValidator = updateTransactionValidator;
         _userRepository = userRepository;
         _categoryRepository = categoryRepository;
     }
@@ -53,13 +47,6 @@ public class PersonalTransactionService : IPersonalTransactionService
         {
             throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
         }
-
-        // ValidationResult validationResult = await _createTransactionValidator.ValidateAsync(request);
-        //
-        // if (!validationResult.IsValid)
-        // {
-        //     throw new ValidationException(validationResult.Errors);
-        // }
 
         PersonalTransaction transaction = request.ToPersonalTransaction();
 
@@ -96,13 +83,6 @@ public class PersonalTransactionService : IPersonalTransactionService
         {
             throw new ResourceNotFoundException(PersonalTransactionMessages.NoTransactionFound);
         }
-        //
-        // ValidationResult validationResult = await _updateTransactionValidator.ValidateAsync(request);
-        //
-        // if (!validationResult.IsValid)
-        // {
-        //     throw new ValidationException(validationResult.Errors);
-        // }
 
         PersonalTransaction updatedTransaction = request.ToPersonalTransaction();
 

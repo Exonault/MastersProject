@@ -2,6 +2,7 @@
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Category;
 using FamilyBudgetTracker.BE.Commons.Services.Personal;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.Endpoints.Personal;
 
@@ -13,6 +14,7 @@ public static class CategoryEndpoints
 
         categoryGroup.MapPost("/", CreateCategory)
             // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -25,6 +27,7 @@ public static class CategoryEndpoints
 
         categoryGroup.MapPut("/{id:int}", UpdateCategory)
             // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -53,18 +56,18 @@ public static class CategoryEndpoints
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .WithSummary("Retreives a category by id")
+            .WithSummary("Retrieve a category by id")
             .WithOpenApi();
 
         categoryGroup.MapGet("/user", GetCategoriesByUserId)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName
+            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             // .CacheOutput(x => x.Expire(TimeSpan.FromMinutes(5)))
             .Produces(StatusCodes.Status200OK, typeof(List<CategoryResponse>), "application/json")
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .WithSummary("Retrieves all categories for the user")
+            .WithSummary("Retrieves all categories for a user")
             .WithOpenApi();
     }
 

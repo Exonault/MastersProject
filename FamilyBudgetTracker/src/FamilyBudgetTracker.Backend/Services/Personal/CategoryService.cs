@@ -58,7 +58,7 @@ public class CategoryService : ICategoryService
             throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
         }
 
-        Category updatedCategory = request.ToCategory();
+        Category updatedCategory = request.ToCategory(category);
         updatedCategory.Id = category.Id;
         updatedCategory.User = user;
         //TODO: Should the lists be added here

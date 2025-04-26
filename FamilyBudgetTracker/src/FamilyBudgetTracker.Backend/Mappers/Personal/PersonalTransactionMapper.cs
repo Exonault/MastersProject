@@ -16,14 +16,14 @@ public static class PersonalTransactionMapper
     }
 
 
-    public static PersonalTransaction ToPersonalTransaction(this UpdatePersonalTransactionRequest request)
+    public static PersonalTransaction ToPersonalTransaction(this UpdatePersonalTransactionRequest request,
+        PersonalTransaction origin)
     {
-        return new PersonalTransaction
-        {
-            Amount = request.Amount,
-            Description = request.Description,
-            TransactionDate = request.TransactionDate,
-        };
+        origin.Amount = request.Amount;
+        origin.Description = request.Description;
+        origin.TransactionDate = request.TransactionDate;
+
+        return origin;
     }
 
 

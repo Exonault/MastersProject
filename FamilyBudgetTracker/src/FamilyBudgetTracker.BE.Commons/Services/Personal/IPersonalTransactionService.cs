@@ -12,7 +12,7 @@ public interface IPersonalTransactionService
     
     Task<PersonalTransactionResponse> GetTransactionById (int id, string userId);
 
-    Task<List<PersonalTransactionResponse>> GetTransactionForPeriod(PersonalTransactionsForPeriodRequest request, string userId);
+    Task<List<PersonalTransactionResponse>> GetTransactionForPeriod(DateOnly startDate, DateOnly endDate, string userId);
 
 
 }

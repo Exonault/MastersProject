@@ -12,31 +12,31 @@ public static class UserEndpoint
     {
         group.MapPost("register/", Register)
             .AllowAnonymous()
+            .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK, typeof(RegisterResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status500InternalServerError)
-            .AddFluentValidationAutoValidation()
             .WithSummary("Register a user")
             .WithOpenApi();
 
         group.MapPost("login/", Login)
             .AllowAnonymous()
+            .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK, typeof(LoginResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .AddFluentValidationAutoValidation()
             .WithSummary("Log a user in the system")
             .WithOpenApi();
 
         group.MapPost("refresh/", Refresh)
             .AllowAnonymous()
+            .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK, typeof(LoginResponse), "application/json")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .AddFluentValidationAutoValidation()
             .WithSummary("Refresh user tokens")
             .WithOpenApi();
 
@@ -47,6 +47,9 @@ public static class UserEndpoint
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Revoke all tokens")
             .WithOpenApi();
+        
+        group.MapPost("/test", async (IEmailService emailService) => { await emailService.SendTestEmail(); });
+
     }
 
     private static async Task<IResult> Register([FromBody] RegisterRequest request, IUserService service)

@@ -1,65 +1,42 @@
-using FamilyBudgetTracker.Backend.Configuration;
-using FamilyBudgetTracker.Backend.Data;
 using FamilyBudgetTracker.Backend.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var configuration = builder.Configuration;
-//Open API documentation
-builder.Services.AddOpenApi("v1", options =>
-{
-    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-});
 
+//Open API documentation
+builder.Services.AddOpenApiServices();
 
 //Database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseNpgsql(configuration.GetConnectionString("ApplicationDb"));
-});
+builder.Services.AddDatabase(configuration);
 
 //Cors
-const string corsPolicy = "AllowedOrigin";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(corsPolicy,
-        policy => { policy.WithOrigins(configuration.GetSection("FrontEndUrl").Value!); });
-});
+// builder.Services.AddCorsServices(configuration);
 
 //Auth
 builder.Services.AddApplicationAuthenticationServices(configuration);
 
 //Cache
-builder.Services.AddApplicationCachingServices(configuration);
+// builder.Services.AddApplicationCachingServices(configuration);
 
 //Exception handlers
 builder.Services.AddApplicationExceptionHandlers();
 
 //Services
-builder.Services.AddApplicationServices();
+builder.Services.AddEntityServices();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.WithTitle("FamilyBudgetTracker.Api")
-            .WithLayout(ScalarLayout.Modern)
-            .WithTheme(ScalarTheme.BluePlanet)
-            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
-    });
+    app.ConfigureScalar();
 }
 
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
-app.UseCors(corsPolicy);
+// app.UseCors(ApplicationConstants.Cors.CorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();

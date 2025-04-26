@@ -2,6 +2,7 @@ using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
 using FamilyBudgetTracker.BE.Commons.Services.Personal;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.Endpoints.Personal;
 
@@ -13,6 +14,7 @@ public static class PersonalTransactionEndpoints
 
         transactionsGroup.MapPost("/", CreateTransaction)
             // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -24,6 +26,7 @@ public static class PersonalTransactionEndpoints
 
         transactionsGroup.MapPut("/{id:int}", UpdateTransaction)
             // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -63,7 +66,7 @@ public static class PersonalTransactionEndpoints
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .WithSummary("Get a transactions for given period")
+            .WithSummary("Get all transactions for given period")
             .WithOpenApi();
     }
 
@@ -107,13 +110,13 @@ public static class PersonalTransactionEndpoints
     }
 
 
-    private static async Task<IResult> GetTransactionsForPeriod([FromBody] PersonalTransactionsForPeriodRequest request,
+    private static async Task<IResult> GetTransactionsForPeriod([FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate,
         IPersonalTransactionService service, HttpContext httpContext)
     {
         string userId = httpContext.GetUserIdFromAuth();
 
         List<PersonalTransactionResponse>
-            transactions = await service.GetTransactionForPeriod(request, userId);
+            transactions = await service.GetTransactionForPeriod(startDate, endDate, userId);
 
         return Results.Ok(transactions);
     }

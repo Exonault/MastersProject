@@ -5,14 +5,14 @@ public static class ApplicationConstants
     public static class PolicyNames
     {
         public const string AdminRolePolicyName = "AdminPolicy";
-        
+
         public const string UserRolePolicyName = "UserPolicy";
     }
-    
+
     public static class ClaimNames
     {
         public const string AdminRoleClaimName = "Admin";
-       
+
         public const string UserRoleClaimName = "User";
     }
 
@@ -29,13 +29,17 @@ public static class ApplicationConstants
 
         public const string UserRoleType = "User";
     }
-    
+
+    public static class Cors
+    {
+        public const string CorsPolicy = "AllowedOrigin";
+    }
+
     public static class Regex
     {
         public const string UpperCaseRegex = @"[A-Z]+";
         public const string LowerCaseRegex = @"[a-z]+";
         public const string NumberRegex = @"[0-1]+";
         public const string SpecialCharacterRegex = @"[\!\?\*\.]+";
-        
     }
 }

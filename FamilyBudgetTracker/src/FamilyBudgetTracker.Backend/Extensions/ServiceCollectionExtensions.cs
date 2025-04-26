@@ -1,29 +1,41 @@
 ﻿using System.Text;
+using FamilyBudgetTracker.Backend.Configuration;
 using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Data;
 using FamilyBudgetTracker.Backend.ExceptionHandlers;
-using FamilyBudgetTracker.Backend.Repositories;
-using FamilyBudgetTracker.Backend.Repositories.Personal;
 using FamilyBudgetTracker.Backend.Services;
-using FamilyBudgetTracker.Backend.Services.Personal;
 using FamilyBudgetTracker.BE.Commons.Entities;
-using FamilyBudgetTracker.BE.Commons.Repositories;
-using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
 using FamilyBudgetTracker.BE.Commons.Services;
-using FamilyBudgetTracker.BE.Commons.Services.Personal;
-using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    public static void AddOpenApiServices(this IServiceCollection services)
+    {
+        services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
+    }
+
+    public static void AddDatabase(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        services.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(configuration.GetConnectionString("ApplicationDb")); });
+    }
+
+    public static void AddCorsServices(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(ApplicationConstants.Cors.CorsPolicy,
+                policy => { policy.WithOrigins(configuration.GetSection("FrontEndUrl").Value!); });
+        });
+    }
+
     public static void AddApplicationExceptionHandlers(this IServiceCollection services)
     {
-        //Exception handlers
         services.AddProblemDetails();
 
         services.AddExceptionHandler<InvalidEmailExceptionHandler>();
@@ -33,57 +45,35 @@ public static class ServiceCollectionExtensions
         services.AddExceptionHandler<MappingExceptionHandler>();
         services.AddExceptionHandler<ValidationExceptionHandler>();
         services.AddExceptionHandler<BadHttpRequestExceptionHandler>();
-//Global exception handler should be last
+        services.AddExceptionHandler<ResourceNotFoundExceptionHandler>();
+        //Global exception handler should be last
         services.AddExceptionHandler<GlobalExceptionHandler>();
     }
 
-    public static void AddApplicationServices(this IServiceCollection services)
+    public static void AddEmailServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        //User services
-        services.AddUserServices();
+        services.AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
+            .AddSmtpSender(configuration["Email:Host"], configuration.GetValue<int>("Email:Port"));
 
-        //Personal services
-        services.AddCategoryServices();
-        services.AddPersonalTransactionServices();
-        services.AddRecurringTransactionServices();
-        
-        //Family services
-        //TODO
-        
-        
-        //Application services
-        services.AddValidatorsFromAssemblyContaining<Program>();
-        services.AddFluentValidationAutoValidation();
+        services.AddScoped<IEmailService, EmailService>();
     }
 
-    private static void AddUserServices(this IServiceCollection services)
+    public static void AddHangfireServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUserService, UserService>();
     }
 
 
-    private static void AddCategoryServices(this IServiceCollection services)
+    public static void AddApplicationCachingServices(this IServiceCollection service, ConfigurationManager configuration)
     {
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-        services.AddScoped<ICategoryService, CategoryService>();
+        service.AddOutputCache()
+            .AddStackExchangeRedisOutputCache(options =>
+            {
+                options.InstanceName = configuration["Redis:Name"]!;
+                options.Configuration = configuration["Redis:Url"];
+            });
     }
 
-
-    private static void AddPersonalTransactionServices(this IServiceCollection services)
-    {
-        services.AddScoped<IPersonalTransactionRepository, PersonalTransactionRepository>();
-        services.AddScoped<IPersonalTransactionService, PersonalTransactionService>();
-    }
-
-    private static void AddRecurringTransactionServices(this IServiceCollection services)
-    {
-        services.AddScoped<IRecurringTransactionRepository, RecurringTransactionRepository>();
-        services.AddScoped<IRecurringTransactionService, RecurringTransactionService>();
-    }
-
-    public static void AddApplicationAuthenticationServices(this IServiceCollection service,
-        ConfigurationManager configuration)
+    public static void AddApplicationAuthenticationServices(this IServiceCollection service, ConfigurationManager configuration)
     {
         service.AddIdentity<User, IdentityRole>(options =>
             {
@@ -140,16 +130,5 @@ public static class ServiceCollectionExtensions
                     p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
                 });
         });
-    }
-
-    public static void AddApplicationCachingServices(this IServiceCollection service,
-        ConfigurationManager configuration)
-    {
-        service.AddOutputCache()
-            .AddStackExchangeRedisOutputCache(options =>
-            {
-                options.InstanceName = configuration["Redis:Name"]!;
-                options.Configuration = configuration["Redis:Url"];
-            });
     }
 }

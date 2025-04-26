@@ -2,9 +2,9 @@ namespace FamilyBudgetTracker.Backend.Constants.Personal;
 
 public class RecurringTransactionConstants
 {
-    public const string WeeklyValue = "weekly";
-    public const string BiWeeklyValue = "biweekly";
-    public const string MonthlyValue = "monthly";
+    public const string WeeklyValue = "Weekly";
+    public const string BiWeeklyValue = "Biweekly";
+    public const string MonthlyValue = "Monthly";
 
     public static IReadOnlyList<string> Types =
     [

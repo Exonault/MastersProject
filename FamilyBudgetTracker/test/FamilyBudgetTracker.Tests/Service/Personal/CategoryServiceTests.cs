@@ -29,7 +29,7 @@ public class CategoryServiceTests
 
         // System Under Test
         _categoryService =
-            new CategoryService(_categoryRepository, _userRepository, _createValidator, _updateValidator);
+            new CategoryService(_categoryRepository, _userRepository);
     }
 
     [Test]

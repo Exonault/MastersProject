@@ -19,16 +19,16 @@ public static class RecurringTransactionMapper
     }
 
 
-    public static RecurringTransaction ToRecurringTransaction(this UpdateRecurringTransactionRequest request)
+    public static RecurringTransaction ToRecurringTransaction(this UpdateRecurringTransactionRequest request,
+        RecurringTransaction origin)
     {
-        return new RecurringTransaction()
-        {
-            Amount = request.Amount,
-            Description = request.Description,
-            Type = Enum.Parse<RecurringType>(request.Type),
-            StartDate = request.StartDate,
-            EndDate = request.EndDate,
-        };
+        origin.Amount = request.Amount;
+        origin.Description = request.Description;
+        origin.Type = Enum.Parse<RecurringType>(request.Type);
+        origin.StartDate = request.StartDate;
+        origin.EndDate = request.EndDate;
+
+        return origin;
     }
 
 

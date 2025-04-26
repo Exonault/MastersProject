@@ -17,15 +17,14 @@ public static class CategoryMapper
         };
     }
 
-    public static Category ToCategory(this UpdateCategoryRequest request)
+    public static Category ToCategory(this UpdateCategoryRequest request, Category origin)
     {
-        return new Category
-        {
-            Name = request.Name,
-            Icon = request.Icon,
-            Type = Enum.Parse<CategoryType>(request.Type),
-            Limit = request.Limit,
-        };
+        origin.Name = request.Name;
+        origin.Icon = request.Icon;
+        origin.Type = Enum.Parse<CategoryType>(request.Type);
+        origin.Limit = request.Limit;
+
+        return origin;
     }
 
     public static CategoryResponse ToCategoryResponse(this Category category)

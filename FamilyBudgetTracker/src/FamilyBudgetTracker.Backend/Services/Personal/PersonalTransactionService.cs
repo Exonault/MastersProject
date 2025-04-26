@@ -43,7 +43,7 @@ public class PersonalTransactionService : IPersonalTransactionService
             throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
         }
 
-        if (category.User.Id == userId)
+        if (category.User.Id != userId)
         {
             throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
         }
@@ -72,7 +72,7 @@ public class PersonalTransactionService : IPersonalTransactionService
             throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
         }
 
-        if (category.User.Id == userId)
+        if (category.User.Id != userId)
         {
             throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
         }
@@ -84,7 +84,12 @@ public class PersonalTransactionService : IPersonalTransactionService
             throw new ResourceNotFoundException(PersonalTransactionMessages.NoTransactionFound);
         }
 
-        PersonalTransaction updatedTransaction = request.ToPersonalTransaction();
+        if (transaction.User.Id != userId)
+        {
+            throw new InvalidOperationException(PersonalTransactionMessages.TransactionIsNotFromTheUser);
+        }
+
+        PersonalTransaction updatedTransaction = request.ToPersonalTransaction(transaction);
 
         updatedTransaction.Id = transaction.Id;
         updatedTransaction.Category = category;
@@ -136,8 +141,8 @@ public class PersonalTransactionService : IPersonalTransactionService
         return response;
     }
 
-    public async Task<List<PersonalTransactionResponse>> GetTransactionForPeriod(
-        PersonalTransactionsForPeriodRequest request, string userId)
+    public async Task<List<PersonalTransactionResponse>> GetTransactionForPeriod(DateOnly startDate, DateOnly endDate,
+        string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -147,7 +152,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         }
 
         List<PersonalTransaction> transactions =
-            await _transactionRepository.GetTransactionForPeriod(userId, request.StartDate, request.EndDate);
+            await _transactionRepository.GetTransactionForPeriod(userId, startDate, endDate);
 
         List<PersonalTransactionResponse> response = transactions.Select(x => x.ToPersonalTransactionResponse())
             .ToList();

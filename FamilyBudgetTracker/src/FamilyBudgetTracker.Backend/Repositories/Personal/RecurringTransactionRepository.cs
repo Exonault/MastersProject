@@ -24,8 +24,6 @@ public class RecurringTransactionRepository : IRecurringTransactionRepository
     {
         _dbContext.Entry(transaction).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
-
-        throw new NotImplementedException();
     }
 
     public async Task DeleteRecurringTransaction(RecurringTransaction transaction)
@@ -36,7 +34,10 @@ public class RecurringTransactionRepository : IRecurringTransactionRepository
 
     public async Task<RecurringTransaction?> GetRecurringTransactionById(int id)
     {
-        return await _dbContext.RecurringTransactions.FirstOrDefaultAsync(rt => rt.Id == id);
+        return await _dbContext.RecurringTransactions
+            .Include(rt => rt.User)
+            .Include(rt => rt.Category)
+            .FirstOrDefaultAsync(rt => rt.Id == id);
     }
 
     public async Task<List<RecurringTransaction>> GetRecurringTransactionsByUserid(string userId)

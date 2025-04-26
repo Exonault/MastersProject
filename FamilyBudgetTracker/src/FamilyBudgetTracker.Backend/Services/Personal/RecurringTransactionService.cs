@@ -3,6 +3,7 @@ using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.Backend.Messages.Personal;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.RecurringTransaction;
 using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Entities.Common;
 using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 using FamilyBudgetTracker.BE.Commons.Exceptions;
 using FamilyBudgetTracker.BE.Commons.Repositories;
@@ -43,7 +44,7 @@ public class RecurringTransactionService : IRecurringTransactionService
             throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
         }
 
-        if (category.User.Id == userId)
+        if (category.User.Id != userId)
         {
             throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
         }
@@ -52,6 +53,8 @@ public class RecurringTransactionService : IRecurringTransactionService
 
         transaction.User = user;
         transaction.Category = category;
+
+        transaction.NextExecutionDate = GetNextExecutionDate(transaction);
 
         await _recurringTransactionRepository.CreateRecurringTransaction(transaction);
     }
@@ -72,7 +75,7 @@ public class RecurringTransactionService : IRecurringTransactionService
             throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
         }
 
-        if (category.User.Id == userId)
+        if (category.User.Id != userId)
         {
             throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
         }
@@ -84,12 +87,17 @@ public class RecurringTransactionService : IRecurringTransactionService
             throw new ResourceNotFoundException(RecurringTransactionMessages.NoTransactionFound);
         }
 
-        RecurringTransaction updatedTransaction = request.ToRecurringTransaction();
+        if (transaction.User.Id != userId)
+        {
+            throw new InvalidOperationException(RecurringTransactionMessages.TransactionIsNotFromTheUser);
+        }
+
+        RecurringTransaction updatedTransaction = request.ToRecurringTransaction(transaction);
 
         updatedTransaction.Id = transaction.Id;
         updatedTransaction.Category = category;
         updatedTransaction.User = user;
-
+        
         await _recurringTransactionRepository.UpdateRecurringTransaction(updatedTransaction);
     }
 
@@ -160,4 +168,40 @@ public class RecurringTransactionService : IRecurringTransactionService
 
         return response;
     }
+
+
+    private DateOnly GetNextExecutionDate(RecurringTransaction transaction)
+    {
+        DateOnly executionDate = transaction.NextExecutionDate;
+
+        if (executionDate == DateOnly.MinValue)
+        {
+            executionDate = transaction.StartDate;
+        }
+
+        DateOnly result;
+
+        switch (transaction.Type)
+        {
+            case RecurringType.Weekly:
+                result = executionDate.AddDays(7);
+                break;
+
+            case RecurringType.BiWeekly:
+                result = executionDate.AddDays(14);
+                break;
+
+            case RecurringType.Monthly:
+                result = executionDate.AddMonths(1);
+                break;
+
+            default:
+                result = executionDate;
+                break;
+        }
+
+        return result;
+    }
+    
+   
 }

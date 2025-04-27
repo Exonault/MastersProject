@@ -1,0 +1,14 @@
+﻿using FamilyBudgetTracker.BE.Commons.Entities.Familial;
+
+namespace FamilyBudgetTracker.BE.Commons.Repositories.Familial;
+
+public interface IFamilyRepository
+{
+    Task CreateFamily(Family family);
+
+    Task DeleteFamily(Family family);
+
+    Task<Family?> GetFamilyById(int id);
+
+    Task<List<Family>> GetAllFamilies();
+}

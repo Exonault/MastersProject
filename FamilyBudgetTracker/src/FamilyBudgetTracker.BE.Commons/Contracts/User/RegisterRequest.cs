@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FamilyBudgetTracker.BE.Entities.Contracts.User;
+namespace FamilyBudgetTracker.BE.Commons.Contracts.User;
 
 public class RegisterRequest
 {

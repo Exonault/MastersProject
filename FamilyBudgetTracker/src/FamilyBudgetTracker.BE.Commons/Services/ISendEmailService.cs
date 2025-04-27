@@ -1,6 +1,6 @@
 ﻿namespace FamilyBudgetTracker.BE.Commons.Services;
 
-public interface IEmailService
+public interface ISendEmailService
 {
     Task SendTestEmail();
 }

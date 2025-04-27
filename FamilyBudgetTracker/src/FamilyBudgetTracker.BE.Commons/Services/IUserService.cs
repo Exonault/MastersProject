@@ -1,4 +1,4 @@
-using FamilyBudgetTracker.BE.Entities.Contracts.User;
+using FamilyBudgetTracker.BE.Commons.Contracts.User;
 
 namespace FamilyBudgetTracker.BE.Commons.Services;
 

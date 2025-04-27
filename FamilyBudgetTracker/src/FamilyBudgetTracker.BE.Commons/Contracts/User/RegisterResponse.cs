@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FamilyBudgetTracker.BE.Entities.Contracts.User;
+namespace FamilyBudgetTracker.BE.Commons.Contracts.User;
 
 public class RegisterResponse
 {

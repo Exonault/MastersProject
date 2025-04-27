@@ -19,5 +19,7 @@ public interface IUserRepository
 
     Task<List<string>> GetAllRoles(User user);
 
+    Task<string> GetMainFamilyRole(User user);
+
     Task UpdateUser(User user);
 }

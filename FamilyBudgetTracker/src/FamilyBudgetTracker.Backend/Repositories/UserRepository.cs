@@ -1,3 +1,4 @@
+using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -47,9 +48,21 @@ public class UserRepository : IUserRepository
 
     public async Task<List<string>> GetAllRoles(User user)
     {
-        IList<string> rolesAsync = await _userManager.GetRolesAsync(user);
+        IList<string> roles = await _userManager.GetRolesAsync(user);
 
-        return rolesAsync.ToList();
+        return roles.ToList();
+    }
+
+    public async Task<string> GetMainFamilyRole(User user)
+    {
+        IList<string> roles = await _userManager.GetRolesAsync(user);
+
+        if (roles.Contains(ApplicationConstants.RoleTypes.FamilyAdminRoleType))
+        {
+            return ApplicationConstants.RoleTypes.FamilyAdminRoleType;
+        }
+
+        return ApplicationConstants.RoleTypes.FamilyMemberRoleType;
     }
 
     public async Task UpdateUser(User user)

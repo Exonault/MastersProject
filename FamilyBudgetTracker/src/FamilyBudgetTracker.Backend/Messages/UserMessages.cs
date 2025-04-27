@@ -35,6 +35,10 @@ public static class UserMessages
         public const string AccessTokenRequired = "Access token is required";
 
         public const string RefreshTokenRequired = "Refresh token is required";
+
+        public const string NoFamilyForUser = "User does not have a family";
+
+        public const string UserIsNotFromFamily = "User is not from this family";
     }
 
     public static class Messages

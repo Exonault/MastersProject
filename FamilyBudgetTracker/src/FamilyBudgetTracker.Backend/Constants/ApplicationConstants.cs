@@ -28,6 +28,10 @@ public static class ApplicationConstants
         public const string AdminRoleType = "Admin";
 
         public const string UserRoleType = "User";
+
+        public const string FamilyAdminRoleType = "FamilyAdmin";
+
+        public const string FamilyMemberRoleType = "FamilyMember";
     }
 
     public static class Cors

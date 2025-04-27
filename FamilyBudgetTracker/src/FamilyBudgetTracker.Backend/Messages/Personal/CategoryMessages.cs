@@ -1,4 +1,3 @@
-using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Constants.Personal;
 
 namespace FamilyBudgetTracker.Backend.Messages.Personal;

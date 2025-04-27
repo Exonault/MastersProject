@@ -3,11 +3,11 @@ using FluentEmail.Core;
 
 namespace FamilyBudgetTracker.Backend.Services;
 
-public class EmailService : IEmailService
+public class SendEmailService : ISendEmailService
 {
     private readonly IFluentEmail _fluentEmail;
 
-    public EmailService(IFluentEmail fluentEmail)
+    public SendEmailService(IFluentEmail fluentEmail)
     {
         _fluentEmail = fluentEmail;
     }

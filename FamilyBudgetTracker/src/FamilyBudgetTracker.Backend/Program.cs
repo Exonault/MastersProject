@@ -18,11 +18,20 @@ builder.Services.AddApplicationAuthenticationServices(configuration);
 //Cache
 // builder.Services.AddApplicationCachingServices(configuration);
 
+//Send email service
+builder.Services.AddEmailServices(configuration);
+
+//Hangfire
+// builder.Services.AddHangfireServices(configuration);
+
 //Exception handlers
 builder.Services.AddApplicationExceptionHandlers();
 
 //Services
 builder.Services.AddEntityServices();
+
+//Validation
+builder.Services.AddFluentValidationServices();
 
 var app = builder.Build();
 

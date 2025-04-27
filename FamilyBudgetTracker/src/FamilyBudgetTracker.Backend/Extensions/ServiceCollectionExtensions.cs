@@ -6,10 +6,12 @@ using FamilyBudgetTracker.Backend.ExceptionHandlers;
 using FamilyBudgetTracker.Backend.Services;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.Extensions;
 
@@ -50,12 +52,18 @@ public static class ServiceCollectionExtensions
         services.AddExceptionHandler<GlobalExceptionHandler>();
     }
 
+    public static void AddFluentValidationServices(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssemblyContaining<Program>();
+        services.AddFluentValidationAutoValidation();
+    }
+
     public static void AddEmailServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
             .AddSmtpSender(configuration["Email:Host"], configuration.GetValue<int>("Email:Port"));
 
-        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ISendEmailService, SendEmailService>();
     }
 
     public static void AddHangfireServices(this IServiceCollection services, ConfigurationManager configuration)
@@ -110,25 +118,20 @@ public static class ServiceCollectionExtensions
                 };
             });
 
-        service.AddAuthorization(options =>
-        {
-            options.AddPolicy(ApplicationConstants.PolicyNames.AdminRolePolicyName,
-                p =>
-                {
-                    p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                        ApplicationConstants.ClaimNames.AdminRoleClaimName);
+        service.AddAuthorizationBuilder()
+            .AddPolicy(ApplicationConstants.PolicyNames.AdminRolePolicyName, p =>
+            {
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimNames.AdminRoleClaimName);
 
-                    p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
-                });
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
+            })
+            .AddPolicy(ApplicationConstants.PolicyNames.UserRolePolicyName, p =>
+            {
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimNames.UserRoleClaimName);
 
-            options.AddPolicy(ApplicationConstants.PolicyNames.UserRolePolicyName,
-                p =>
-                {
-                    p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                        ApplicationConstants.ClaimNames.UserRoleClaimName);
-
-                    p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
-                });
-        });
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
+            });
     }
 }

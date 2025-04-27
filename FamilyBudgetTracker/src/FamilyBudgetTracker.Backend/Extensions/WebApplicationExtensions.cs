@@ -1,4 +1,5 @@
-﻿using FamilyBudgetTracker.Backend.Endpoints.Personal;
+﻿using FamilyBudgetTracker.Backend.Endpoints.Familial;
+using FamilyBudgetTracker.Backend.Endpoints.Personal;
 using FamilyBudgetTracker.Backend.Endpoints.User;
 using Scalar.AspNetCore;
 
@@ -10,6 +11,7 @@ public static class WebApplicationExtensions
     {
         app.MapUserEndpoints();
         app.MapPersonalEndpoints();
+        app.MapFamilialEndpoints();
     }
 
     private static void MapPersonalEndpoints(this WebApplication app)
@@ -24,6 +26,8 @@ public static class WebApplicationExtensions
     private static void MapFamilialEndpoints(this WebApplication app)
     {
         var familyGroup = app.MapGroup("family");
+
+        familyGroup.MapFamilyEndpoints();
     }
 
 

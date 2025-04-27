@@ -1,6 +1,6 @@
 using FamilyBudgetTracker.Backend.Constants;
+using FamilyBudgetTracker.BE.Commons.Contracts.User;
 using FamilyBudgetTracker.BE.Commons.Services;
-using FamilyBudgetTracker.BE.Entities.Contracts.User;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
@@ -48,7 +48,7 @@ public static class UserEndpoint
             .WithSummary("Revoke all tokens")
             .WithOpenApi();
         
-        group.MapPost("/test", async (IEmailService emailService) => { await emailService.SendTestEmail(); });
+        // group.MapPost("/test", async (IEmailService emailService) => { await emailService.SendTestEmail(); });
 
     }
 

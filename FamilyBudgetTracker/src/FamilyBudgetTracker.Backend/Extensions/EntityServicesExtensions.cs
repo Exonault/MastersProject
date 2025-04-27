@@ -1,13 +1,15 @@
 ﻿using FamilyBudgetTracker.Backend.Repositories;
+using FamilyBudgetTracker.Backend.Repositories.Familial;
 using FamilyBudgetTracker.Backend.Repositories.Personal;
 using FamilyBudgetTracker.Backend.Services;
+using FamilyBudgetTracker.Backend.Services.Familial;
 using FamilyBudgetTracker.Backend.Services.Personal;
 using FamilyBudgetTracker.BE.Commons.Repositories;
+using FamilyBudgetTracker.BE.Commons.Repositories.Familial;
 using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
 using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Commons.Services.Familial;
 using FamilyBudgetTracker.BE.Commons.Services.Personal;
-using FluentValidation;
-using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.Extensions;
 
@@ -25,11 +27,8 @@ public static class EntityServicesExtensions
 
         //Family services
         //TODO
-
-
-        //Application services
-        services.AddValidatorsFromAssemblyContaining<Program>();
-        services.AddFluentValidationAutoValidation();
+        services.AddFamilyServices();
+        services.AddFamilyCategoryServices();
     }
 
     private static void AddUserServices(this IServiceCollection services)
@@ -54,5 +53,20 @@ public static class EntityServicesExtensions
     {
         services.AddScoped<IRecurringTransactionRepository, RecurringTransactionRepository>();
         services.AddScoped<IRecurringTransactionService, RecurringTransactionService>();
+    }
+
+    private static void AddFamilyServices(this IServiceCollection services)
+    {
+        services.AddScoped<IFamilyRepository, FamilyRepository>();
+        services.AddScoped<IFamilyService, FamilyService>();
+    }
+
+    private static void AddFamilyCategoryServices(this IServiceCollection services)
+    {
+        services.AddScoped<IFamilyCategoryRepository, FamilyCategoryRepository>();
+    }
+
+    private static void AddFamilyTransactionServices(this IServiceCollection services)
+    {
     }
 }

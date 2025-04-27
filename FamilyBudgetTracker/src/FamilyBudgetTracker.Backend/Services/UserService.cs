@@ -3,12 +3,13 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using FamilyBudgetTracker.Backend.Constants;
+using FamilyBudgetTracker.Backend.Mappers;
 using FamilyBudgetTracker.Backend.Messages;
+using FamilyBudgetTracker.BE.Commons.Contracts.User;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Exceptions;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using FamilyBudgetTracker.BE.Commons.Services;
-using FamilyBudgetTracker.BE.Entities.Contracts.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -39,12 +40,14 @@ public class UserService : IUserService
              throw new UserAlreadyRegisteredException(UserMessages.ValidationMessages.AlreadyRegistered);
          }
 
-         User user = new User()
-         {
-             UserName = request.UserName,
-             PasswordHash = request.Password,
-             Email = request.Email
-         };
+         User user = request.ToUser();
+         
+         // User user = new User()
+         // {
+         //     UserName = request.UserName,
+         //     PasswordHash = request.Password,
+         //     Email = request.Email
+         // };
 
          IdentityResult identityResult = await _repository.Create(user, request.Password);
 

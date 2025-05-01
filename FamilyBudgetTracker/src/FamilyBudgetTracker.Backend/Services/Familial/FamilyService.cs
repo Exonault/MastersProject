@@ -1,13 +1,12 @@
 ﻿using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Mappers;
 using FamilyBudgetTracker.Backend.Mappers.Familial;
-using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.Backend.Messages.Familial;
+using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Familial.Family;
 using FamilyBudgetTracker.BE.Commons.Contracts.User;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Entities.Familial;
-using FamilyBudgetTracker.BE.Commons.Exceptions;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using FamilyBudgetTracker.BE.Commons.Repositories.Familial;
 using FamilyBudgetTracker.BE.Commons.Services;
@@ -33,10 +32,7 @@ public class FamilyService : IFamilyService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         Family family = new Family
         {
@@ -60,34 +56,21 @@ public class FamilyService : IFamilyService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
-
-        if (user.Family is null)
-        {
-            throw new ResourceNotFoundException(UserMessages.ValidationMessages.NoFamilyForUser);
-        }
+        user = user.ValidateUser();
 
         Family? family = await _familyRepository.GetFamilyById(id);
 
-        if (family is null)
-        {
-            throw new ResourceNotFoundException(FamilyMessages.FamilyNotFound);
-        }
+        family = family.ValidateFamily();
 
-        if (user.Family.Id != family.Id)
-        {
-            throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
-        }
+        user.ValidateUserFamily(family.Id);
 
-        List<string> roles = await _userRepository.GetAllRoles(user);
-
-        if (!roles.Contains(ApplicationConstants.RoleTypes.FamilyAdminRoleType))
-        {
-            throw new InvalidOperationException(FamilyMessages.DeleteImpossible);
-        }
+        // TODO: not needed because policy for familyAdmin
+        //
+        // List<string> roles = await _userRepository.GetAllRoles(user);
+        // if (!roles.Contains(ApplicationConstants.RoleTypes.FamilyAdminRoleType))
+        // {
+        //     throw new InvalidOperationException(FamilyMessages.DeleteImpossible);
+        // }
 
         await _familyRepository.DeleteFamily(family);
     }
@@ -96,27 +79,13 @@ public class FamilyService : IFamilyService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
-
-        if (user.Family is null)
-        {
-            throw new ResourceNotFoundException(UserMessages.ValidationMessages.NoFamilyForUser);
-        }
+        user = user.ValidateUser();
 
         Family? family = await _familyRepository.GetFamilyById(id);
 
-        if (family is null)
-        {
-            throw new ResourceNotFoundException(FamilyMessages.FamilyNotFound);
-        }
+        family = family.ValidateFamily();
 
-        if (user.Family.Id != family.Id)
-        {
-            throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
-        }
+        user.ValidateUserFamily(family.Id);
 
         var familyMemberResponse = await GetFamilyMembersResponse(family.FamilyMembers);
 

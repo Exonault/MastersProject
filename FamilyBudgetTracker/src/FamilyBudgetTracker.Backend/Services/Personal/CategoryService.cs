@@ -1,14 +1,11 @@
 ﻿using FamilyBudgetTracker.Backend.Mappers.Personal;
-using FamilyBudgetTracker.Backend.Messages;
-using FamilyBudgetTracker.Backend.Messages.Personal;
+using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Category;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Entities.Personal;
-using FamilyBudgetTracker.BE.Commons.Exceptions;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
 using FamilyBudgetTracker.BE.Commons.Services.Personal;
-using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Services.Personal;
 
@@ -16,8 +13,8 @@ public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
-  
 
+    
     public CategoryService(ICategoryRepository categoryRepository, IUserRepository userRepository)
     {
         _categoryRepository = categoryRepository;
@@ -26,15 +23,10 @@ public class CategoryService : ICategoryService
 
     public async Task CreateCategory(CreateCategoryRequest request, string userId)
     {
-        //check user
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
         
-        //map
         Category category = request.ToCategory();
 
         category.User = user;
@@ -42,28 +34,20 @@ public class CategoryService : ICategoryService
         await _categoryRepository.CreateCategory(category);
     }
 
+
     public async Task UpdateCategory(int id, UpdateCategoryRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         Category? category = await _categoryRepository.GetCategoryById(id);
-
-        if (category is null)
-        {
-            throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
-        }
+        
+        category = category.ValidateCategory(user.Id);
 
         Category updatedCategory = request.ToCategory(category);
-        updatedCategory.Id = category.Id;
-        updatedCategory.User = user;
-        //TODO: Should the lists be added here
-        // updatedCategory.RecurringTransactions = category.RecurringTransactions;
-        // updatedCategory.Transactions = category.Transactions;
+        // updatedCategory.Id = category.Id;
+        // updatedCategory.User = user;
 
         await _categoryRepository.UpdateCategory(updatedCategory);
     }
@@ -72,40 +56,24 @@ public class CategoryService : ICategoryService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         Category? category = await _categoryRepository.GetCategoryById(id);
 
-        if (category is null)
-        {
-            throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
-        }
-
-        if (category.User.Id != userId)
-        {
-            throw new InvalidOperationException(CategoryMessages.DeleteImpossible);
-        }
+        category = category.ValidateCategory(user.Id);
 
         await _categoryRepository.DeleteCategory(category);
     }
 
     public async Task<CategoryResponse> GetCategory(int id, string userId)
     {
+        User? user = await _userRepository.GetById(userId);
+
+        user = user.ValidateUser();
+
         Category? category = await _categoryRepository.GetCategoryById(id);
 
-        if (category is null)
-        {
-            throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
-        }
-        
-        if (category.User.Id != userId)
-        {
-            throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
-        }
-
+        category = category.ValidateCategory(user.Id);
 
         CategoryResponse response = category.ToCategoryResponse();
 
@@ -116,16 +84,14 @@ public class CategoryService : ICategoryService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
-        List<Category> categories = await _categoryRepository.GetAllCategoriesForUser(userId);
+        List<Category> categories = await _categoryRepository.GetAllCategoriesForUser(user.Id);
 
         List<CategoryResponse> response = categories.Select(x => x.ToCategoryResponse())
             .ToList();
 
         return response;
     }
+    
 }

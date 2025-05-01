@@ -3,7 +3,7 @@ using FamilyBudgetTracker.Backend.Messages.Personal;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Category;
 using FluentValidation;
 
-namespace FamilyBudgetTracker.Backend.Validation.Personal.Category;
+namespace FamilyBudgetTracker.Backend.Validators.Personal.Category;
 
 public class UpdateCategoryRequestValidator : AbstractValidator<UpdateCategoryRequest>
 {

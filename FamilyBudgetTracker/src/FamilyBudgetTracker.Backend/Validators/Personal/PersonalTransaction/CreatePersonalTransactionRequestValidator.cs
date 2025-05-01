@@ -2,11 +2,11 @@ using FamilyBudgetTracker.Backend.Messages.Personal;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
 using FluentValidation;
 
-namespace FamilyBudgetTracker.Backend.Validation.Personal.PersonalTransaction;
+namespace FamilyBudgetTracker.Backend.Validators.Personal.PersonalTransaction;
 
-public class UpdatePersonalTransactionRequestValidator : AbstractValidator<UpdatePersonalTransactionRequest>
+public class CreatePersonalTransactionRequestValidator : AbstractValidator<CreatePersonalTransactionRequest>
 {
-    public UpdatePersonalTransactionRequestValidator()
+    public CreatePersonalTransactionRequestValidator()
     {
         RuleFor(x => x.Amount)
             .NotEmpty()

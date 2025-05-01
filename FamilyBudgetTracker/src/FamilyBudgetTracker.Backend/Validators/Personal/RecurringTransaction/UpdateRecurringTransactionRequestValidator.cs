@@ -3,7 +3,7 @@ using FamilyBudgetTracker.Backend.Messages.Personal;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.RecurringTransaction;
 using FluentValidation;
 
-namespace FamilyBudgetTracker.Backend.Validation.Personal.RecurringTransaction;
+namespace FamilyBudgetTracker.Backend.Validators.Personal.RecurringTransaction;
 
 public class UpdateRecurringTransactionRequestValidator : AbstractValidator<UpdateRecurringTransactionRequest>
 {

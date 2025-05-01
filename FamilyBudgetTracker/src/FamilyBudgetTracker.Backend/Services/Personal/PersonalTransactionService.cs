@@ -1,6 +1,7 @@
 using FamilyBudgetTracker.Backend.Mappers.Personal;
 using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.Backend.Messages.Personal;
+using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Entities.Common;
@@ -9,7 +10,6 @@ using FamilyBudgetTracker.BE.Commons.Exceptions;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
 using FamilyBudgetTracker.BE.Commons.Services.Personal;
-using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Services.Personal;
 
@@ -32,25 +32,13 @@ public class PersonalTransactionService : IPersonalTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
-        if (category is null)
-        {
-            throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
-        }
-
-        if (category.User.Id != userId)
-        {
-            throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
-        }
+        category = category.ValidateCategory(user.Id);
 
         PersonalTransaction transaction = request.ToPersonalTransaction();
-
         transaction.User = user;
         transaction.Category = category;
 
@@ -61,40 +49,17 @@ public class PersonalTransactionService : IPersonalTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
-        if (category is null)
-        {
-            throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
-        }
-
-        if (category.User.Id != userId)
-        {
-            throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
-        }
+        category = category.ValidateCategory(user.Id);
 
         PersonalTransaction? transaction = await _transactionRepository.GetTransactionById(id);
 
-        if (transaction is null)
-        {
-            throw new ResourceNotFoundException(PersonalTransactionMessages.NoTransactionFound);
-        }
-
-        if (transaction.User.Id != userId)
-        {
-            throw new InvalidOperationException(PersonalTransactionMessages.TransactionIsNotFromTheUser);
-        }
+        transaction = transaction.ValidatePersonalTransaction(user.Id);
 
         PersonalTransaction updatedTransaction = request.ToPersonalTransaction(transaction);
-
-        updatedTransaction.Id = transaction.Id;
-        updatedTransaction.Category = category;
-        updatedTransaction.User = user;
 
         await _transactionRepository.UpdateTransaction(updatedTransaction);
     }
@@ -103,39 +68,24 @@ public class PersonalTransactionService : IPersonalTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         PersonalTransaction? transaction = await _transactionRepository.GetTransactionById(id);
 
-        if (transaction is null)
-        {
-            throw new ResourceNotFoundException(PersonalTransactionMessages.NoTransactionFound);
-        }
-
-        if (transaction.User.Id != userId)
-        {
-            throw new InvalidOperationException(PersonalTransactionMessages.DeleteImpossible);
-        }
+        transaction = transaction.ValidatePersonalTransaction(user.Id);
 
         await _transactionRepository.DeleteTransaction(transaction);
     }
 
     public async Task<PersonalTransactionResponse> GetTransactionById(int id, string userId)
     {
+        User? user = await _userRepository.GetById(userId);
+
+        user = user.ValidateUser();
+
         PersonalTransaction? transaction = await _transactionRepository.GetTransactionById(id);
 
-        if (transaction is null)
-        {
-            throw new ResourceNotFoundException(PersonalTransactionMessages.NoTransactionFound);
-        }
-
-        if (transaction.User.Id != userId)
-        {
-            throw new InvalidOperationException(PersonalTransactionMessages.TransactionIsNotFromTheUser);
-        }
+        transaction = transaction.ValidatePersonalTransaction(user.Id);
 
         PersonalTransactionResponse response = transaction.ToPersonalTransactionResponse();
 
@@ -147,13 +97,10 @@ public class PersonalTransactionService : IPersonalTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         List<PersonalTransaction> transactions =
-            await _transactionRepository.GetTransactionForPeriod(userId, startDate, endDate);
+            await _transactionRepository.GetTransactionForPeriod(user.Id, startDate, endDate);
 
         List<PersonalTransactionResponse> response = transactions.Select(x => x.ToPersonalTransactionResponse())
             .ToList();
@@ -166,14 +113,10 @@ public class PersonalTransactionService : IPersonalTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         List<PersonalTransaction> transactions =
-            await _transactionRepository.GetTransactionForPeriod(userId, startDate, endDate);
-
+            await _transactionRepository.GetTransactionForPeriod(user.Id, startDate, endDate);
 
         var response = GenerateTransactionForPeriodSummaryResponse(transactions);
 
@@ -181,7 +124,7 @@ public class PersonalTransactionService : IPersonalTransactionService
     }
 
 
-    private TransactionForPeriodSummaryResponse GenerateTransactionForPeriodSummaryResponse(List<PersonalTransaction> transactions)
+    private static TransactionForPeriodSummaryResponse GenerateTransactionForPeriodSummaryResponse(List<PersonalTransaction> transactions)
     {
         var expenseSum = 0.0m;
         var incomeSum = 0.0m;
@@ -190,7 +133,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         {
             var transactionCategory = transaction.Category;
             var transactionAmount = transaction.Amount;
-            
+
             if (transactionCategory.Type == CategoryType.Income)
             {
                 incomeSum += transactionAmount;

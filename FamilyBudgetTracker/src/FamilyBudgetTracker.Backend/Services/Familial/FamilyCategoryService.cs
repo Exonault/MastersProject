@@ -1,6 +1,7 @@
 ﻿using FamilyBudgetTracker.Backend.Mappers.Familial;
 using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.Backend.Messages.Familial;
+using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Familial.FamilyCategory;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Entities.Familial;
@@ -30,27 +31,13 @@ public class FamilyCategoryService : IFamilyCategoryService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
-
-        if (user.Family is null)
-        {
-            throw new ResourceNotFoundException(UserMessages.ValidationMessages.NoFamilyForUser);
-        }
+        user = user.ValidateUser();
 
         Family? family = await _familyRepository.GetFamilyById(request.FamilyId);
 
-        if (family is null)
-        {
-            throw new ResourceNotFoundException(FamilyMessages.FamilyNotFound);
-        }
+        family = family.ValidateFamily();
 
-        if (user.Family.Id != family.Id)
-        {
-            throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
-        }
+        user.ValidateUserFamily(family.Id);
 
         FamilyCategory familyCategory = request.ToFamilyCategory();
         familyCategory.Family = family;
@@ -62,43 +49,19 @@ public class FamilyCategoryService : IFamilyCategoryService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
-
-        if (user.Family is null)
-        {
-            throw new ResourceNotFoundException(UserMessages.ValidationMessages.NoFamilyForUser);
-        }
+        user = user.ValidateUser();
 
         Family? family = await _familyRepository.GetFamilyById(request.FamilyId);
 
-        if (family is null)
-        {
-            throw new ResourceNotFoundException(FamilyMessages.FamilyNotFound);
-        }
+        family = family.ValidateFamily();
 
-        if (user.Family.Id != family.Id)
-        {
-            throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
-        }
+        user.ValidateUserFamily(family.Id);
 
         FamilyCategory? familyCategory = await _familyCategoryRepository.GetCategoryById(id);
 
-        if (familyCategory is null)
-        {
-            throw new ResourceNotFoundException(FamilyCategoryMessages.FamilyCategoryNotFound);
-        }
-
-        if (familyCategory.Family.Id != family.Id)
-        {
-            throw new InvalidOperationException(FamilyCategoryMessages.FamilyCategoryIsNotFromFamily);
-        }
+        familyCategory = familyCategory.ValidateFamilyCategory(family.Id);
 
         FamilyCategory updatedCategory = request.ToFamilyCategory(familyCategory);
-        updatedCategory.Id = familyCategory.Id;
-        updatedCategory.Family = family;
 
         await _familyCategoryRepository.UpdateFamilyCategory(updatedCategory);
     }
@@ -107,10 +70,7 @@ public class FamilyCategoryService : IFamilyCategoryService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         if (user.Family is null)
         {
@@ -136,10 +96,7 @@ public class FamilyCategoryService : IFamilyCategoryService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         if (user.Family is null)
         {
@@ -167,20 +124,9 @@ public class FamilyCategoryService : IFamilyCategoryService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
-        if (user.Family is null)
-        {
-            throw new ResourceNotFoundException(UserMessages.ValidationMessages.NoFamilyForUser);
-        }
-
-        if (user.Family.Id != familyId)
-        {
-            throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
-        }
+        user.ValidateUserFamily(familyId);
 
         List<FamilyCategory> categories = await _familyCategoryRepository.GetCategoriesByFamilyId(familyId);
 

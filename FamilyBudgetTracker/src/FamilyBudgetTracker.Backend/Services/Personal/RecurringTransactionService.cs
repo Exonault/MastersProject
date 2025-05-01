@@ -1,6 +1,7 @@
 using FamilyBudgetTracker.Backend.Mappers.Personal;
 using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.Backend.Messages.Personal;
+using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.RecurringTransaction;
 using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Entities.Common;
@@ -32,22 +33,11 @@ public class RecurringTransactionService : IRecurringTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
-        if (category is null)
-        {
-            throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
-        }
-
-        if (category.User.Id != userId)
-        {
-            throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
-        }
+        category = category.ValidateCategory(user.Id);
 
         RecurringTransaction transaction = request.ToRecurringTransaction();
 
@@ -63,41 +53,18 @@ public class RecurringTransactionService : IRecurringTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
-        if (category is null)
-        {
-            throw new ResourceNotFoundException(CategoryMessages.NoCategoryFound);
-        }
-
-        if (category.User.Id != userId)
-        {
-            throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
-        }
+        category = category.ValidateCategory(user.Id);
 
         RecurringTransaction? transaction = await _recurringTransactionRepository.GetRecurringTransactionById(id);
 
-        if (transaction is null)
-        {
-            throw new ResourceNotFoundException(RecurringTransactionMessages.NoTransactionFound);
-        }
-
-        if (transaction.User.Id != userId)
-        {
-            throw new InvalidOperationException(RecurringTransactionMessages.TransactionIsNotFromTheUser);
-        }
+        transaction = transaction.ValidateRecurringTransaction(user.Id);
 
         RecurringTransaction updatedTransaction = request.ToRecurringTransaction(transaction);
 
-        updatedTransaction.Id = transaction.Id;
-        updatedTransaction.Category = category;
-        updatedTransaction.User = user;
-        
         await _recurringTransactionRepository.UpdateRecurringTransaction(updatedTransaction);
     }
 
@@ -105,22 +72,11 @@ public class RecurringTransactionService : IRecurringTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         RecurringTransaction? transaction = await _recurringTransactionRepository.GetRecurringTransactionById(id);
 
-        if (transaction is null)
-        {
-            throw new ResourceNotFoundException(PersonalTransactionMessages.NoTransactionFound);
-        }
-
-        if (transaction.User.Id != userId)
-        {
-            throw new InvalidOperationException(PersonalTransactionMessages.DeleteImpossible);
-        }
+        transaction = transaction.ValidateRecurringTransaction(user.Id);
 
         await _recurringTransactionRepository.DeleteRecurringTransaction(transaction);
     }
@@ -129,22 +85,11 @@ public class RecurringTransactionService : IRecurringTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         RecurringTransaction? transaction = await _recurringTransactionRepository.GetRecurringTransactionById(id);
 
-        if (transaction is null)
-        {
-            throw new ResourceNotFoundException(PersonalTransactionMessages.NoTransactionFound);
-        }
-
-        if (transaction.User.Id != userId)
-        {
-            throw new InvalidOperationException(PersonalTransactionMessages.TransactionIsNotFromTheUser);
-        }
+        transaction = transaction.ValidateRecurringTransaction(user.Id);
 
         RecurringTransactionResponse response = transaction.ToRecurringTransactionResponse();
 
@@ -155,13 +100,10 @@ public class RecurringTransactionService : IRecurringTransactionService
     {
         User? user = await _userRepository.GetById(userId);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
-        }
+        user = user.ValidateUser();
 
         List<RecurringTransaction> transactions =
-            await _recurringTransactionRepository.GetRecurringTransactionsByUserid(userId);
+            await _recurringTransactionRepository.GetRecurringTransactionsByUserid(user.Id);
 
         List<RecurringTransactionResponse> response = transactions.Select(x => x.ToRecurringTransactionResponse())
             .ToList();
@@ -202,6 +144,4 @@ public class RecurringTransactionService : IRecurringTransactionService
 
         return result;
     }
-    
-   
 }

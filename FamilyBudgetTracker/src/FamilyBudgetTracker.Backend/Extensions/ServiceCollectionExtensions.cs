@@ -133,5 +133,7 @@ public static class ServiceCollectionExtensions
 
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
             });
+        
+        //Do policies for family
     }
 }

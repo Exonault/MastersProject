@@ -50,7 +50,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseOutputCache();
+// app.UseOutputCache();
 
 //Map endpoints
 app.MapApplicationEndpoints();

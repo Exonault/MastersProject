@@ -14,5 +14,5 @@ public interface IPersonalTransactionService
 
     Task<List<PersonalTransactionResponse>> GetTransactionForPeriod(DateOnly startDate, DateOnly endDate, string userId);
 
-
+    Task<TransactionForPeriodSummaryResponse> GetTransactionForPeriodSummary(DateOnly startDate, DateOnly endDate, string userId);
 }

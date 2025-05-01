@@ -3,6 +3,7 @@ using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.Backend.Messages.Personal;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
 using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Entities.Common;
 using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 using FamilyBudgetTracker.BE.Commons.Exceptions;
 using FamilyBudgetTracker.BE.Commons.Repositories;
@@ -158,5 +159,59 @@ public class PersonalTransactionService : IPersonalTransactionService
             .ToList();
 
         return response;
+    }
+
+    public async Task<TransactionForPeriodSummaryResponse> GetTransactionForPeriodSummary(DateOnly startDate, DateOnly endDate,
+        string userId)
+    {
+        User? user = await _userRepository.GetById(userId);
+
+        if (user is null)
+        {
+            throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
+        }
+
+        List<PersonalTransaction> transactions =
+            await _transactionRepository.GetTransactionForPeriod(userId, startDate, endDate);
+
+
+        var response = GenerateTransactionForPeriodSummaryResponse(transactions);
+
+        return response;
+    }
+
+
+    private TransactionForPeriodSummaryResponse GenerateTransactionForPeriodSummaryResponse(List<PersonalTransaction> transactions)
+    {
+        var expenseSum = 0.0m;
+        var incomeSum = 0.0m;
+        var expenseCategoryAmounts = new Dictionary<string, decimal>();
+        foreach (var transaction in transactions)
+        {
+            var transactionCategory = transaction.Category;
+            var transactionAmount = transaction.Amount;
+            
+            if (transactionCategory.Type == CategoryType.Income)
+            {
+                incomeSum += transactionAmount;
+            }
+            else if (transactionCategory.Type == CategoryType.Expense)
+            {
+                expenseSum += transactionAmount;
+                if (!expenseCategoryAmounts.TryAdd(transactionCategory.Name, transactionAmount))
+                {
+                    expenseCategoryAmounts[transactionCategory.Name] += transactionAmount;
+                }
+            }
+        }
+
+        var result = new TransactionForPeriodSummaryResponse
+        {
+            IncomeAmount = incomeSum,
+            ExpenseAmount = expenseSum,
+            ExpenseCategoryAmounts = expenseCategoryAmounts
+        };
+
+        return result;
     }
 }

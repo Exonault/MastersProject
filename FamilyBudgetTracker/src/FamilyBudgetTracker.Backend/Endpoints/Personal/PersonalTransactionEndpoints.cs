@@ -68,6 +68,17 @@ public static class PersonalTransactionEndpoints
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Get all transactions for given period")
             .WithOpenApi();
+
+        transactionsGroup.MapGet("/period/summary", GetTransactionsForPeriodSummary)
+            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .Produces(StatusCodes.Status200OK, typeof(TransactionForPeriodSummaryResponse), "application/json")
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Get a summary for all transactions for given period")
+            .WithOpenApi();
     }
 
     private static async Task<IResult> CreateTransaction([FromBody] CreatePersonalTransactionRequest request,
@@ -119,5 +130,15 @@ public static class PersonalTransactionEndpoints
             transactions = await service.GetTransactionForPeriod(startDate, endDate, userId);
 
         return Results.Ok(transactions);
+    }
+
+    private static async Task<IResult> GetTransactionsForPeriodSummary([FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate,
+        IPersonalTransactionService service, HttpContext httpContext)
+    {
+        string userId = httpContext.GetUserIdFromAuth();
+
+        var summary = await service.GetTransactionForPeriodSummary(startDate, endDate, userId);
+
+        return Results.Ok(summary);
     }
 }

@@ -29,6 +29,7 @@ public static class EntityServicesExtensions
         //TODO
         services.AddFamilyServices();
         services.AddFamilyCategoryServices();
+        services.AddFamilyTransactionServices();
     }
 
     private static void AddUserServices(this IServiceCollection services)
@@ -64,6 +65,7 @@ public static class EntityServicesExtensions
     private static void AddFamilyCategoryServices(this IServiceCollection services)
     {
         services.AddScoped<IFamilyCategoryRepository, FamilyCategoryRepository>();
+        services.AddScoped<IFamilyCategoryService, FamilyCategoryService>();
     }
 
     private static void AddFamilyTransactionServices(this IServiceCollection services)

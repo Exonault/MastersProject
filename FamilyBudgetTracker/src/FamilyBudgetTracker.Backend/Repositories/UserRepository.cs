@@ -1,5 +1,7 @@
 using FamilyBudgetTracker.Backend.Constants;
+using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.BE.Commons.Entities;
+using FamilyBudgetTracker.BE.Commons.Exceptions;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using Microsoft.AspNetCore.Identity;
 
@@ -61,8 +63,12 @@ public class UserRepository : IUserRepository
         {
             return ApplicationConstants.RoleTypes.FamilyAdminRoleType;
         }
+        else if (roles.Contains(ApplicationConstants.RoleTypes.FamilyMemberRoleType))
+        {
+            return ApplicationConstants.RoleTypes.FamilyMemberRoleType;
+        }
 
-        return ApplicationConstants.RoleTypes.FamilyMemberRoleType;
+        throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
     }
 
     public async Task UpdateUser(User user)

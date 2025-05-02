@@ -63,9 +63,9 @@ public static class FamilyEndpoints
     {
         var userId = httpContext.GetUserIdFromAuth();
 
-        await service.CreateFamily(request, userId);
+        string updatedToken = await service.CreateFamily(request, userId);
 
-        return Results.Ok();
+        return Results.Ok(updatedToken);
     }
 
     private static async Task<IResult> DeleteFamily([FromRoute] Guid id,

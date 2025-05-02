@@ -1,12 +1,14 @@
 ﻿namespace FamilyBudgetTracker.BE.Commons.Entities.Familial;
 
-public class FamilyVerificationToken
+public class FamilyInvitationToken
 {
     public Guid Id { get; set; }
 
     // public User User { get; set; }
 
     public string Email { get; set; }
+
+    public string FamilyId { get; set; }
 
     public bool UserInApplication { get; set; }
 

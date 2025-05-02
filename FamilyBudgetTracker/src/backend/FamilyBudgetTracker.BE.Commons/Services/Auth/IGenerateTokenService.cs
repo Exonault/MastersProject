@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 using FamilyBudgetTracker.BE.Commons.Entities;
 
-namespace FamilyBudgetTracker.BE.Commons.Services;
+namespace FamilyBudgetTracker.BE.Commons.Services.Auth;
 
-public interface ITokenService
+public interface IGenerateTokenService
 {
-    string GenerateAccessToken(User user, List<string> roles);
+    Task<string> GenerateAccessToken(User user);
 
     string GenerateRefreshToken();
 

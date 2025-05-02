@@ -1,6 +1,6 @@
 using FamilyBudgetTracker.BE.Commons.Contracts.User;
 
-namespace FamilyBudgetTracker.BE.Commons.Services;
+namespace FamilyBudgetTracker.BE.Commons.Services.Auth;
 
 public interface IUserService
 {
@@ -10,5 +10,7 @@ public interface IUserService
 
     Task<LoginResponse> Refresh(RefreshRequest request);
 
-    Task Revoke(); 
+    Task Revoke();
+
+    Task<bool> AddUserToFamily(string tokenId, string familyId);
 }

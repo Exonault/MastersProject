@@ -1,5 +1,4 @@
 ﻿using FamilyBudgetTracker.Backend.Constants;
-using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Familial.Family;
 using FamilyBudgetTracker.BE.Commons.Contracts.User;
 using FamilyBudgetTracker.BE.Commons.Entities;
@@ -9,6 +8,7 @@ using FamilyBudgetTracker.BE.Commons.Mappers.Familial;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using FamilyBudgetTracker.BE.Commons.Repositories.Familial;
 using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Commons.Services.Auth;
 using FamilyBudgetTracker.BE.Commons.Services.Familial;
 using FamilyBudgetTracker.BE.Commons.Validation;
 
@@ -19,19 +19,21 @@ public class FamilyService : IFamilyService
     private readonly IFamilyRepository _familyRepository;
     private readonly IUserRepository _userRepository;
     private readonly ISendEmailService _sendEmailService;
-    private readonly IFamilyVerificationTokenRepository _familyVerificationTokenRepository;
+    private readonly IFamilyInvitationTokenRepository _familyInvitationTokenRepository;
+    private readonly IGenerateTokenService _generateTokenService;
 
 
     public FamilyService(IFamilyRepository familyRepository, IUserRepository userRepository, ISendEmailService sendEmailService,
-        IFamilyVerificationTokenRepository familyVerificationTokenRepository)
+        IFamilyInvitationTokenRepository familyInvitationTokenRepository, IGenerateTokenService generateTokenService)
     {
         _familyRepository = familyRepository;
         _userRepository = userRepository;
         _sendEmailService = sendEmailService;
-        _familyVerificationTokenRepository = familyVerificationTokenRepository;
+        _familyInvitationTokenRepository = familyInvitationTokenRepository;
+        _generateTokenService = generateTokenService;
     }
 
-    public async Task CreateFamily(CreateFamilyRequest request, string userId)
+    public async Task<string> CreateFamily(CreateFamilyRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -49,14 +51,22 @@ public class FamilyService : IFamilyService
         await _userRepository.UpdateUser(user);
 
         await _userRepository.AddToRole(user, ApplicationConstants.RoleTypes.FamilyAdminRoleType);
+
+        string accessToken = await _generateTokenService.GenerateAccessToken(user);
+
+        return accessToken;
     }
 
-    public async Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, int familyId)
+    public async Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, string familyId)
     {
         //TODO send emails to join with code. 
         // Similar to https://www.youtube.com/watch?v=KtCjH-1iCIk
 
         List<string> inviteList = request.InviteList;
+
+        Family? family = await _familyRepository.GetFamilyById(familyId);
+
+        family = family.ValidateFamily();
 
         foreach (string email in inviteList)
         {
@@ -64,18 +74,20 @@ public class FamilyService : IFamilyService
 
             bool userInApplicationFlag = user is null;
 
-            var familyVerificationToken = new FamilyVerificationToken
+            var dateUtc = DateTime.UtcNow;
+            var familyInvitationToken = new FamilyInvitationToken
             {
                 Id = Guid.NewGuid(),
                 Email = email,
+                FamilyId = familyId,
                 UserInApplication = userInApplicationFlag,
-                CreatedOnUtc = DateTime.UtcNow,
-                ExpiresOnUtc = DateTime.UtcNow.AddDays(1)
+                CreatedOnUtc = dateUtc,
+                ExpiresOnUtc = dateUtc.AddDays(1)
             };
 
-            await _familyVerificationTokenRepository.CreateVerificationToken(familyVerificationToken);
-            
-            
+            await _familyInvitationTokenRepository.CreateInvitationToken(familyInvitationToken);
+
+            await _sendEmailService.SendFamilyInvitationEmail(familyInvitationToken);
         }
     }
 

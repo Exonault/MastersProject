@@ -17,7 +17,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Family> Family { get; set; }
     public DbSet<FamilyCategory> FamilyCategories { get; set; }
     public DbSet<FamilyTransaction> FamilyTransactions { get; set; }
-    public DbSet<FamilyVerificationToken> FamilyVerificationTokens { get; set; }
+    public DbSet<FamilyInvitationToken> FamilyInvitationTokens { get; set; }
     
     
     

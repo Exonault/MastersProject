@@ -5,26 +5,31 @@ using System.Text;
 using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.BE.Commons.Entities;
-using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Commons.Repositories;
+using FamilyBudgetTracker.BE.Commons.Services.Auth;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FamilyBudgetTracker.Backend.Services;
+namespace FamilyBudgetTracker.Backend.Services.Auth;
 
-public class TokenService : ITokenService
+public class GenerateTokenService : IGenerateTokenService
 {
     private readonly IConfiguration _config;
+    private readonly IUserRepository _userRepository;
 
-    public TokenService(IConfiguration config, IHttpContextAccessor httpContextAccessor)
+    public GenerateTokenService(IConfiguration config, IUserRepository userRepository)
     {
         _config = config;
+        _userRepository = userRepository;
     }
 
     private static readonly TimeSpan TokenDuration = TimeSpan.FromHours(8); // test
     // private static readonly TimeSpan TokenDuration = TimeSpan.FromMinutes(5);
 
 
-    public string GenerateAccessToken(User user, List<string> roles)
+    public async Task<string> GenerateAccessToken(User user)
     {
+        List<string> roles = await _userRepository.GetAllRoles(user);
+
         var tokenHandler = new JwtSecurityTokenHandler();
         string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(ApplicationMessages.SecretNotConfigured);
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));

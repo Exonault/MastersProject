@@ -1,6 +1,6 @@
 using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.BE.Commons.Contracts.User;
-using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Commons.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
@@ -47,9 +47,12 @@ public static class UserEndpoint
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Revoke all tokens")
             .WithOpenApi();
-        
+
         // group.MapPost("/test", async (IEmailService emailService) => { await emailService.SendTestEmail(); });
 
+        group.MapGet("joinFamily/{token:guid}", JoinFamily)
+            .WithSummary("Adds user to a family")
+            .WithName(ApplicationConstants.FamilyJoining.JoinFamily);
     }
 
     private static async Task<IResult> Register([FromBody] RegisterRequest request, IUserService service)
@@ -79,6 +82,11 @@ public static class UserEndpoint
     private static async Task<IResult> Revoke(IUserService service)
     {
         await service.Revoke();
+        return Results.Ok();
+    }
+
+    private static async Task<IResult> JoinFamily([FromRoute] Guid token, IUserService service)
+    {
         return Results.Ok();
     }
 }

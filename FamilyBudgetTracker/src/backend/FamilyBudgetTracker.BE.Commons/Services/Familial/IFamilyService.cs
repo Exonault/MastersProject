@@ -4,9 +4,9 @@ namespace FamilyBudgetTracker.BE.Commons.Services.Familial;
 
 public interface IFamilyService
 {
-    Task CreateFamily(CreateFamilyRequest request, string userId);
+    Task<string> CreateFamily(CreateFamilyRequest request, string userId);
 
-    Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, int familyId);
+    Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, string familyId);
 
     Task DeleteFamily(string id, string userId);
 

@@ -56,4 +56,9 @@ public static class ApplicationConstants
         public const string NumberRegex = @"[0-1]+";
         public const string SpecialCharacterRegex = @"[\!\?\*\.]+";
     }
+
+    public static class FamilyJoining
+    {
+        public const string JoinFamily = "Join family";
+    }
 }

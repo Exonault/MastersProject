@@ -1,13 +1,14 @@
-﻿using FamilyBudgetTracker.Backend.Repositories;
+﻿using FamilyBudgetTracker.Backend.Factory;
+using FamilyBudgetTracker.Backend.Repositories;
 using FamilyBudgetTracker.Backend.Repositories.Familial;
 using FamilyBudgetTracker.Backend.Repositories.Personal;
-using FamilyBudgetTracker.Backend.Services;
+using FamilyBudgetTracker.Backend.Services.Auth;
 using FamilyBudgetTracker.Backend.Services.Familial;
 using FamilyBudgetTracker.Backend.Services.Personal;
 using FamilyBudgetTracker.BE.Commons.Repositories;
 using FamilyBudgetTracker.BE.Commons.Repositories.Familial;
 using FamilyBudgetTracker.BE.Commons.Repositories.Personal;
-using FamilyBudgetTracker.BE.Commons.Services;
+using FamilyBudgetTracker.BE.Commons.Services.Auth;
 using FamilyBudgetTracker.BE.Commons.Services.Familial;
 using FamilyBudgetTracker.BE.Commons.Services.Personal;
 
@@ -37,7 +38,8 @@ public static class EntityServicesExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserService>();
 
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IGenerateTokenService, GenerateTokenService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
     }
 
     private static void AddCategoryServices(this IServiceCollection services)
@@ -63,7 +65,8 @@ public static class EntityServicesExtensions
         services.AddScoped<IFamilyRepository, FamilyRepository>();
         services.AddScoped<IFamilyService, FamilyService>();
 
-        services.AddScoped<IFamilyVerificationTokenRepository, FamilyVerificationTokenRepository>();
+        services.AddScoped<IFamilyInvitationTokenRepository, FamilyInvitationTokenRepository>();
+        services.AddScoped<FamilyInvitationLinkFactory>();
     }
 
     private static void AddFamilyCategoryServices(this IServiceCollection services)

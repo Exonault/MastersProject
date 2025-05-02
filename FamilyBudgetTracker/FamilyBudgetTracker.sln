@@ -4,11 +4,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1D743532-2A3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{92AF045D-CEFB-4F9D-9FDE-53C163F45C90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.BE.Commons", "src\FamilyBudgetTracker.BE.Commons\FamilyBudgetTracker.BE.Commons.csproj", "{0479A258-3032-41B6-874B-FA5EBE921E8D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Backend", "src\FamilyBudgetTracker.Backend\FamilyBudgetTracker.Backend.csproj", "{B2B0CABA-F2C3-4869-8C5C-C33FA21C736E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Tests", "test\FamilyBudgetTracker.Tests\FamilyBudgetTracker.Tests.csproj", "{A0FC5E47-6832-433E-8218-9D1CF862BDFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{46E948C8-60D8-453C-B881-73DB69330ACB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{71921C35-EF07-487C-A7F0-B4ED03624390}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.BE.Commons", "src\backend\FamilyBudgetTracker.BE.Commons\FamilyBudgetTracker.BE.Commons.csproj", "{0923AFC1-A025-4DA0-85A1-D1F9D148FE60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Backend", "src\backend\FamilyBudgetTracker.Backend\FamilyBudgetTracker.Backend.csproj", "{92D6FA22-FEF6-4AFF-88FB-ECB7EA64B41E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,22 +20,24 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0479A258-3032-41B6-874B-FA5EBE921E8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0479A258-3032-41B6-874B-FA5EBE921E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0479A258-3032-41B6-874B-FA5EBE921E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0479A258-3032-41B6-874B-FA5EBE921E8D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2B0CABA-F2C3-4869-8C5C-C33FA21C736E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2B0CABA-F2C3-4869-8C5C-C33FA21C736E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2B0CABA-F2C3-4869-8C5C-C33FA21C736E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2B0CABA-F2C3-4869-8C5C-C33FA21C736E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0FC5E47-6832-433E-8218-9D1CF862BDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A0FC5E47-6832-433E-8218-9D1CF862BDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0FC5E47-6832-433E-8218-9D1CF862BDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0FC5E47-6832-433E-8218-9D1CF862BDFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0923AFC1-A025-4DA0-85A1-D1F9D148FE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0923AFC1-A025-4DA0-85A1-D1F9D148FE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0923AFC1-A025-4DA0-85A1-D1F9D148FE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0923AFC1-A025-4DA0-85A1-D1F9D148FE60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92D6FA22-FEF6-4AFF-88FB-ECB7EA64B41E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92D6FA22-FEF6-4AFF-88FB-ECB7EA64B41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92D6FA22-FEF6-4AFF-88FB-ECB7EA64B41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92D6FA22-FEF6-4AFF-88FB-ECB7EA64B41E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0479A258-3032-41B6-874B-FA5EBE921E8D} = {1D743532-2A3B-4812-AE9A-179D08A7D45A}
-		{B2B0CABA-F2C3-4869-8C5C-C33FA21C736E} = {1D743532-2A3B-4812-AE9A-179D08A7D45A}
 		{A0FC5E47-6832-433E-8218-9D1CF862BDFD} = {92AF045D-CEFB-4F9D-9FDE-53C163F45C90}
+		{46E948C8-60D8-453C-B881-73DB69330ACB} = {1D743532-2A3B-4812-AE9A-179D08A7D45A}
+		{71921C35-EF07-487C-A7F0-B4ED03624390} = {1D743532-2A3B-4812-AE9A-179D08A7D45A}
+		{0923AFC1-A025-4DA0-85A1-D1F9D148FE60} = {46E948C8-60D8-453C-B881-73DB69330ACB}
+		{92D6FA22-FEF6-4AFF-88FB-ECB7EA64B41E} = {46E948C8-60D8-453C-B881-73DB69330ACB}
 	EndGlobalSection
 EndGlobal

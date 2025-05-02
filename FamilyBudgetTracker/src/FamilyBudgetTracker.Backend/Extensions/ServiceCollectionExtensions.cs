@@ -41,7 +41,7 @@ public static class ServiceCollectionExtensions
         services.AddProblemDetails();
 
         services.AddExceptionHandler<InvalidEmailExceptionHandler>();
-        services.AddExceptionHandler<InvalidOperationExceptionHandler>();
+        services.AddExceptionHandler<OperationNotAllowedExceptionHandler>();
         services.AddExceptionHandler<UserAlreadyRegisteredExceptionHandler>();
         services.AddExceptionHandler<UserNotFoundExceptionHandler>();
         services.AddExceptionHandler<MappingExceptionHandler>();
@@ -117,7 +117,10 @@ public static class ServiceCollectionExtensions
                     ClockSkew = TimeSpan.FromSeconds(5),
                 };
             });
+    }
 
+    public static void AddApplicationAuthorizationServices(this IServiceCollection service)
+    {
         service.AddAuthorizationBuilder()
             .AddPolicy(ApplicationConstants.PolicyNames.AdminRolePolicyName, p =>
             {
@@ -132,8 +135,26 @@ public static class ServiceCollectionExtensions
                     ApplicationConstants.ClaimNames.UserRoleClaimName);
 
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
+            })
+            .AddPolicy(ApplicationConstants.PolicyNames.FamilyAdminPolicyName, p =>
+            {
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimNames.UserRoleClaimName);
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimNames.FamilyAdminClaimName);
+
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimFamilyIdType);
+            })
+            .AddPolicy(ApplicationConstants.PolicyNames.FamilyMemberPolicyName, p =>
+            {
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimNames.UserRoleClaimName);
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimNames.FamilyMemberClaimName);
+
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimFamilyIdType);
             });
-        
-        //Do policies for family
     }
 }

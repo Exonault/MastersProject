@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FamilyBudgetTracker.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250423153212_Initial")]
+    [Migration("20250502130631_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -27,11 +27,9 @@ namespace FamilyBudgetTracker.Backend.Migrations
 
             modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.Family", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -50,8 +48,8 @@ namespace FamilyBudgetTracker.Backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("FamilyId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Icon")
                         .HasColumnType("text");
@@ -92,8 +90,8 @@ namespace FamilyBudgetTracker.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("FamilyId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateOnly>("TransactionDate")
                         .HasColumnType("date");
@@ -110,6 +108,30 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("FamilyTransactions");
+                });
+
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyVerificationToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ExpiresOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("UserInApplication")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FamilyVerificationTokens");
                 });
 
             modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.Category", b =>
@@ -241,8 +263,8 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("FamilyId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("FamilyId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -469,7 +491,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
             modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyTransaction", b =>
                 {
                     b.HasOne("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyCategory", "Category")
-                        .WithMany()
+                        .WithMany("FamilyTransactions")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -607,6 +629,11 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     b.Navigation("FamilyMembers");
 
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Familial.FamilyCategory", b =>
+                {
+                    b.Navigation("FamilyTransactions");
                 });
 
             modelBuilder.Entity("FamilyBudgetTracker.BE.Commons.Entities.Personal.Category", b =>

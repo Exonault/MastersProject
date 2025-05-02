@@ -12,12 +12,6 @@ public class CreateFamilyRequestValidator : AbstractValidator<CreateFamilyReques
             .NotEmpty()
             .WithMessage(FamilyMessages.NameRequired);
 
-        RuleFor(x => x.InviteList)
-            .NotNull()
-            .WithMessage(FamilyMessages.InvitesRequired);
-
-        RuleForEach(x => x.InviteList)
-            .EmailAddress()
-            .WithMessage(FamilyMessages.ItemIsNotEmail);
+     
     }
 }

@@ -26,12 +26,12 @@ public class FamilyRepository : IFamilyRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Family?> GetFamilyById(int id)
+    public async Task<Family?> GetFamilyById(string id)
     {
         return await _dbContext.Family
             // .Include(f => f.Categories)
             .Include(f => f.FamilyMembers)
-            .FirstOrDefaultAsync(f => f.Id == id);
+            .FirstOrDefaultAsync(f => f.Id == Guid.Parse(id));
     }
 
     public async Task<List<Family>> GetAllFamilies()

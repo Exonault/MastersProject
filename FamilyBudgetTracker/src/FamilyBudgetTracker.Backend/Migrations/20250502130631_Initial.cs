@@ -32,13 +32,27 @@ namespace FamilyBudgetTracker.Backend.Migrations
                 name: "Family",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Family", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FamilyVerificationTokens",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    UserInApplication = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExpiresOnUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FamilyVerificationTokens", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,7 +83,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     RefreshToken = table.Column<string>(type: "text", nullable: true),
                     RefreshTokenExpiry = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FamilyId = table.Column<int>(type: "integer", nullable: true),
+                    FamilyId = table.Column<Guid>(type: "uuid", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -105,7 +119,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     Icon = table.Column<string>(type: "text", nullable: true),
                     Type = table.Column<string>(type: "text", nullable: false),
                     Limit = table.Column<decimal>(type: "numeric", nullable: true),
-                    FamilyId = table.Column<int>(type: "integer", nullable: false)
+                    FamilyId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,7 +251,7 @@ namespace FamilyBudgetTracker.Backend.Migrations
                     TransactionDate = table.Column<DateOnly>(type: "date", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true),
-                    FamilyId = table.Column<int>(type: "integer", nullable: false)
+                    FamilyId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -441,6 +455,9 @@ namespace FamilyBudgetTracker.Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "FamilyTransactions");
+
+            migrationBuilder.DropTable(
+                name: "FamilyVerificationTokens");
 
             migrationBuilder.DropTable(
                 name: "RecurringTransactions");

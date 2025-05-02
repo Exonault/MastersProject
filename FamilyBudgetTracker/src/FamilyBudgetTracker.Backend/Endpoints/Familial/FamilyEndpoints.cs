@@ -24,7 +24,7 @@ public static class FamilyEndpoints
             .WithSummary("Create a family")
             .WithOpenApi();
 
-        familyGroup.MapDelete("/{id:int}", DeleteFamily)
+        familyGroup.MapDelete("/{id:guid}", DeleteFamily)
             // .RequireAuthorization(userAdminPolicy)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -35,7 +35,7 @@ public static class FamilyEndpoints
             .WithSummary("Delete a family")
             .WithOpenApi();
 
-        familyGroup.MapGet("{id:int}", GetFamilyById)
+        familyGroup.MapGet("{id:guid}", GetFamilyById)
             // .RequireAuthorization(userAdminPolicy)
             .Produces(StatusCodes.Status200OK, typeof(FamilyResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
@@ -68,22 +68,22 @@ public static class FamilyEndpoints
         return Results.Ok();
     }
 
-    private static async Task<IResult> DeleteFamily([FromRoute] int id,
+    private static async Task<IResult> DeleteFamily([FromRoute] Guid id,
         IFamilyService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
 
-        await service.DeleteFamily(id, userId);
+        await service.DeleteFamily(id.ToString(), userId);
 
         return Results.Ok();
     }
 
-    private static async Task<IResult> GetFamilyById([FromRoute] int id,
+    private static async Task<IResult> GetFamilyById([FromRoute] Guid id,
         IFamilyService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
 
-        FamilyResponse response = await service.GetFamilyById(id, userId);
+        FamilyResponse response = await service.GetFamilyById(id.ToString(), userId);
 
         return Results.Ok(response);
     }

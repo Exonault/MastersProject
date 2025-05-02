@@ -42,7 +42,7 @@ public static class AdditionalPersonalValidation
 
         if (category.User.Id != userId)
         {
-            throw new InvalidOperationException(CategoryMessages.CategoryIsNotFromTheUser);
+            throw new OperationNotAllowedException(CategoryMessages.CategoryIsNotFromTheUser);
         }
 
         return category;
@@ -66,7 +66,7 @@ public static class AdditionalPersonalValidation
 
         if (transaction.User.Id != userId)
         {
-            throw new InvalidOperationException(PersonalTransactionMessages.TransactionIsNotFromTheUser);
+            throw new OperationNotAllowedException(PersonalTransactionMessages.TransactionIsNotFromTheUser);
         }
 
         return transaction;
@@ -90,7 +90,7 @@ public static class AdditionalPersonalValidation
 
         if (transaction.User.Id != userId)
         {
-            throw new InvalidOperationException(RecurringTransactionMessages.TransactionIsNotFromTheUser);
+            throw new OperationNotAllowedException(RecurringTransactionMessages.TransactionIsNotFromTheUser);
         }
 
         return transaction;

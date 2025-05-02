@@ -19,7 +19,7 @@ public static class AdditionalFamilialValidation
     /// <exception cref="InvalidOperationException">
     /// Thrown when the user is not associated with the specified family.
     /// </exception>
-    public static void ValidateUserFamily(this User user, int familyId)
+    public static void ValidateUserFamily(this User user, Guid familyId)
     {
         if (user.Family is null)
         {
@@ -28,7 +28,7 @@ public static class AdditionalFamilialValidation
 
         if (user.Family.Id != familyId)
         {
-            throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
+            throw new OperationNotAllowedException(UserMessages.ValidationMessages.UserIsNotFromFamily);
         }
     }
 
@@ -50,16 +50,16 @@ public static class AdditionalFamilialValidation
         return family;
     }
 
-    public static FamilyCategory ValidateFamilyCategory(this FamilyCategory? familyCategory, int familyId)
+    public static FamilyCategory ValidateFamilyCategory(this FamilyCategory? familyCategory, string familyId)
     {
         if (familyCategory is null)
         {
             throw new ResourceNotFoundException(FamilyCategoryMessages.FamilyCategoryNotFound);
         }
 
-        if (familyCategory.Family.Id != familyId)
+        if (familyCategory.Family.Id != Guid.Parse(familyId))
         {
-            throw new InvalidOperationException(FamilyCategoryMessages.FamilyCategoryIsNotFromFamily);
+            throw new OperationNotAllowedException(FamilyCategoryMessages.FamilyCategoryIsNotFromFamily);
         }
 
         return familyCategory;

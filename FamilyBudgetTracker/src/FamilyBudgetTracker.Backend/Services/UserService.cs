@@ -91,10 +91,8 @@ public class UserService : IUserService
         }
 
         List<string> roles = await _repository.GetAllRoles(user);
-
-        // string token = GenerateToken(user.UserName!, user.Id, roles);
-        string token = _tokenService.GenerateAccessToken();
-
+        
+        string token = _tokenService.GenerateAccessToken(user, roles);
         string refreshToken = _tokenService.GenerateRefreshToken();
 
         user.RefreshToken = refreshToken;
@@ -128,8 +126,9 @@ public class UserService : IUserService
             throw new UserNotFoundException(UserMessages.ValidationMessages.UserNotFound);
         }
 
-        // string token = GenerateToken(user.UserName!, user.Id, await _repository.GetAllRoles(user));
-        string token = _tokenService.GenerateAccessToken();
+        List<string> roles = await _repository.GetAllRoles(user);
+        
+        string token = _tokenService.GenerateAccessToken(user, roles);
 
         LoginResponse response = new LoginResponse
         {
@@ -160,71 +159,5 @@ public class UserService : IUserService
 
         await _repository.UpdateUser(user);
     }
-
-    // private string GenerateToken(string userName, string id, List<string> roles)
-    // {
-    //     var tokenHandler = new JwtSecurityTokenHandler();
-    //     string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(ApplicationMessages.SecretNotConfigured);
-    //     SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
-    //
-    //     List<Claim> claims =
-    //     [
-    //         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-    //         new Claim(ClaimTypes.Name, userName),
-    //         new Claim(ApplicationConstants.ClaimTypes.ClaimUserIdType, id),
-    //     ];
-    //
-    //     foreach (string role in roles)
-    //     {
-    //         claims.Add(new Claim(ApplicationConstants.ClaimTypes.ClaimRoleType, role));
-    //     }
-    //
-    //     SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
-    //     {
-    //         Subject = new ClaimsIdentity(claims),
-    //         Expires = DateTime.UtcNow.Add(TokenDuration),
-    //         Issuer = _config["Jwt:Issuer"],
-    //         IssuedAt = DateTime.UtcNow,
-    //         NotBefore = DateTime.UtcNow,
-    //         Audience = _config["Jwt:Audience"],
-    //         SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
-    //     };
-    //
-    //     SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-    //
-    //     string jwt = tokenHandler.WriteToken(token);
-    //
-    //     return jwt;
-    // }
-    //
-    //
-    // private string GenerateRefreshToken()
-    // {
-    //     byte[] randomNumbers = new byte[64];
-    //
-    //     using var generator = RandomNumberGenerator.Create();
-    //
-    //     generator.GetBytes(randomNumbers);
-    //
-    //     string token = Convert.ToBase64String(randomNumbers);
-    //
-    //     return token;
-    // }
-    //
-    // private ClaimsPrincipal? GetUserFromExpiredToken(string token)
-    // {
-    //     string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(ApplicationMessages.SecretNotConfigured);
-    //
-    //     TokenValidationParameters validation = new TokenValidationParameters()
-    //     {
-    //         ValidIssuer = _config["Jwt:Issuer"],
-    //         ValidAudience = _config["Jwt:Audience"],
-    //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-    //         ValidateLifetime = false,
-    //     };
-    //
-    //     ClaimsPrincipal claimsPrincipal = new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
-    //
-    //     return claimsPrincipal;
-    // }
+    
 }

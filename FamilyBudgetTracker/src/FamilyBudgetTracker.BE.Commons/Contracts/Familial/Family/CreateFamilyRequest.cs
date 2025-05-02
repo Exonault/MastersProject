@@ -4,5 +4,4 @@ public class CreateFamilyRequest
 {
     public string Name { get; set; }
 
-    public List<string> InviteList { get; set; }
 }

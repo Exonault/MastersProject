@@ -40,11 +40,11 @@ public class FamilyCategoryRepository : IFamilyCategoryRepository
             .FirstOrDefaultAsync(fc => fc.Id == id);
     }
 
-    public async Task<List<FamilyCategory>> GetCategoriesByFamilyId(int familyId)
+    public async Task<List<FamilyCategory>> GetCategoriesByFamilyId(string familyId)
     {
         return await _dbContext.FamilyCategories
             .Include(fc => fc.Family)
-            .Where(fc => fc.Family.Id == familyId)
+            .Where(fc => fc.Family.Id == Guid.Parse(familyId))
             .ToListAsync();
     }
 }

@@ -8,7 +8,7 @@ public class FamilyCategoryMessages
     public const string TypeRequired = "Type is required";
 
     public static readonly string TypeMustBe = $"Type must be one of the following: " +
-                                               $"{string.Join(",", CategoryConstants.Types)}";
+                                               $"{string.Join(", ", CategoryConstants.Types)}";
 
     public const string FamilyCategoryNotFound = "Family category with id does not exist";
 

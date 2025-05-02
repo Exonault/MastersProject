@@ -2,7 +2,9 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Messages;
+using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Services;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,10 +22,46 @@ public class TokenService : ITokenService
     private static readonly TimeSpan TokenDuration = TimeSpan.FromHours(8); // test
     // private static readonly TimeSpan TokenDuration = TimeSpan.FromMinutes(5);
 
-    
-    public string GenerateAccessToken()
+
+    public string GenerateAccessToken(User user, List<string> roles)
     {
-        throw new NotImplementedException();
+        var tokenHandler = new JwtSecurityTokenHandler();
+        string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(ApplicationMessages.SecretNotConfigured);
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+
+        List<Claim> claims =
+        [
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Name, user.UserName!),
+            new Claim(ApplicationConstants.ClaimTypes.ClaimUserIdType, user.Id),
+        ];
+
+        if (user.Family is not null)
+        {
+            claims.Add(new Claim(ApplicationConstants.ClaimTypes.ClaimFamilyIdType, user.Family.Id.ToString()));
+        }
+
+        foreach (string role in roles)
+        {
+            claims.Add(new Claim(ApplicationConstants.ClaimTypes.ClaimRoleType, role));
+        }
+
+        SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.Add(TokenDuration),
+            Issuer = _config["Jwt:Issuer"],
+            IssuedAt = DateTime.UtcNow,
+            NotBefore = DateTime.UtcNow,
+            Audience = _config["Jwt:Audience"],
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
+        };
+
+        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+        string jwt = tokenHandler.WriteToken(token);
+
+        return jwt;
     }
 
     public string GenerateRefreshToken()

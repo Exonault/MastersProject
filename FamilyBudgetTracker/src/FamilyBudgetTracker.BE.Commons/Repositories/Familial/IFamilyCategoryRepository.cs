@@ -12,5 +12,5 @@ public interface IFamilyCategoryRepository
 
     Task<FamilyCategory?> GetCategoryById(int id);
 
-    Task<List<FamilyCategory>> GetCategoriesByFamilyId(int familyId);
+    Task<List<FamilyCategory>> GetCategoriesByFamilyId(string familyId);
 }

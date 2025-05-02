@@ -27,13 +27,13 @@ public class FamilyCategoryService : IFamilyCategoryService
         _familyRepository = familyRepository;
     }
 
-    public async Task CreateFamilyCategory(CreateFamilyCategoryRequest request, string userId)
+    public async Task CreateFamilyCategory(CreateFamilyCategoryRequest request, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
 
         user = user.ValidateUser();
 
-        Family? family = await _familyRepository.GetFamilyById(request.FamilyId);
+        Family? family = await _familyRepository.GetFamilyById(familyId);
 
         family = family.ValidateFamily();
 
@@ -45,13 +45,13 @@ public class FamilyCategoryService : IFamilyCategoryService
         await _familyCategoryRepository.CreateFamilyCategory(familyCategory);
     }
 
-    public async Task UpdateFamilyCategory(int id, UpdateFamilyCategoryRequest request, string userId)
+    public async Task UpdateFamilyCategory(int id, UpdateFamilyCategoryRequest request, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
 
         user = user.ValidateUser();
 
-        Family? family = await _familyRepository.GetFamilyById(request.FamilyId);
+        Family? family = await _familyRepository.GetFamilyById(familyId);
 
         family = family.ValidateFamily();
 
@@ -59,74 +59,64 @@ public class FamilyCategoryService : IFamilyCategoryService
 
         FamilyCategory? familyCategory = await _familyCategoryRepository.GetCategoryById(id);
 
-        familyCategory = familyCategory.ValidateFamilyCategory(family.Id);
+        familyCategory = familyCategory.ValidateFamilyCategory(family.Id.ToString());
 
         FamilyCategory updatedCategory = request.ToFamilyCategory(familyCategory);
 
         await _familyCategoryRepository.UpdateFamilyCategory(updatedCategory);
     }
 
-    public async Task DeleteFamilyCategory(int id, string userId)
+    public async Task DeleteFamilyCategory(int id, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
 
         user = user.ValidateUser();
 
-        if (user.Family is null)
-        {
-            throw new ResourceNotFoundException(UserMessages.ValidationMessages.NoFamilyForUser);
-        }
+        Family? family = await _familyRepository.GetFamilyById(familyId);
+
+        family = family.ValidateFamily();
+
+        user.ValidateUserFamily(family.Id);
 
         FamilyCategory? familyCategory = await _familyCategoryRepository.GetCategoryById(id);
 
-        if (familyCategory is null)
-        {
-            throw new ResourceNotFoundException(FamilyCategoryMessages.FamilyCategoryNotFound);
-        }
-
-        if (user.Family.Id != familyCategory.Family.Id)
-        {
-            throw new InvalidOperationException(FamilyCategoryMessages.FamilyCategoryIsNotFromFamily);
-        }
+        familyCategory = familyCategory.ValidateFamilyCategory(family.Id.ToString());
 
         await _familyCategoryRepository.DeleteFamilyCategory(familyCategory);
     }
 
-    public async Task<FamilyCategoryResponse> GetFamilyCategoryById(int id, string userId)
+    public async Task<FamilyCategoryResponse> GetFamilyCategoryById(int id, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
 
         user = user.ValidateUser();
 
-        if (user.Family is null)
-        {
-            throw new ResourceNotFoundException(UserMessages.ValidationMessages.NoFamilyForUser);
-        }
+        Family? family = await _familyRepository.GetFamilyById(familyId);
+
+        family = family.ValidateFamily();
+
+        user.ValidateUserFamily(family.Id);
 
         FamilyCategory? familyCategory = await _familyCategoryRepository.GetCategoryById(id);
 
-        if (familyCategory is null)
-        {
-            throw new ResourceNotFoundException(FamilyCategoryMessages.FamilyCategoryNotFound);
-        }
-
-        if (user.Family.Id != familyCategory.Family.Id)
-        {
-            throw new InvalidOperationException(FamilyCategoryMessages.FamilyCategoryIsNotFromFamily);
-        }
+        familyCategory = familyCategory.ValidateFamilyCategory(family.Id.ToString());
 
         FamilyCategoryResponse response = familyCategory.ToFamilyCategoryResponse();
 
         return response;
     }
 
-    public async Task<List<FamilyCategoryResponse>> GetFamilyCategoriesByFamilyId(int familyId, string userId)
+    public async Task<List<FamilyCategoryResponse>> GetFamilyCategoriesByFamilyId(string familyId, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
         user = user.ValidateUser();
 
-        user.ValidateUserFamily(familyId);
+        Family? family = await _familyRepository.GetFamilyById(familyId);
+
+        family = family.ValidateFamily();
+
+        user.ValidateUserFamily(family.Id);
 
         List<FamilyCategory> categories = await _familyCategoryRepository.GetCategoriesByFamilyId(familyId);
 

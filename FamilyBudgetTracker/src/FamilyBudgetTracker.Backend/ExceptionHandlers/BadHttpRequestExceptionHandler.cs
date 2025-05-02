@@ -25,7 +25,7 @@ public class BadHttpRequestExceptionHandler : IExceptionHandler
 
         var problemDetails = new ProblemDetails()
         {
-            Status = StatusCodes.Status400BadRequest,
+            Status = StatusCodes.Status402PaymentRequired,
             Title = "Bad Request",
             Detail = badHttpRequest.Message
         };

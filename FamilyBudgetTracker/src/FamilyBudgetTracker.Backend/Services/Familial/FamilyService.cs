@@ -1,7 +1,6 @@
 ﻿using FamilyBudgetTracker.Backend.Constants;
 using FamilyBudgetTracker.Backend.Mappers;
 using FamilyBudgetTracker.Backend.Mappers.Familial;
-using FamilyBudgetTracker.Backend.Messages.Familial;
 using FamilyBudgetTracker.Backend.Util;
 using FamilyBudgetTracker.BE.Commons.Contracts.Familial.Family;
 using FamilyBudgetTracker.BE.Commons.Contracts.User;
@@ -19,13 +18,16 @@ public class FamilyService : IFamilyService
     private readonly IFamilyRepository _familyRepository;
     private readonly IUserRepository _userRepository;
     private readonly ISendEmailService _sendEmailService;
+    private readonly IFamilyVerificationTokenRepository _familyVerificationTokenRepository;
 
 
-    public FamilyService(IFamilyRepository familyRepository, IUserRepository userRepository, ISendEmailService sendEmailService)
+    public FamilyService(IFamilyRepository familyRepository, IUserRepository userRepository, ISendEmailService sendEmailService,
+        IFamilyVerificationTokenRepository familyVerificationTokenRepository)
     {
         _familyRepository = familyRepository;
         _userRepository = userRepository;
         _sendEmailService = sendEmailService;
+        _familyVerificationTokenRepository = familyVerificationTokenRepository;
     }
 
     public async Task CreateFamily(CreateFamilyRequest request, string userId)
@@ -46,13 +48,38 @@ public class FamilyService : IFamilyService
         await _userRepository.UpdateUser(user);
 
         await _userRepository.AddToRole(user, ApplicationConstants.RoleTypes.FamilyAdminRoleType);
-
-
-        //TODO send emails to join with code. 
-        // Similar to https://www.youtube.com/watch?v=KtCjH-1iCIk
     }
 
-    public async Task DeleteFamily(int id, string userId)
+    public async Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, int familyId)
+    {
+        //TODO send emails to join with code. 
+        // Similar to https://www.youtube.com/watch?v=KtCjH-1iCIk
+
+        List<string> inviteList = request.InviteList;
+
+        foreach (string email in inviteList)
+        {
+            User? user = await _userRepository.GetByEmail(email);
+
+            bool userInApplicationFlag = user is null;
+
+            var familyVerificationToken = new FamilyVerificationToken
+            {
+                Id = Guid.NewGuid(),
+                Email = email,
+                UserInApplication = userInApplicationFlag,
+                CreatedOnUtc = DateTime.UtcNow,
+                ExpiresOnUtc = DateTime.UtcNow.AddDays(1)
+            };
+
+            await _familyVerificationTokenRepository.CreateVerificationToken(familyVerificationToken);
+            
+            
+        }
+    }
+
+
+    public async Task DeleteFamily(string id, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -64,18 +91,10 @@ public class FamilyService : IFamilyService
 
         user.ValidateUserFamily(family.Id);
 
-        // TODO: not needed because policy for familyAdmin
-        //
-        // List<string> roles = await _userRepository.GetAllRoles(user);
-        // if (!roles.Contains(ApplicationConstants.RoleTypes.FamilyAdminRoleType))
-        // {
-        //     throw new InvalidOperationException(FamilyMessages.DeleteImpossible);
-        // }
-
         await _familyRepository.DeleteFamily(family);
     }
 
-    public async Task<FamilyResponse> GetFamilyById(int id, string userId)
+    public async Task<FamilyResponse> GetFamilyById(string id, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 

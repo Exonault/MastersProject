@@ -15,4 +15,15 @@ public static class UserUtil
 
         return userId;
     }
+
+    public static string GetFamilyIdFromAuth(this HttpContext httpContext)
+    {
+        ClaimsPrincipal user = httpContext.User;
+
+        string familyId = user.Claims
+            .First(c => c.Type == ApplicationConstants.ClaimTypes.ClaimFamilyIdType)
+            .Value;
+
+        return familyId;
+    }
 }

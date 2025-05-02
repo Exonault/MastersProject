@@ -6,7 +6,7 @@ namespace FamilyBudgetTracker.BE.Commons.Contracts.Familial.Family;
 public class FamilyResponse
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [JsonPropertyName("name")]
     public string Name { get; set; }

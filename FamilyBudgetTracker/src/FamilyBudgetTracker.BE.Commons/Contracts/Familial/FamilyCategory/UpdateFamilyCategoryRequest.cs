@@ -9,6 +9,4 @@ public class UpdateFamilyCategoryRequest
     public string Type { get; set; }
 
     public decimal? Limit { get; set; } //Monthly limit
-
-    public int FamilyId { get; set; }
 }

@@ -36,6 +36,8 @@ public static class EntityServicesExtensions
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserService>();
+
+        services.AddScoped<ITokenService, TokenService>();
     }
 
     private static void AddCategoryServices(this IServiceCollection services)
@@ -60,6 +62,8 @@ public static class EntityServicesExtensions
     {
         services.AddScoped<IFamilyRepository, FamilyRepository>();
         services.AddScoped<IFamilyService, FamilyService>();
+
+        services.AddScoped<IFamilyVerificationTokenRepository, FamilyVerificationTokenRepository>();
     }
 
     private static void AddFamilyCategoryServices(this IServiceCollection services)

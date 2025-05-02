@@ -6,9 +6,11 @@ public interface IFamilyService
 {
     Task CreateFamily(CreateFamilyRequest request, string userId);
 
-    Task DeleteFamily(int id, string userId);
+    Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, int familyId);
 
-    Task<FamilyResponse> GetFamilyById(int id, string userId);
+    Task DeleteFamily(string id, string userId);
+
+    Task<FamilyResponse> GetFamilyById(string id, string userId);
 
     Task<List<FamilyResponse>> GetAllFamilies();
 }

@@ -1,13 +1,14 @@
+using FamilyBudgetTracker.BE.Commons.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyBudgetTracker.Backend.ExceptionHandlers;
 
-public class InvalidOperationExceptionHandler : IExceptionHandler
+public class OperationNotAllowedExceptionHandler : IExceptionHandler
 {
-    private readonly ILogger<InvalidOperationExceptionHandler> _logger;
+    private readonly ILogger<OperationNotAllowedExceptionHandler> _logger;
 
-    public InvalidOperationExceptionHandler(ILogger<InvalidOperationExceptionHandler> logger)
+    public OperationNotAllowedExceptionHandler(ILogger<OperationNotAllowedExceptionHandler> logger)
     {
         _logger = logger;
     }
@@ -15,7 +16,7 @@ public class InvalidOperationExceptionHandler : IExceptionHandler
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not InvalidOperationException invalidOperationException)
+        if (exception is not OperationNotAllowedException invalidOperationException)
         {
             return false;
         }

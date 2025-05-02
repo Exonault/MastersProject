@@ -8,7 +8,7 @@ public interface IFamilyRepository
 
     Task DeleteFamily(Family family);
 
-    Task<Family?> GetFamilyById(int id);
+    Task<Family?> GetFamilyById(string id);
 
     Task<List<Family>> GetAllFamilies();
 }

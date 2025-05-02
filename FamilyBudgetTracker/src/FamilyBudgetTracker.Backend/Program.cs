@@ -1,3 +1,4 @@
+using FamilyBudgetTracker.Backend.Endpoints;
 using FamilyBudgetTracker.Backend.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddDatabase(configuration);
 
 //Auth
 builder.Services.AddApplicationAuthenticationServices(configuration);
+builder.Services.AddApplicationAuthorizationServices();
 
 //Cache
 // builder.Services.AddApplicationCachingServices(configuration);

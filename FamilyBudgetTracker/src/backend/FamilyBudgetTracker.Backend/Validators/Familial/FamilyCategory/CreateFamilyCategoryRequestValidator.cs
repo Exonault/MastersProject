@@ -1,6 +1,6 @@
-﻿using FamilyBudgetTracker.Backend.Constants.Personal;
-using FamilyBudgetTracker.Backend.Messages.Familial;
+﻿using FamilyBudgetTracker.BE.Commons.Constants.Personal;
 using FamilyBudgetTracker.BE.Commons.Contracts.Familial.FamilyCategory;
+using FamilyBudgetTracker.BE.Commons.Messages.Familial;
 using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Validators.Familial.FamilyCategory;

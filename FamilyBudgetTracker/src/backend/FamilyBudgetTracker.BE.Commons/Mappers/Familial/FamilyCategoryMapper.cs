@@ -2,7 +2,7 @@
 using FamilyBudgetTracker.BE.Commons.Entities.Common;
 using FamilyBudgetTracker.BE.Commons.Entities.Familial;
 
-namespace FamilyBudgetTracker.Backend.Mappers.Familial;
+namespace FamilyBudgetTracker.BE.Commons.Mappers.Familial;
 
 public static class FamilyCategoryMapper
 {

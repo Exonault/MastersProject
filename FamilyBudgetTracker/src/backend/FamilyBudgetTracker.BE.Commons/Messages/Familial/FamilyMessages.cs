@@ -1,4 +1,4 @@
-﻿namespace FamilyBudgetTracker.Backend.Messages.Familial;
+﻿namespace FamilyBudgetTracker.BE.Commons.Messages.Familial;
 
 public static class FamilyMessages
 {

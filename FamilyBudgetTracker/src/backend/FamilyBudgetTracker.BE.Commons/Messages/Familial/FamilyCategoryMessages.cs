@@ -1,6 +1,6 @@
-﻿using FamilyBudgetTracker.Backend.Constants.Personal;
+﻿using FamilyBudgetTracker.BE.Commons.Constants.Personal;
 
-namespace FamilyBudgetTracker.Backend.Messages.Familial;
+namespace FamilyBudgetTracker.BE.Commons.Messages.Familial;
 
 public class FamilyCategoryMessages
 {

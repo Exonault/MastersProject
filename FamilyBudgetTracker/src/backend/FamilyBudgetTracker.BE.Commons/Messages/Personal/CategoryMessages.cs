@@ -1,6 +1,6 @@
-using FamilyBudgetTracker.Backend.Constants.Personal;
+using FamilyBudgetTracker.BE.Commons.Constants.Personal;
 
-namespace FamilyBudgetTracker.Backend.Messages.Personal;
+namespace FamilyBudgetTracker.BE.Commons.Messages.Personal;
 
 public static class CategoryMessages
 {

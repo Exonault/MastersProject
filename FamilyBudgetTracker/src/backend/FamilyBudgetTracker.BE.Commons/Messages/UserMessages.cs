@@ -1,4 +1,4 @@
-namespace FamilyBudgetTracker.Backend.Messages;
+namespace FamilyBudgetTracker.BE.Commons.Messages;
 
 public static class UserMessages
 {

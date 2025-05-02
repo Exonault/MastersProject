@@ -1,7 +1,7 @@
 ﻿using FamilyBudgetTracker.BE.Commons.Contracts.User;
 using FamilyBudgetTracker.BE.Commons.Entities;
 
-namespace FamilyBudgetTracker.Backend.Mappers;
+namespace FamilyBudgetTracker.BE.Commons.Mappers;
 
 public static class UserMapper
 {

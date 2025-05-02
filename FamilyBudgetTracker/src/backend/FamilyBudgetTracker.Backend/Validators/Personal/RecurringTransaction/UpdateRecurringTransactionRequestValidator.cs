@@ -1,6 +1,6 @@
-using FamilyBudgetTracker.Backend.Constants.Personal;
-using FamilyBudgetTracker.Backend.Messages.Personal;
+using FamilyBudgetTracker.BE.Commons.Constants.Personal;
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.RecurringTransaction;
+using FamilyBudgetTracker.BE.Commons.Messages.Personal;
 using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Validators.Personal.RecurringTransaction;

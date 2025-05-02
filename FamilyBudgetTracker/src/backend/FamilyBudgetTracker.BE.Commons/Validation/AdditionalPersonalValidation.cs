@@ -1,10 +1,10 @@
-﻿using FamilyBudgetTracker.Backend.Messages;
-using FamilyBudgetTracker.Backend.Messages.Personal;
-using FamilyBudgetTracker.BE.Commons.Entities;
+﻿using FamilyBudgetTracker.BE.Commons.Entities;
 using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 using FamilyBudgetTracker.BE.Commons.Exceptions;
+using FamilyBudgetTracker.BE.Commons.Messages;
+using FamilyBudgetTracker.BE.Commons.Messages.Personal;
 
-namespace FamilyBudgetTracker.Backend.Util;
+namespace FamilyBudgetTracker.BE.Commons.Validation;
 
 public static class AdditionalPersonalValidation
 {

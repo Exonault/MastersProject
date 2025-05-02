@@ -2,7 +2,7 @@ using FamilyBudgetTracker.BE.Commons.Contracts.Personal.RecurringTransaction;
 using FamilyBudgetTracker.BE.Commons.Entities.Common;
 using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 
-namespace FamilyBudgetTracker.Backend.Mappers.Personal;
+namespace FamilyBudgetTracker.BE.Commons.Mappers.Personal;
 
 public static class RecurringTransactionMapper
 {

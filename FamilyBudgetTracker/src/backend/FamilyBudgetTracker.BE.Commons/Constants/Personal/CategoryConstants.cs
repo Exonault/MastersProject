@@ -1,4 +1,4 @@
-namespace FamilyBudgetTracker.Backend.Constants.Personal;
+namespace FamilyBudgetTracker.BE.Commons.Constants.Personal;
 
 public static class CategoryConstants
 {

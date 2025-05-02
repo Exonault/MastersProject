@@ -1,7 +1,7 @@
 ﻿using FamilyBudgetTracker.BE.Commons.Contracts.Familial.Family;
 using FamilyBudgetTracker.BE.Commons.Entities.Familial;
 
-namespace FamilyBudgetTracker.Backend.Mappers.Familial;
+namespace FamilyBudgetTracker.BE.Commons.Mappers.Familial;
 
 public static class FamilyMapper
 {

@@ -1,7 +1,7 @@
 using FamilyBudgetTracker.BE.Commons.Contracts.Personal.Transaction;
 using FamilyBudgetTracker.BE.Commons.Entities.Personal;
 
-namespace FamilyBudgetTracker.Backend.Mappers.Personal;
+namespace FamilyBudgetTracker.BE.Commons.Mappers.Personal;
 
 public static class PersonalTransactionMapper
 {

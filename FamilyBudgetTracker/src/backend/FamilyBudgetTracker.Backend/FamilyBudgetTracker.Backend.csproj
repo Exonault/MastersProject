@@ -36,4 +36,12 @@
       <Folder Include="Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="EmailTemplates\Test.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="EmailTemplates\Test.cshtml" />
+    </ItemGroup>
+
 </Project>

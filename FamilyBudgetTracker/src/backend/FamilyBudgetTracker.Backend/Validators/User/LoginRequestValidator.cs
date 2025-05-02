@@ -1,5 +1,5 @@
-using FamilyBudgetTracker.Backend.Messages;
 using FamilyBudgetTracker.BE.Commons.Contracts.User;
+using FamilyBudgetTracker.BE.Commons.Messages;
 using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Validators.User;

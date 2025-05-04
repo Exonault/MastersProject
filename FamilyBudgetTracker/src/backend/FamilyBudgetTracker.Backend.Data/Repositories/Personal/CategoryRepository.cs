@@ -1,0 +1,48 @@
+﻿using FamilyBudgetTracker.Backend.Domain.Entities.Personal;
+using FamilyBudgetTracker.Backend.Domain.Repositories.Personal;
+using Microsoft.EntityFrameworkCore;
+
+namespace FamilyBudgetTracker.Backend.Data.Repositories.Personal;
+
+public class CategoryRepository : ICategoryRepository
+{
+    private readonly ApplicationDbContext _dbContext;
+ 
+    public CategoryRepository(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task CreateCategory(Category category)
+    {
+        await _dbContext.Categories.AddAsync(category);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateCategory(Category category)
+    {
+        _dbContext.Entry(category).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteCategory(Category category)
+    {
+        _dbContext.Categories.Remove(category);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<Category?> GetCategoryById(int id)
+    {
+        return await _dbContext.Categories
+            .Include(c => c.User)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<List<Category>> GetAllCategoriesForUser(string userId)
+    {
+        return await _dbContext.Categories
+            .Include(c => c.User)
+            .Where(c => c.User.Id == userId)
+            .ToListAsync();
+    }
+}

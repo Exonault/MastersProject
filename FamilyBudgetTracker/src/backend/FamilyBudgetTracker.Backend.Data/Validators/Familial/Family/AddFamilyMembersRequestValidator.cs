@@ -4,15 +4,15 @@ using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Data.Validators.Familial.Family;
 
-public class AddFamilyMembersRequestValidator : AbstractValidator<AddFamilyMembersRequest>
+public class AddFamilyMembersRequestValidator : AbstractValidator<InviteFamilyMembersRequest>
 {
     public AddFamilyMembersRequestValidator()
     {
-        RuleFor(x => x.InviteList)
+        RuleFor(x => x.EmailList)
             .NotNull()
             .WithMessage(FamilyValidationMessages.InvitesRequired);
 
-        RuleForEach(x => x.InviteList)
+        RuleForEach(x => x.EmailList)
             .EmailAddress()
             .WithMessage(FamilyValidationMessages.ItemIsNotEmail);
     }

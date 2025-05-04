@@ -6,7 +6,7 @@ public interface IFamilyService
 {
     Task<string> CreateFamily(CreateFamilyRequest request, string userId);
 
-    Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, string familyId);
+    Task AddFamilyMembersToFamily(InviteFamilyMembersRequest request, string userId, string familyId);
 
     Task DeleteFamily(string id, string userId);
 

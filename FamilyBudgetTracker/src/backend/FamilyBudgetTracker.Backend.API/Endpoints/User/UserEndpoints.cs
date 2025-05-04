@@ -1,5 +1,7 @@
 using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.Authentication.Interfaces;
+using FamilyBudgetTracker.Backend.Authentication.Util;
+using FamilyBudgetTracker.Backend.Domain.Invite;
 using FamilyBudgetTracker.Backend.Domain.Services;
 using FamilyBudgetTracker.Shared.Contracts.User;
 using Microsoft.AspNetCore.Mvc;
@@ -43,16 +45,20 @@ public static class UserEndpoint
         group.MapDelete("revoke/", Revoke)
             .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Revoke all tokens")
             .WithOpenApi();
-
-        // group.MapPost("/test", async (IEmailService emailService) => { await emailService.SendTestEmail(); });
-
+        
         group.MapGet("joinFamily/{token:guid}", JoinFamily)
+            .AllowAnonymous()
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Adds user to a family")
-            .WithName(ApplicationConstants.FamilyJoining.JoinFamily);
+            .WithOpenApi();
     }
 
     private static async Task<IResult> Register([FromBody] RegisterRequest request,
@@ -77,11 +83,9 @@ public static class UserEndpoint
 
     private static async Task<IResult> Refresh(IUserService service, HttpContext httpContext)
     {
-        httpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken);
         httpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
 
-
-        await service.Refresh(accessToken!, refreshToken, httpContext);
+        await service.Refresh(refreshToken, httpContext);
         return Results.Ok();
     }
 
@@ -92,8 +96,11 @@ public static class UserEndpoint
     }
 
     private static async Task<IResult> JoinFamily([FromRoute] Guid token,
-        IUserService service)
+        IFamilyInvitationService service, HttpContext httpContext)
     {
+
+        await service.AddUserToFamily(token.ToString());
+        
         return Results.Ok();
     }
 }

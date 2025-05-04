@@ -69,6 +69,7 @@ public static class EntityServicesExtensions
 
         services.AddScoped<IFamilyInvitationTokenRepository, FamilyInvitationTokenRepository>();
         services.AddScoped<IFamilyInvitationLinkFactory, FamilyInvitationLinkFactory>();
+        services.AddScoped<IFamilyInvitationService, FamilyInvitationService>();
     }
 
     private static void AddFamilyCategoryServices(this IServiceCollection services)

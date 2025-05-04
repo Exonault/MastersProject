@@ -1,16 +1,13 @@
-﻿using System.Text.Json.Serialization;
-
-namespace FamilyBudgetTracker.Shared.Contracts.User;
+﻿namespace FamilyBudgetTracker.Shared.Contracts.User;
 
 public class LoginResponse
 {
-    [JsonPropertyName("message")]
-    public string Message { get; set; } = string.Empty;
-    
-    [JsonPropertyName("token")]
-    public string Token { get; set; } = string.Empty;
-
-    [JsonPropertyName("refreshToken")]
-    public string RefreshToken { get; set; } = string.Empty;
-    
+    // [JsonPropertyName("message")]
+    // public string Message { get; set; } = string.Empty;
+    //
+    // [JsonPropertyName("token")]
+    // public string Token { get; set; } = string.Empty;
+    //
+    // [JsonPropertyName("refreshToken")]
+    // public string RefreshToken { get; set; } = string.Empty;
 }

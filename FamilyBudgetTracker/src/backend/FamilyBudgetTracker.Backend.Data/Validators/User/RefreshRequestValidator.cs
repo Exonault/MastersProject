@@ -1,10 +1,6 @@
-using FamilyBudgetTracker.Backend.Domain.Messages.User;
-using FamilyBudgetTracker.Shared.Contracts.User;
-using FluentValidation;
-
 namespace FamilyBudgetTracker.Backend.Data.Validators.User;
 
-public class RefreshRequestValidator : AbstractValidator<RefreshRequest>
+public class RefreshRequestValidator //: AbstractValidator<RefreshRequest>
 {
     // public RefreshRequestValidator()
     // {

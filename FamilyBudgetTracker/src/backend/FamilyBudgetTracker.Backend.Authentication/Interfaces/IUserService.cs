@@ -9,7 +9,7 @@ public interface IUserService
     
     Task LoginAccount(LoginRequest request, HttpContext httpContext);
     
-    Task Refresh(string accessToken, string? refreshToken , HttpContext httpContext);
+    Task Refresh(string? refreshToken , HttpContext httpContext);
 
     Task Revoke(HttpContext httpContext);
 }

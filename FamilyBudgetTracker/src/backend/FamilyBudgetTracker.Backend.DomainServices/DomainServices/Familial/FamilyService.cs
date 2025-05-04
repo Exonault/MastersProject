@@ -54,12 +54,12 @@ public class FamilyService : IFamilyService
         return "";
     }
 
-    public async Task AddFamilyMembersToFamily(AddFamilyMembersRequest request, string userId, string familyId)
+    public async Task AddFamilyMembersToFamily(InviteFamilyMembersRequest request, string userId, string familyId)
     {
         //TODO send emails to join with code. 
         // Similar to https://www.youtube.com/watch?v=KtCjH-1iCIk
 
-        List<string> inviteList = request.InviteList;
+        List<string> inviteList = request.EmailList;
 
         Family? family = await _familyRepository.GetFamilyById(familyId);
 

@@ -111,7 +111,7 @@ public class UserService : IUserService
         _applicationAuthenticationService.SetTokensInsideCookie(refreshDto, httpContext);
     }
 
-    public async Task Refresh(string accessToken, string? refreshToken, HttpContext httpContext)
+    public async Task Refresh(string? refreshToken, HttpContext httpContext)
     {
         if (refreshToken is null)
         {

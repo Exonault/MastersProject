@@ -1,4 +1,7 @@
-﻿using FamilyBudgetTracker.Backend.Authentication.Util;
+﻿using FamilyBudgetTracker.Backend.API.Constants;
+using FamilyBudgetTracker.Backend.Authentication.Util;
+using FamilyBudgetTracker.Backend.Domain.Constants.User;
+using FamilyBudgetTracker.Backend.Domain.Invite;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +16,7 @@ public static class FamilyEndpoints
         var familyGroup = group.MapGroup("family");
 
         familyGroup.MapPost("/", CreateFamily)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -25,7 +28,7 @@ public static class FamilyEndpoints
             .WithOpenApi();
 
         familyGroup.MapDelete("/{id:guid}", DeleteFamily)
-            // .RequireAuthorization(userAdminPolicy)
+            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -36,7 +39,7 @@ public static class FamilyEndpoints
             .WithOpenApi();
 
         familyGroup.MapGet("{id:guid}", GetFamilyById)
-            // .RequireAuthorization(userAdminPolicy)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .Produces(StatusCodes.Status200OK, typeof(FamilyResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -55,6 +58,18 @@ public static class FamilyEndpoints
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Get all families")
+            .WithOpenApi();
+
+        familyGroup.MapPost("/invite", InviteToFamily)
+            // .RequireAuthorization()
+            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Invites a list of users to a family")
             .WithOpenApi();
     }
 
@@ -93,5 +108,15 @@ public static class FamilyEndpoints
         List<FamilyResponse> response = await service.GetAllFamilies();
 
         return Results.Ok(response);
+    }
+
+    private static async Task<IResult> InviteToFamily([FromBody] InviteFamilyMembersRequest request,
+        IFamilyInvitationService service, HttpContext httpContext)
+    {
+        string familyId = httpContext.GetFamilyIdFromAuth();
+
+        await service.InviteMembersToFamily(request, familyId);
+
+        return Results.Ok();
     }
 }

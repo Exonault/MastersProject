@@ -1,12 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using FamilyBudgetTracker.Backend.Authentication.Interfaces;
 using FamilyBudgetTracker.Backend.Authentication.Messages;
 using FamilyBudgetTracker.Backend.Authentication.Token;
-using FamilyBudgetTracker.Backend.Data.DTO.User;
 using FamilyBudgetTracker.Backend.Data.Mappers;
 using FamilyBudgetTracker.Backend.Domain.Constants.User;
+using FamilyBudgetTracker.Backend.Domain.DTO.User;
 using FamilyBudgetTracker.Backend.Domain.Entities;
 using FamilyBudgetTracker.Backend.Domain.Exceptions;
 using FamilyBudgetTracker.Backend.Domain.Messages.User;
@@ -14,8 +11,6 @@ using FamilyBudgetTracker.Backend.Domain.Repositories;
 using FamilyBudgetTracker.Shared.Contracts.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyBudgetTracker.Backend.Authentication.Services;
 
@@ -42,7 +37,7 @@ public class UserService : IUserService
         {
             throw new UserAlreadyRegisteredException(UserValidationMessages.AlreadyRegistered);
         }
-        
+
         User user = request.ToUser();
 
         IdentityResult identityResult = await _userRepository.Create(user, request.Password);
@@ -157,5 +152,39 @@ public class UserService : IUserService
         await _userRepository.UpdateUser(user);
 
         _applicationAuthenticationService.RemoveTokensInsideCookie(httpContext);
+    }
+
+    public async Task UpdateUserAccessToken(HttpContext httpContext)
+    {
+        string? userName = httpContext.User.Identity?.Name;
+
+        if (userName is null)
+        {
+            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
+        }
+
+        User? user = await _userRepository.GetByName(userName);
+
+        if (user is null)
+        {
+            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
+        }
+
+        string newAccessToken = await _generateTokenService.GenerateAccessToken(user);
+
+        httpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
+
+        if (refreshToken is null)
+        {
+            throw new OperationNotAllowedException(AuthenticationMessages.RefreshTokenNotProvided);
+        }
+
+        TokenDto updatedTokens = new TokenDto
+        {
+            AccessToken = newAccessToken,
+            RefreshToken = refreshToken
+        };
+
+        _applicationAuthenticationService.SetTokensInsideCookie(updatedTokens, httpContext);
     }
 }

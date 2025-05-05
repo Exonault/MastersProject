@@ -16,4 +16,9 @@
         <ProjectReference Include="..\..\shared\FamilyBudgetTracker.Shared\FamilyBudgetTracker.Shared.csproj"/>
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Folder Include="Services\User\" />
+    </ItemGroup>
+
 </Project>

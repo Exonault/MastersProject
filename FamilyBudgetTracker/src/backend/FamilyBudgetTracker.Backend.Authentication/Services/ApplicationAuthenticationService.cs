@@ -1,6 +1,6 @@
 ﻿using FamilyBudgetTracker.Backend.Authentication.Constants;
 using FamilyBudgetTracker.Backend.Authentication.Interfaces;
-using FamilyBudgetTracker.Backend.Data.DTO.User;
+using FamilyBudgetTracker.Backend.Domain.DTO.User;
 using Microsoft.AspNetCore.Http;
 
 namespace FamilyBudgetTracker.Backend.Authentication.Services;

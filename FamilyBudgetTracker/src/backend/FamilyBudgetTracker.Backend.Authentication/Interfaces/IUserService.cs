@@ -12,4 +12,6 @@ public interface IUserService
     Task Refresh(string? refreshToken , HttpContext httpContext);
 
     Task Revoke(HttpContext httpContext);
+
+    Task UpdateUserAccessToken(HttpContext httpContext);
 }

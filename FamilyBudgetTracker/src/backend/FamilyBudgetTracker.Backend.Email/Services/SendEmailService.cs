@@ -33,7 +33,5 @@ public class SendEmailService : ISendEmailService
             .Subject("Family invite")
             .Body($"You have been invited to join family. <a href='{invitationLink}'>Click here</a>", isHtml: true)
             .SendAsync();
-        
-        throw new NotImplementedException();
     }
 }

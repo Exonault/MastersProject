@@ -1,4 +1,6 @@
 ﻿using FamilyBudgetTracker.Backend.API.Constants;
+using FamilyBudgetTracker.Backend.Authentication.Interfaces;
+using FamilyBudgetTracker.Backend.Authentication.Token;
 using FamilyBudgetTracker.Backend.Authentication.Util;
 using FamilyBudgetTracker.Backend.Domain.Constants.User;
 using FamilyBudgetTracker.Backend.Domain.Invite;
@@ -62,7 +64,6 @@ public static class FamilyEndpoints
             .WithOpenApi();
 
         familyGroup.MapPost("/invite", InviteToFamily)
-            // .RequireAuthorization()
             // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -75,13 +76,14 @@ public static class FamilyEndpoints
     }
 
     private static async Task<IResult> CreateFamily([FromBody] FamilyRequest request,
-        IFamilyService service, HttpContext httpContext)
+        IFamilyService service, HttpContext httpContext, IUserService userService)
     {
         var userId = httpContext.GetUserIdFromAuth();
 
-        string updatedToken = await service.CreateFamily(request, userId);
+        await service.CreateFamily(request, userId);
+        await userService.UpdateUserAccessToken(httpContext);
 
-        return Results.Ok(updatedToken);
+        return Results.Ok();
     }
 
     private static async Task<IResult> DeleteFamily([FromRoute] Guid id,

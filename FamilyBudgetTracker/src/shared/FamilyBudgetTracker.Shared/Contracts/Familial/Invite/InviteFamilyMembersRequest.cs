@@ -1,4 +1,4 @@
-﻿namespace FamilyBudgetTracker.Shared.Contracts.Familial.Family;
+﻿namespace FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
 
 public class InviteFamilyMembersRequest
 {

@@ -1,6 +1,6 @@
 namespace FamilyBudgetTracker.Shared.Contracts.Personal.RecurringTransaction;
 
-public class CreateRecurringTransactionRequest
+public class RecurringTransactionRequest
 {
     public decimal Amount { get; set; }
 

@@ -5,9 +5,9 @@ using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Data.Validators.Familial.FamilyCategory;
 
-public class UpdateFamilyCategoryRequestValidator :  AbstractValidator<UpdateFamilyCategoryRequest>
+public class FamilyCategoryRequestValidator : AbstractValidator<FamilyCategoryRequest>
 {
-    public UpdateFamilyCategoryRequestValidator()
+    public FamilyCategoryRequestValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()

@@ -6,7 +6,7 @@ namespace FamilyBudgetTracker.Backend.Data.Mappers.Personal;
 
 public static class RecurringTransactionMapper
 {
-    public static RecurringTransaction ToRecurringTransaction(this CreateRecurringTransactionRequest request)
+    public static RecurringTransaction ToRecurringTransaction(this RecurringTransactionRequest request)
     {
         return new RecurringTransaction
         {
@@ -19,7 +19,7 @@ public static class RecurringTransactionMapper
     }
 
 
-    public static RecurringTransaction ToRecurringTransaction(this UpdateRecurringTransactionRequest request,
+    public static RecurringTransaction ToRecurringTransaction(this RecurringTransactionRequest request,
         RecurringTransaction origin)
     {
         origin.Amount = request.Amount;

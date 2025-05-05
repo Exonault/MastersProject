@@ -4,9 +4,9 @@ namespace FamilyBudgetTracker.Backend.Domain.Services.Personal;
 
 public interface IRecurringTransactionService
 {
-    Task CreateRecurringTransaction(CreateRecurringTransactionRequest request, string userId);
+    Task CreateRecurringTransaction(RecurringTransactionRequest request, string userId);
     
-    Task UpdateRecurringTransaction(int id, UpdateRecurringTransactionRequest request, string userId);
+    Task UpdateRecurringTransaction(int id, RecurringTransactionRequest request, string userId);
     
     Task DeleteRecurringTransaction(int id, string userId);
 

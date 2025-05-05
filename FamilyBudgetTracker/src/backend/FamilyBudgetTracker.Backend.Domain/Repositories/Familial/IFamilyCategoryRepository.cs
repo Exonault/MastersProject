@@ -10,7 +10,7 @@ public interface IFamilyCategoryRepository
 
     Task DeleteFamilyCategory(FamilyCategory category);
 
-    Task<FamilyCategory?> GetCategoryById(int id);
+    Task<FamilyCategory?> GetFamilyCategoryById(int id);
 
-    Task<List<FamilyCategory>> GetCategoriesByFamilyId(string familyId);
+    Task<List<FamilyCategory>> GetFamilyCategoriesByFamilyId(string familyId);
 }

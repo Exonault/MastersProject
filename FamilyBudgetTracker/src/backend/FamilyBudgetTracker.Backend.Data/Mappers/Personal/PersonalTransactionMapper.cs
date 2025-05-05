@@ -5,7 +5,7 @@ namespace FamilyBudgetTracker.Backend.Data.Mappers.Personal;
 
 public static class PersonalTransactionMapper
 {
-    public static PersonalTransaction ToPersonalTransaction(this CreatePersonalTransactionRequest request)
+    public static PersonalTransaction ToPersonalTransaction(this PersonalTransactionRequest request)
     {
         return new PersonalTransaction
         {
@@ -16,7 +16,7 @@ public static class PersonalTransactionMapper
     }
 
 
-    public static PersonalTransaction ToPersonalTransaction(this UpdatePersonalTransactionRequest request,
+    public static PersonalTransaction ToPersonalTransaction(this PersonalTransactionRequest request,
         PersonalTransaction origin)
     {
         origin.Amount = request.Amount;

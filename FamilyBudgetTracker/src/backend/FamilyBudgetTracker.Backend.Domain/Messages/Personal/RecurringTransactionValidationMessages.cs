@@ -30,4 +30,6 @@ public static class RecurringTransactionValidationMessages
     public const string DeleteImpossible = "You cannot delete this transaction";
 
     public const string TransactionIsNotFromTheUser = "The transaction is not from the user";
+    
+    public const string CategoryIsNotForTransaction = "The category is not for the transaction";
 }

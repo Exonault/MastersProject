@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace FamilyBudgetTracker.Backend.Data.Validators.Personal.RecurringTransaction;
 
-public class CreateRecurringTransactionRequestValidator : AbstractValidator<CreateRecurringTransactionRequest>
+public class CreateRecurringTransactionRequestValidator : AbstractValidator<RecurringTransactionRequest>
 {
     public CreateRecurringTransactionRequestValidator()
     {

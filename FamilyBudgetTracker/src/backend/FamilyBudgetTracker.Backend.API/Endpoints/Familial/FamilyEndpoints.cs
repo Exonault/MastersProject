@@ -4,6 +4,7 @@ using FamilyBudgetTracker.Backend.Domain.Constants.User;
 using FamilyBudgetTracker.Backend.Domain.Invite;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
+using FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
@@ -73,7 +74,7 @@ public static class FamilyEndpoints
             .WithOpenApi();
     }
 
-    private static async Task<IResult> CreateFamily([FromBody] CreateFamilyRequest request,
+    private static async Task<IResult> CreateFamily([FromBody] FamilyRequest request,
         IFamilyService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();

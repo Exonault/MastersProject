@@ -5,7 +5,7 @@ namespace FamilyBudgetTracker.Backend.Authentication.Interfaces;
 
 public interface IApplicationAuthenticationService
 {
-    void SetTokensInsideCookie(RefreshDto request, HttpContext httpContext);
+    void SetTokensInsideCookie(TokenDto request, HttpContext httpContext);
 
     void RemoveTokensInsideCookie(HttpContext httpContext);
 }

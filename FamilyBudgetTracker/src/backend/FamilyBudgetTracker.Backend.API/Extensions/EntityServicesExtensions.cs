@@ -80,5 +80,7 @@ public static class EntityServicesExtensions
 
     private static void AddFamilyTransactionServices(this IServiceCollection services)
     {
+        services.AddScoped<IFamilyTransactionRepository, FamilyTransactionRepository>();
+        services.AddScoped<IFamilyTransactionService, FamilyTransactionService>();
     }
 }

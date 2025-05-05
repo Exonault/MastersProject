@@ -33,9 +33,9 @@ public static class AdditionalFamilialValidation
     }
 
     /// <summary>
-    /// Validates the given family, ensuring it exists
+    /// Validates the given family.
     /// </summary>
-    /// <param name="family">The family instance to validate.</param>
+    /// <param name="family">The family to be validated.</param>
     /// <returns>The validated family instance.</returns>
     /// <exception cref="ResourceNotFoundException">
     /// Thrown when the provided family instance is null.
@@ -50,14 +50,26 @@ public static class AdditionalFamilialValidation
         return family;
     }
 
-    public static FamilyCategory ValidateFamilyCategory(this FamilyCategory? familyCategory, string familyId)
+    /// <summary>
+    /// Validates the given family category.
+    /// </summary>
+    /// <param name="familyCategory">The family category to be validated.</param>
+    /// <param name="familyId">The identifier of the associated family.</param>
+    /// <returns>The validated family category.</returns>
+    /// <exception cref="ResourceNotFoundException">
+    /// Thrown when the specified family category is null or does not exist.
+    /// </exception>
+    /// <exception cref="OperationNotAllowedException">
+    /// Thrown when the family category is not associated with the specified family.
+    /// </exception>
+    public static FamilyCategory ValidateFamilyCategory(this FamilyCategory? familyCategory, Guid familyId)
     {
         if (familyCategory is null)
         {
             throw new ResourceNotFoundException(FamilyCategoryValidationMessages.FamilyCategoryNotFound);
         }
 
-        if (familyCategory.Family.Id != Guid.Parse(familyId))
+        if (familyCategory.Family.Id != familyId)
         {
             throw new OperationNotAllowedException(FamilyCategoryValidationMessages.FamilyCategoryIsNotFromFamily);
         }
@@ -65,8 +77,47 @@ public static class AdditionalFamilialValidation
         return familyCategory;
     }
 
-    public static FamilyTransaction ValidateFamilyTransaction(this FamilyTransaction? familyTransaction, int familyId)
+    /// <summary>
+    /// Validates the given family transaction.
+    /// </summary>
+    /// <param name="familyTransaction">The family transaction to br validated.</param>
+    /// <param name="familyId">The ID of the family to validate association with.</param>
+    /// <param name="userId">The ID of the user to validate association with.</param>
+    /// <returns>The validated family transaction.</returns>
+    /// <exception cref="ResourceNotFoundException">
+    /// Thrown when the specified family transaction is null.
+    /// </exception>
+    /// <exception cref="OperationNotAllowedException">
+    /// Thrown when the family transaction is not associated with the given family.
+    /// </exception>
+    public static FamilyTransaction ValidateFamilyTransaction(this FamilyTransaction? familyTransaction, Guid familyId, string userId)
     {
-        return familyTransaction!;
+        if (familyTransaction is null)
+        {
+            throw new ResourceNotFoundException(FamilyTransactionValidationMessages.NoTransactionFound);
+        }
+
+        if (familyTransaction.Family.Id != familyId)
+        {
+            throw new OperationNotAllowedException(FamilyTransactionValidationMessages.TransactionIsNotFromTheFamily);
+        }
+
+        if (familyTransaction.User.Id != userId)
+        {
+            throw new OperationNotAllowedException(FamilyTransactionValidationMessages.TransactionIsNotFromTheUser);
+        }
+
+        return familyTransaction;
+    }
+
+
+    public static FamilyTransaction ValidateFamilyTransactionCategory(this FamilyTransaction familyTransaction, int familyCategoryId)
+    {
+        if (familyTransaction.Category.Id != familyCategoryId)
+        {
+            throw new OperationNotAllowedException(FamilyTransactionValidationMessages.CategoryNotFromTransaction);
+        }
+
+        return familyTransaction;
     }
 }

@@ -12,5 +12,5 @@ public interface IPersonalTransactionRepository
 
     Task<PersonalTransaction?> GetTransactionById(int id);
 
-    Task<List<PersonalTransaction>> GetTransactionForPeriod(string userId, DateOnly startDate, DateOnly endDate);
+    Task<List<PersonalTransaction>> GetTransactionsForPeriod(string userId, DateOnly startDate, DateOnly endDate);
 }

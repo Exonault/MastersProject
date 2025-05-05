@@ -1,6 +1,6 @@
 ﻿namespace FamilyBudgetTracker.Backend.Data.DTO.User;
 
-public class RefreshDto
+public class TokenDto
 {
     public string AccessToken { get; set; } = string.Empty;
     

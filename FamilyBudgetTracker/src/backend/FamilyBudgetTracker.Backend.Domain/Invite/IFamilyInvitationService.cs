@@ -1,4 +1,5 @@
 ﻿using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
+using FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
 
 namespace FamilyBudgetTracker.Backend.Domain.Invite;
 

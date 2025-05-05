@@ -70,7 +70,7 @@ public static class FamilyCategoryEndpoints
             .WithOpenApi();
     }
 
-    private static async Task<IResult> CreateFamilyCategory([FromBody] CreateFamilyCategoryRequest request,
+    private static async Task<IResult> CreateFamilyCategory([FromBody] FamilyCategoryRequest request,
         IFamilyCategoryService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
@@ -81,7 +81,7 @@ public static class FamilyCategoryEndpoints
         return Results.Ok();
     }
 
-    private static async Task<IResult> UpdateFamilyCategory([FromRoute] int id, [FromBody] UpdateFamilyCategoryRequest request,
+    private static async Task<IResult> UpdateFamilyCategory([FromRoute] int id, [FromBody] FamilyCategoryRequest request,
         IFamilyCategoryService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();

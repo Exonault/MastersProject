@@ -2,6 +2,7 @@
 using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.API.ExceptionHandlers;
 using FamilyBudgetTracker.Backend.API.OpenApi;
+using FamilyBudgetTracker.Backend.Authentication.Constants;
 using FamilyBudgetTracker.Backend.Data;
 using FamilyBudgetTracker.Backend.Domain.Email;
 using FamilyBudgetTracker.Backend.Domain.Entities;
@@ -121,7 +122,7 @@ public static class ServiceCollectionExtensions
                 {
                     OnMessageReceived = ctx =>
                     {
-                        ctx.Request.Cookies.TryGetValue("accessToken", out var accessToken);
+                        ctx.Request.Cookies.TryGetValue(AuthenticationConstants.CookiesName.AccessToken, out var accessToken);
 
                         if (!string.IsNullOrEmpty(accessToken))
                         {
@@ -130,6 +131,7 @@ public static class ServiceCollectionExtensions
 
                         return Task.CompletedTask;
                     }
+                    
                 };
             });
     }

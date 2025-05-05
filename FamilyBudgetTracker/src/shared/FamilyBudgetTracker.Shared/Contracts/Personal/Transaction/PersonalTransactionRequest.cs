@@ -1,6 +1,6 @@
 namespace FamilyBudgetTracker.Shared.Contracts.Personal.Transaction;
 
-public class CreatePersonalTransactionRequest
+public class PersonalTransactionRequest
 {
     public decimal Amount { get; set; }
 

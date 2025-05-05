@@ -21,7 +21,7 @@ public class CategoryService : ICategoryService
         _userRepository = userRepository;
     }
 
-    public async Task CreateCategory(CreateCategoryRequest request, string userId)
+    public async Task CreateCategory(CategoryRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -35,7 +35,7 @@ public class CategoryService : ICategoryService
     }
 
 
-    public async Task UpdateCategory(int id, UpdateCategoryRequest request, string userId)
+    public async Task UpdateCategory(int id, CategoryRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -46,8 +46,6 @@ public class CategoryService : ICategoryService
         category = category.ValidateCategory(user.Id);
 
         Category updatedCategory = request.ToCategory(category);
-        // updatedCategory.Id = category.Id;
-        // updatedCategory.User = user;
 
         await _categoryRepository.UpdateCategory(updatedCategory);
     }

@@ -40,15 +40,16 @@ public class PersonalTransactionRepository : IPersonalTransactionRepository
             .FirstOrDefaultAsync(pt => pt.Id == id);
     }
 
-    public async Task<List<PersonalTransaction>> GetTransactionForPeriod(string userId, DateOnly startDate,
+    public async Task<List<PersonalTransaction>> GetTransactionsForPeriod(string userId, DateOnly startDate,
         DateOnly endDate)
     {
         return await _dbContext.Transactions
             .Include(pt => pt.User)
             .Include(pt => pt.Category)
-            .Where(pt => pt.User.Id == userId &&
-                         pt.TransactionDate >= startDate &&
-                         pt.TransactionDate <= endDate)
+            .Where(pt =>
+                pt.User.Id == userId &&
+                pt.TransactionDate >= startDate &&
+                pt.TransactionDate <= endDate)
             .Include(pt => pt.Category)
             .ToListAsync();
     }

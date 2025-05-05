@@ -24,7 +24,7 @@ public class FamilyCategoryService : IFamilyCategoryService
         _familyRepository = familyRepository;
     }
 
-    public async Task CreateFamilyCategory(CreateFamilyCategoryRequest request, string userId, string familyId)
+    public async Task CreateFamilyCategory(FamilyCategoryRequest request, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -42,7 +42,7 @@ public class FamilyCategoryService : IFamilyCategoryService
         await _familyCategoryRepository.CreateFamilyCategory(familyCategory);
     }
 
-    public async Task UpdateFamilyCategory(int id, UpdateFamilyCategoryRequest request, string userId, string familyId)
+    public async Task UpdateFamilyCategory(int id, FamilyCategoryRequest request, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -54,9 +54,9 @@ public class FamilyCategoryService : IFamilyCategoryService
 
         user.ValidateUserFamily(family.Id);
 
-        FamilyCategory? familyCategory = await _familyCategoryRepository.GetCategoryById(id);
+        FamilyCategory? familyCategory = await _familyCategoryRepository.GetFamilyCategoryById(id);
 
-        familyCategory = familyCategory.ValidateFamilyCategory(family.Id.ToString());
+        familyCategory = familyCategory.ValidateFamilyCategory(family.Id);
 
         FamilyCategory updatedCategory = request.ToFamilyCategory(familyCategory);
 
@@ -75,9 +75,9 @@ public class FamilyCategoryService : IFamilyCategoryService
 
         user.ValidateUserFamily(family.Id);
 
-        FamilyCategory? familyCategory = await _familyCategoryRepository.GetCategoryById(id);
+        FamilyCategory? familyCategory = await _familyCategoryRepository.GetFamilyCategoryById(id);
 
-        familyCategory = familyCategory.ValidateFamilyCategory(family.Id.ToString());
+        familyCategory = familyCategory.ValidateFamilyCategory(family.Id);
 
         await _familyCategoryRepository.DeleteFamilyCategory(familyCategory);
     }
@@ -94,9 +94,9 @@ public class FamilyCategoryService : IFamilyCategoryService
 
         user.ValidateUserFamily(family.Id);
 
-        FamilyCategory? familyCategory = await _familyCategoryRepository.GetCategoryById(id);
+        FamilyCategory? familyCategory = await _familyCategoryRepository.GetFamilyCategoryById(id);
 
-        familyCategory = familyCategory.ValidateFamilyCategory(family.Id.ToString());
+        familyCategory = familyCategory.ValidateFamilyCategory(family.Id);
 
         FamilyCategoryResponse response = familyCategory.ToFamilyCategoryResponse();
 
@@ -115,7 +115,7 @@ public class FamilyCategoryService : IFamilyCategoryService
 
         user.ValidateUserFamily(family.Id);
 
-        List<FamilyCategory> categories = await _familyCategoryRepository.GetCategoriesByFamilyId(familyId);
+        List<FamilyCategory> categories = await _familyCategoryRepository.GetFamilyCategoriesByFamilyId(familyId);
 
         List<FamilyCategoryResponse> response = categories.Select(x => x.ToFamilyCategoryResponse())
             .ToList();

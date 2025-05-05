@@ -1,6 +1,6 @@
 ﻿namespace FamilyBudgetTracker.Shared.Contracts.Familial.Family;
 
-public class CreateFamilyRequest
+public class FamilyRequest
 {
     public string Name { get; set; }
 

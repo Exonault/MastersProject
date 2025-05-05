@@ -9,6 +9,7 @@ using FamilyBudgetTracker.Backend.Domain.Repositories;
 using FamilyBudgetTracker.Backend.Domain.Repositories.Familial;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
+using FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
 using FamilyBudgetTracker.Shared.Contracts.User;
 
 namespace FamilyBudgetTracker.Backend.DomainServices.DomainServices.Familial;
@@ -30,7 +31,7 @@ public class FamilyService : IFamilyService
         _sendEmailService = sendEmailService;
     }
 
-    public async Task<string> CreateFamily(CreateFamilyRequest request, string userId)
+    public async Task<string> CreateFamily(FamilyRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -118,9 +119,7 @@ public class FamilyService : IFamilyService
 
         var familyMemberResponse = await GetFamilyMembersResponse(family.FamilyMembers);
 
-        FamilyResponse familyResponse = family.ToFamilyResponse();
-
-        familyResponse.FamilyMembers = familyMemberResponse;
+        FamilyResponse familyResponse = family.ToFamilyResponse(familyMemberResponse);
 
         return familyResponse;
     }
@@ -133,10 +132,10 @@ public class FamilyService : IFamilyService
 
         foreach (Family family in allFamilies)
         {
-            FamilyResponse familyResponse = family.ToFamilyResponse();
+            List<UserResponse> familyMembersResponse = await GetFamilyMembersResponse(family.FamilyMembers);
 
-            familyResponse.FamilyMembers = await GetFamilyMembersResponse(family.FamilyMembers);
-
+            FamilyResponse familyResponse = family.ToFamilyResponse(familyMembersResponse);
+            
             familyResponses.Add(familyResponse);
         }
 

@@ -74,7 +74,7 @@ public static class RecurringTransactionEndpoints
         //     .WithOpenApi();
     }
 
-    private static async Task<IResult> CreateTransaction([FromBody] CreateRecurringTransactionRequest request,
+    private static async Task<IResult> CreateTransaction([FromBody] RecurringTransactionRequest request,
         IRecurringTransactionService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
@@ -83,8 +83,9 @@ public static class RecurringTransactionEndpoints
         return Results.Ok();
     }
 
+    //TODO manage execution date when updated
     private static async Task<IResult> UpdateTransaction([FromRoute] int id,
-        [FromBody] UpdateRecurringTransactionRequest request,
+        [FromBody] RecurringTransactionRequest request,
         IRecurringTransactionService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();

@@ -10,6 +10,7 @@ using FamilyBudgetTracker.Backend.Domain.Repositories;
 using FamilyBudgetTracker.Backend.Domain.Repositories.Familial;
 using FamilyBudgetTracker.Backend.DomainServices.FamilyInvitation.Messages;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
+using FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
 
 namespace FamilyBudgetTracker.Backend.DomainServices.FamilyInvitation;
 

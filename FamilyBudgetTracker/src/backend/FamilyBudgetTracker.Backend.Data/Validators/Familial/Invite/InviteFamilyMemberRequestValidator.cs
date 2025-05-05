@@ -1,12 +1,12 @@
 ﻿using FamilyBudgetTracker.Backend.Domain.Messages.Familial;
-using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
+using FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
 using FluentValidation;
 
-namespace FamilyBudgetTracker.Backend.Data.Validators.Familial.Family;
+namespace FamilyBudgetTracker.Backend.Data.Validators.Familial.Invite;
 
-public class AddFamilyMembersRequestValidator : AbstractValidator<InviteFamilyMembersRequest>
+public class InviteFamilyMemberRequestValidator : AbstractValidator<InviteFamilyMembersRequest>
 {
-    public AddFamilyMembersRequestValidator()
+    public InviteFamilyMemberRequestValidator()
     {
         RuleFor(x => x.EmailList)
             .NotNull()

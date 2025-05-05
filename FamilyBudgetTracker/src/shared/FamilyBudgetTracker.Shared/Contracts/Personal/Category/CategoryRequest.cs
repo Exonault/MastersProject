@@ -1,6 +1,6 @@
 ﻿namespace FamilyBudgetTracker.Shared.Contracts.Personal.Category;
 
-public class UpdateCategoryRequest
+public class CategoryRequest
 {
     public string Name { get; set; } = string.Empty;
 

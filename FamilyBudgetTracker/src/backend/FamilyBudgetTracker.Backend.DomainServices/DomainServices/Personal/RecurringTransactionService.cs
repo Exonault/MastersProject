@@ -25,7 +25,7 @@ public class RecurringTransactionService : IRecurringTransactionService
         _categoryRepository = categoryRepository;
     }
 
-    public async Task CreateRecurringTransaction(CreateRecurringTransactionRequest request, string userId)
+    public async Task CreateRecurringTransaction(RecurringTransactionRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -45,7 +45,7 @@ public class RecurringTransactionService : IRecurringTransactionService
         await _recurringTransactionRepository.CreateRecurringTransaction(transaction);
     }
 
-    public async Task UpdateRecurringTransaction(int id, UpdateRecurringTransactionRequest request, string userId)
+    public async Task UpdateRecurringTransaction(int id, RecurringTransactionRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -58,6 +58,7 @@ public class RecurringTransactionService : IRecurringTransactionService
         RecurringTransaction? transaction = await _recurringTransactionRepository.GetRecurringTransactionById(id);
 
         transaction = transaction.ValidateRecurringTransaction(user.Id);
+        transaction = transaction.ValidateRecurringTransactionCategory(category.Id);
 
         RecurringTransaction updatedTransaction = request.ToRecurringTransaction(transaction);
 

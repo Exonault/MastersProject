@@ -1,6 +1,6 @@
 ﻿namespace FamilyBudgetTracker.Shared.Contracts.Familial.FamilyCategory;
 
-public class UpdateFamilyCategoryRequest
+public class FamilyCategoryRequest
 {
     public string Name { get; set; }
 

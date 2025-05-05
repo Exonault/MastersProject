@@ -28,8 +28,9 @@ public static class ApplicationEndpointsExtension
 
         familyGroup.MapFamilyEndpoints();
         familyGroup.MapFamilyCategoryEndpoints();
+        familyGroup.MapFamilyTransactionEndpoints();
     }
-    
+
     private static void MapUserEndpoints(this WebApplication app)
     {
         var userGroup = app.MapGroup("user");

@@ -2,7 +2,7 @@
 
 namespace FamilyBudgetTracker.Shared.Contracts.Personal.Transaction;
 
-public class TransactionForPeriodSummaryResponse
+public class TransactionsForPeriodSummaryResponse
 {
     [JsonPropertyName("incomeAmount")]
     public decimal IncomeAmount { get; set; }

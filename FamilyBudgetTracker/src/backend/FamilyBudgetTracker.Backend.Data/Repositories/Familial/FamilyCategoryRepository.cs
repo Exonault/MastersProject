@@ -32,14 +32,14 @@ public class FamilyCategoryRepository : IFamilyCategoryRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<FamilyCategory?> GetCategoryById(int id)
+    public async Task<FamilyCategory?> GetFamilyCategoryById(int id)
     {
         return await _dbContext.FamilyCategories
             .Include(fc => fc.Family)
             .FirstOrDefaultAsync(fc => fc.Id == id);
     }
 
-    public async Task<List<FamilyCategory>> GetCategoriesByFamilyId(string familyId)
+    public async Task<List<FamilyCategory>> GetFamilyCategoriesByFamilyId(string familyId)
     {
         return await _dbContext.FamilyCategories
             .Include(fc => fc.Family)

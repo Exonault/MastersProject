@@ -42,7 +42,7 @@ public class UserService : IUserService
         {
             throw new UserAlreadyRegisteredException(UserValidationMessages.AlreadyRegistered);
         }
-
+        
         User user = request.ToUser();
 
         IdentityResult identityResult = await _userRepository.Create(user, request.Password);
@@ -102,13 +102,13 @@ public class UserService : IUserService
 
         await _userRepository.UpdateUser(user);
 
-        RefreshDto refreshDto = new RefreshDto
+        TokenDto tokenDto = new TokenDto
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken
         };
 
-        _applicationAuthenticationService.SetTokensInsideCookie(refreshDto, httpContext);
+        _applicationAuthenticationService.SetTokensInsideCookie(tokenDto, httpContext);
     }
 
     public async Task Refresh(string? refreshToken, HttpContext httpContext)
@@ -127,13 +127,13 @@ public class UserService : IUserService
 
         string newAccessToken = await _generateTokenService.GenerateAccessToken(user);
 
-        RefreshDto refreshDto = new RefreshDto
+        TokenDto tokenDto = new TokenDto
         {
             AccessToken = newAccessToken,
             RefreshToken = refreshToken
         };
 
-        _applicationAuthenticationService.SetTokensInsideCookie(refreshDto, httpContext);
+        _applicationAuthenticationService.SetTokensInsideCookie(tokenDto, httpContext);
     }
 
     public async Task Revoke(HttpContext httpContext)

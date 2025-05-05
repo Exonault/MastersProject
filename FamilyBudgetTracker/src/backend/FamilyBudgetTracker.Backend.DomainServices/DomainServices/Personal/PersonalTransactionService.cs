@@ -3,6 +3,8 @@ using FamilyBudgetTracker.Backend.Data.Validation;
 using FamilyBudgetTracker.Backend.Domain.Entities;
 using FamilyBudgetTracker.Backend.Domain.Entities.Common;
 using FamilyBudgetTracker.Backend.Domain.Entities.Personal;
+using FamilyBudgetTracker.Backend.Domain.Exceptions;
+using FamilyBudgetTracker.Backend.Domain.Messages.Personal;
 using FamilyBudgetTracker.Backend.Domain.Repositories;
 using FamilyBudgetTracker.Backend.Domain.Repositories.Personal;
 using FamilyBudgetTracker.Backend.Domain.Services.Personal;
@@ -25,7 +27,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         _categoryRepository = categoryRepository;
     }
 
-    public async Task CreateTransaction(CreatePersonalTransactionRequest request, string userId)
+    public async Task CreateTransaction(PersonalTransactionRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -42,7 +44,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         await _transactionRepository.CreateTransaction(transaction);
     }
 
-    public async Task UpdateTransaction(int id, UpdatePersonalTransactionRequest request, string userId)
+    public async Task UpdateTransaction(int id, PersonalTransactionRequest request, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -55,7 +57,8 @@ public class PersonalTransactionService : IPersonalTransactionService
         PersonalTransaction? transaction = await _transactionRepository.GetTransactionById(id);
 
         transaction = transaction.ValidatePersonalTransaction(user.Id);
-
+        transaction = transaction.ValidatePersonalTransactionCategory(category.Id);
+        
         PersonalTransaction updatedTransaction = request.ToPersonalTransaction(transaction);
 
         await _transactionRepository.UpdateTransaction(updatedTransaction);
@@ -97,7 +100,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         user = user.ValidateUser();
 
         List<PersonalTransaction> transactions =
-            await _transactionRepository.GetTransactionForPeriod(user.Id, startDate, endDate);
+            await _transactionRepository.GetTransactionsForPeriod(user.Id, startDate, endDate);
 
         List<PersonalTransactionResponse> response = transactions.Select(x => x.ToPersonalTransactionResponse())
             .ToList();
@@ -105,7 +108,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         return response;
     }
 
-    public async Task<TransactionForPeriodSummaryResponse> GetTransactionForPeriodSummary(DateOnly startDate, DateOnly endDate,
+    public async Task<TransactionsForPeriodSummaryResponse> GetTransactionsForPeriodSummary(DateOnly startDate, DateOnly endDate,
         string userId)
     {
         User? user = await _userRepository.GetById(userId);
@@ -113,7 +116,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         user = user.ValidateUser();
 
         List<PersonalTransaction> transactions =
-            await _transactionRepository.GetTransactionForPeriod(user.Id, startDate, endDate);
+            await _transactionRepository.GetTransactionsForPeriod(user.Id, startDate, endDate);
 
         var response = GenerateTransactionForPeriodSummaryResponse(transactions);
 
@@ -121,7 +124,7 @@ public class PersonalTransactionService : IPersonalTransactionService
     }
 
 
-    private static TransactionForPeriodSummaryResponse GenerateTransactionForPeriodSummaryResponse(List<PersonalTransaction> transactions)
+    private static TransactionsForPeriodSummaryResponse GenerateTransactionForPeriodSummaryResponse(List<PersonalTransaction> transactions)
     {
         var expenseSum = 0.0m;
         var incomeSum = 0.0m;
@@ -145,7 +148,7 @@ public class PersonalTransactionService : IPersonalTransactionService
             }
         }
 
-        var result = new TransactionForPeriodSummaryResponse
+        var result = new TransactionsForPeriodSummaryResponse
         {
             IncomeAmount = incomeSum,
             ExpenseAmount = expenseSum,

@@ -11,7 +11,7 @@ public class ApplicationAuthenticationService : IApplicationAuthenticationServic
     {
     }
 
-    public void SetTokensInsideCookie(RefreshDto request, HttpContext httpContext)
+    public void SetTokensInsideCookie(TokenDto request, HttpContext httpContext)
     {
         httpContext.Response.Cookies.Append(AuthenticationConstants.CookiesName.AccessToken, request.AccessToken, new CookieOptions()
         {

@@ -71,7 +71,7 @@ public static class PersonalTransactionEndpoints
 
         transactionsGroup.MapGet("/period/summary", GetTransactionsForPeriodSummary)
             // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
-            .Produces(StatusCodes.Status200OK, typeof(TransactionForPeriodSummaryResponse), "application/json")
+            .Produces(StatusCodes.Status200OK, typeof(TransactionsForPeriodSummaryResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -81,7 +81,7 @@ public static class PersonalTransactionEndpoints
             .WithOpenApi();
     }
 
-    private static async Task<IResult> CreateTransaction([FromBody] CreatePersonalTransactionRequest request,
+    private static async Task<IResult> CreateTransaction([FromBody] PersonalTransactionRequest request,
         IPersonalTransactionService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
@@ -91,8 +91,7 @@ public static class PersonalTransactionEndpoints
     }
 
 
-    private static async Task<IResult> UpdateTransaction([FromRoute] int id,
-        [FromBody] UpdatePersonalTransactionRequest request,
+    private static async Task<IResult> UpdateTransaction([FromRoute] int id, [FromBody] PersonalTransactionRequest request,
         IPersonalTransactionService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
@@ -137,7 +136,7 @@ public static class PersonalTransactionEndpoints
     {
         string userId = httpContext.GetUserIdFromAuth();
 
-        var summary = await service.GetTransactionForPeriodSummary(startDate, endDate, userId);
+        var summary = await service.GetTransactionsForPeriodSummary(startDate, endDate, userId);
 
         return Results.Ok(summary);
     }

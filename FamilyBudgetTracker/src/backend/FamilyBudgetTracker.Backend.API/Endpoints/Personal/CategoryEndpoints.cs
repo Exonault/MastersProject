@@ -71,7 +71,7 @@ public static class CategoryEndpoints
             .WithOpenApi();
     }
 
-    private static async Task<IResult> CreateCategory([FromBody] CreateCategoryRequest request,
+    private static async Task<IResult> CreateCategory([FromBody] CategoryRequest request,
         ICategoryService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
@@ -80,7 +80,7 @@ public static class CategoryEndpoints
         return Results.Ok();
     }
 
-    private static async Task<IResult> UpdateCategory([FromRoute] int id, [FromBody] UpdateCategoryRequest request,
+    private static async Task<IResult> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request,
         ICategoryService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();

@@ -6,7 +6,7 @@ namespace FamilyBudgetTracker.Backend.Data.Mappers.Familial;
 
 public static class FamilyCategoryMapper
 {
-    public static FamilyCategory ToFamilyCategory(this CreateFamilyCategoryRequest request)
+    public static FamilyCategory ToFamilyCategory(this FamilyCategoryRequest request)
     {
         return new FamilyCategory
         {
@@ -18,7 +18,7 @@ public static class FamilyCategoryMapper
     }
 
 
-    public static FamilyCategory ToFamilyCategory(this UpdateFamilyCategoryRequest request, FamilyCategory origin)
+    public static FamilyCategory ToFamilyCategory(this FamilyCategoryRequest request, FamilyCategory origin)
     {
         origin.Name = request.Name;
         origin.Icon = request.Icon;

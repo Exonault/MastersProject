@@ -4,9 +4,9 @@ namespace FamilyBudgetTracker.Backend.Domain.Services.Personal;
 
 public interface IPersonalTransactionService
 {
-    Task CreateTransaction(CreatePersonalTransactionRequest request, string userId);
+    Task CreateTransaction(PersonalTransactionRequest request, string userId);
     
-    Task UpdateTransaction(int id, UpdatePersonalTransactionRequest request, string userId);
+    Task UpdateTransaction(int id, PersonalTransactionRequest request, string userId);
 
     Task DeleteTransaction(int id, string userId);
     
@@ -14,5 +14,5 @@ public interface IPersonalTransactionService
 
     Task<List<PersonalTransactionResponse>> GetTransactionForPeriod(DateOnly startDate, DateOnly endDate, string userId);
 
-    Task<TransactionForPeriodSummaryResponse> GetTransactionForPeriodSummary(DateOnly startDate, DateOnly endDate, string userId);
+    Task<TransactionsForPeriodSummaryResponse> GetTransactionsForPeriodSummary(DateOnly startDate, DateOnly endDate, string userId);
 }

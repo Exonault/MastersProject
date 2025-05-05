@@ -1,6 +1,6 @@
-namespace FamilyBudgetTracker.Backend.Domain.Messages.Personal;
+﻿namespace FamilyBudgetTracker.Backend.Domain.Messages.Familial;
 
-public static class PersonalTransactionValdationMessages
+public static class FamilyTransactionValidationMessages
 {
     public const string AmountRequired = "Amount is required";
 
@@ -13,12 +13,16 @@ public static class PersonalTransactionValdationMessages
     public const string DateValueMessage = "Date must be before today";
 
     public const string DescriptionRequired = "Description is required";
+    
+    public const string CategoryIsRequired = "Family category id is required";
 
-    public const string NoTransactionFound = "No transaction found";
+    public const string NoTransactionFound = "No family transaction found";
 
-    public const string DeleteImpossible = "You cannot delete this transaction";
+    public const string DeleteImpossible = "You cannot delete this family transaction";
 
+    public const string TransactionIsNotFromTheFamily = "The transaction is not from the family";
+    
     public const string TransactionIsNotFromTheUser = "The transaction is not from the user";
 
+    public const string CategoryNotFromTransaction = "The family category is not from the transaction";
 }
-    

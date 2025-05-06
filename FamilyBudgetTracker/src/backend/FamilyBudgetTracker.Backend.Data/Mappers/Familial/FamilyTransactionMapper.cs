@@ -35,7 +35,7 @@ public static class FamilyTransactionMapper
             Description = transaction.Description,
             TransactionDate = transaction.TransactionDate,
             Category = transaction.Category.ToFamilyCategoryResponse(),
-            User = transaction.User.ToUserResponse(userRole)
+            FamilyMember = transaction.User.ToUserResponse(userRole)
         };
     }
 }

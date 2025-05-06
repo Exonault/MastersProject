@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FamilyBudgetTracker.Backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250504103539_Initial")]
+    [Migration("20250506122835_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -369,9 +369,9 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                         },
                         new
                         {
-                            Id = "familyUser",
-                            Name = "FamilyUser",
-                            NormalizedName = "FAMILYUSER"
+                            Id = "familyMember",
+                            Name = "FamilyMember",
+                            NormalizedName = "FAMILYMEMBER"
                         });
                 });
 

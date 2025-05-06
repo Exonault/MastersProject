@@ -13,11 +13,11 @@ public static class ApplicationConstants
         public const string FamilyMemberPolicyName = "FamilyMemberPolicy";
     }
 
-    public static class ClaimNames
+    public static class ClaimValues
     {
         public const string AdminRoleClaimName = "Admin";
 
-        public const string UserRoleClaimName = "User";
+        public const string UserRoleClaimName = "FamilyMember";
 
         public const string FamilyAdminClaimName = "FamilyAdmin";
 
@@ -37,8 +37,6 @@ public static class ApplicationConstants
     {
         public const string CorsPolicy = "AllowedOrigin";
     }
-
-
 
     public static class FamilyJoining
     {

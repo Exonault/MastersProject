@@ -36,7 +36,7 @@ public static class PersonalTransactionMapper
             Description = transaction.Description,
             TransactionDate = transaction.TransactionDate,
             Category = transaction.Category.ToCategoryResponse(),
-            // UserId = transaction.User.Id
+            // UserId = transaction.FamilyMember.Id
         };
     }
 

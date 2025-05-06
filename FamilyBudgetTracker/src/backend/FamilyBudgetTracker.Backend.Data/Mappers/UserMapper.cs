@@ -15,9 +15,9 @@ public static class UserMapper
         };
     }
 
-    public static UserResponse ToUserResponse(this User user, string familyRole)
+    public static FamilyMemberResponse ToUserResponse(this User user, string familyRole)
     {
-        return new UserResponse
+        return new FamilyMemberResponse
         {
             Id = user.Id,
             UserName = user.UserName!,

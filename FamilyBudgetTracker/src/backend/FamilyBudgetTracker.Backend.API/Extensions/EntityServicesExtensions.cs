@@ -21,7 +21,7 @@ public static class EntityServicesExtensions
 {
     public static void AddEntityServices(this IServiceCollection services)
     {
-        //User services
+        //FamilyMember services
         services.AddUserServices();
 
         //Personal services

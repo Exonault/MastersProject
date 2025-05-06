@@ -22,7 +22,7 @@ public class FamilyTransactionResponse
     public FamilyCategoryResponse Category { get; set; }
 
     [JsonPropertyName("user")]
-    public UserResponse User { get; set; }
+    public FamilyMemberResponse FamilyMember { get; set; }
 
     // public FamilyResponse Family { get; set; }
 }

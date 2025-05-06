@@ -14,4 +14,6 @@ public interface IUserService
     Task Revoke(HttpContext httpContext);
 
     Task UpdateUserAccessToken(HttpContext httpContext);
+
+    Task<UserResponse> GetUserInformation(HttpContext httpContext);
 }

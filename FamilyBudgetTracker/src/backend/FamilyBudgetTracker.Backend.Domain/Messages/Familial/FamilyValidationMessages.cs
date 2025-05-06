@@ -10,5 +10,5 @@ public static class FamilyValidationMessages
 
     public const string FamilyNotFound = "Family not found";
 
-    public const string DeleteImpossible = "User is not the family admin. Cannot delete family";
+    public const string DeleteImpossible = "FamilyMember is not the family admin. Cannot delete family";
 }

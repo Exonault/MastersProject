@@ -1,4 +1,5 @@
-﻿using FamilyBudgetTracker.Backend.Authentication.Util;
+﻿using FamilyBudgetTracker.Backend.API.Constants;
+using FamilyBudgetTracker.Backend.Authentication.Util;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Shared.Contracts.Familial.FamilyTransaction;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ public static class FamilyTransactionEndpoints
         var familyTransactionGroup = group.MapGroup("familyTransaction");
 
         familyTransactionGroup.MapPost("/", CreateFamilyTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -25,7 +26,7 @@ public static class FamilyTransactionEndpoints
             .WithOpenApi();
 
         familyTransactionGroup.MapPut("/{id:int}", UpdateFamilyTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -36,7 +37,7 @@ public static class FamilyTransactionEndpoints
             .WithOpenApi();
 
         familyTransactionGroup.MapDelete("/{id:int}", DeleteFamilyTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -47,7 +48,7 @@ public static class FamilyTransactionEndpoints
             .WithOpenApi();
 
         familyTransactionGroup.MapGet("/period", GetFamilyTransactionsForPeriod)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .Produces(StatusCodes.Status200OK, typeof(List<FamilyTransactionRequest>), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -58,7 +59,7 @@ public static class FamilyTransactionEndpoints
             .WithOpenApi();
 
         familyTransactionGroup.MapGet("/period/summary", GetFamilyTransactionsForPeriod)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .Produces(StatusCodes.Status200OK, typeof(FamilyTransactionsForPeriodSummaryResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)

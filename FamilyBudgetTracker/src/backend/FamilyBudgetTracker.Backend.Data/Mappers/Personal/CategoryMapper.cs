@@ -36,7 +36,7 @@ public static class CategoryMapper
             Icon = category.Icon,
             Limit = category.Limit,
             Type = category.Type.ToString(),
-            // UserId = category.User.Id
+            // UserId = category.FamilyMember.Id
         };
     }
 }

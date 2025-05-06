@@ -1,4 +1,5 @@
-﻿using Scalar.AspNetCore;
+﻿using FamilyBudgetTracker.Backend.Authentication.Constants;
+using Scalar.AspNetCore;
 
 namespace FamilyBudgetTracker.Backend.API.Extensions;
 

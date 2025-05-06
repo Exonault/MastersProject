@@ -187,4 +187,33 @@ public class UserService : IUserService
 
         _applicationAuthenticationService.SetTokensInsideCookie(updatedTokens, httpContext);
     }
+
+    public async Task<UserResponse> GetUserInformation(HttpContext httpContext)
+    {
+        string? userName = httpContext.User.Identity?.Name;
+
+        if (userName is null)
+        {
+            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
+        }
+
+        User? user = await _userRepository.GetByName(userName);
+
+        if (user is null)
+        {
+            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
+        }
+
+        List<string> roles = await _userRepository.GetAllRoles(user);
+
+        UserResponse userResponse = new UserResponse
+        {
+            Id = user.Id,
+            UserName = user.UserName!,
+            Email = user.Email!,
+            Roles = roles
+        };
+
+        return userResponse;
+    }
 }

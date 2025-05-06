@@ -4,7 +4,7 @@ public class FamilyInvitationToken
 {
     public Guid Id { get; set; }
 
-    // public User User { get; set; }
+    // public FamilyMember FamilyMember { get; set; }
 
     public string Email { get; set; }
 

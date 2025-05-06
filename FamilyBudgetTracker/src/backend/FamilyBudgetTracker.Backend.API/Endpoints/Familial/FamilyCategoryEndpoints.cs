@@ -1,4 +1,5 @@
-﻿using FamilyBudgetTracker.Backend.Authentication.Util;
+﻿using FamilyBudgetTracker.Backend.API.Constants;
+using FamilyBudgetTracker.Backend.Authentication.Util;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Shared.Contracts.Familial.FamilyCategory;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ public static class FamilyCategoryEndpoints
         var familyCategoryGroup = group.MapGroup("familyCategory");
 
         familyCategoryGroup.MapPost("/", CreateFamilyCategory)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -25,6 +27,7 @@ public static class FamilyCategoryEndpoints
 
 
         familyCategoryGroup.MapPut("/{id:int}", UpdateFamilyCategory)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -36,6 +39,7 @@ public static class FamilyCategoryEndpoints
             .WithOpenApi();
 
         familyCategoryGroup.MapDelete("/{id:int}", DeleteFamilyCategory)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -49,6 +53,7 @@ public static class FamilyCategoryEndpoints
 
         familyCategoryGroup.MapGet("/{id:int}", GetFamilyCategoryById)
             .AddFluentValidationAutoValidation()
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .Produces(StatusCodes.Status200OK, typeof(FamilyCategoryResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -59,6 +64,7 @@ public static class FamilyCategoryEndpoints
             .WithOpenApi();
 
         familyCategoryGroup.MapGet("/family", GetFamilyCategoriesByFamilyId)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK, typeof(List<FamilyCategoryResponse>), "application/json")
             .Produces(StatusCodes.Status400BadRequest)

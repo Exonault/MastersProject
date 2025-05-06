@@ -7,6 +7,7 @@ using FamilyBudgetTracker.Backend.Domain.Invite;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
+using FamilyBudgetTracker.Shared.Contracts.User;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
@@ -19,7 +20,7 @@ public static class FamilyEndpoints
         var familyGroup = group.MapGroup("family");
 
         familyGroup.MapPost("/", CreateFamily)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -31,7 +32,7 @@ public static class FamilyEndpoints
             .WithOpenApi();
 
         familyGroup.MapDelete("/{id:guid}", DeleteFamily)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -53,7 +54,7 @@ public static class FamilyEndpoints
             .WithOpenApi();
 
         familyGroup.MapGet("/all", GetAllFamilies)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.AdminRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.AdminRolePolicyName)
             .Produces(StatusCodes.Status200OK, typeof(List<FamilyResponse>), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -64,7 +65,7 @@ public static class FamilyEndpoints
             .WithOpenApi();
 
         familyGroup.MapPost("/invite", InviteToFamily)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)

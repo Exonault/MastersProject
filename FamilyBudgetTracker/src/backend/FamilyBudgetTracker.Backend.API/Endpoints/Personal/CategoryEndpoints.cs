@@ -1,7 +1,11 @@
-﻿using FamilyBudgetTracker.Backend.Authentication.Util;
+﻿using System.Runtime.Serialization.Formatters.Binary;
+using FamilyBudgetTracker.Backend.API.Constants;
+using FamilyBudgetTracker.Backend.API.Policy;
+using FamilyBudgetTracker.Backend.Authentication.Util;
 using FamilyBudgetTracker.Backend.Domain.Services.Personal;
 using FamilyBudgetTracker.Shared.Contracts.Personal.Category;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.API.Endpoints.Personal;
@@ -13,7 +17,7 @@ public static class CategoryEndpoints
         var categoryGroup = group.MapGroup("category");
 
         categoryGroup.MapPost("/", CreateCategory)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -26,7 +30,7 @@ public static class CategoryEndpoints
 
 
         categoryGroup.MapPut("/{id:int}", UpdateCategory)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -39,7 +43,7 @@ public static class CategoryEndpoints
 
 
         categoryGroup.MapDelete("/{id:int}", DeleteCategory)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -50,7 +54,12 @@ public static class CategoryEndpoints
             .WithOpenApi();
 
         categoryGroup.MapGet("/{id:int}", GetCategoryById)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            // .CacheOutput(options =>
+            // {
+            //     options.AddPolicy(typeof(AuthenticatedUserCachePolicy));
+            //     // options.Tag("test");
+            // })
             .Produces(StatusCodes.Status200OK, typeof(CategoryResponse), "application/json")
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -60,8 +69,7 @@ public static class CategoryEndpoints
             .WithOpenApi();
 
         categoryGroup.MapGet("/user", GetCategoriesByUserId)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
-            // .CacheOutput(x => x.Expire(TimeSpan.FromMinutes(5)))
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK, typeof(List<CategoryResponse>), "application/json")
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -81,11 +89,16 @@ public static class CategoryEndpoints
     }
 
     private static async Task<IResult> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request,
-        ICategoryService service, HttpContext httpContext)
+        ICategoryService service, HttpContext httpContext, IOutputCacheStore cacheStore)
     {
         var userId = httpContext.GetUserIdFromAuth();
 
         await service.UpdateCategory(id, request, userId);
+
+        // await cacheStore.EvictByTagAsync("test", CancellationToken.None);
+
+        // cacheStore.
+
         return Results.Ok();
     }
 

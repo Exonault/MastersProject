@@ -18,7 +18,7 @@ builder.Services.AddApplicationAuthenticationServices(configuration);
 builder.Services.AddApplicationAuthorizationServices();
 
 //Cache
-// builder.Services.AddApplicationCachingServices(configuration);
+builder.Services.AddApplicationCachingServices(configuration);
 
 //Send email service
 builder.Services.AddEmailServices(configuration);
@@ -52,7 +52,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// app.UseOutputCache();
+app.UseOutputCache();
 
 //Map endpoints
 app.MapApplicationEndpoints();

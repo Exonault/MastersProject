@@ -12,5 +12,5 @@ public class FamilyResponse
     public string Name { get; set; }
 
     [JsonPropertyName("familyMembers")]
-    public List<UserResponse> FamilyMembers { get; set; }
+    public List<FamilyMemberResponse> FamilyMembers { get; set; }
 }

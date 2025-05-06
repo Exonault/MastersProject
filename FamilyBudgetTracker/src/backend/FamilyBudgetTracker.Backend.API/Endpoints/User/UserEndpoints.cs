@@ -29,15 +29,15 @@ public static class UserEndpoint
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .WithSummary("Log a user in the system")
+            .WithSummary("Log in for a user")
             .WithOpenApi();
 
         group.MapPost("refresh/", Refresh)
-            .AllowAnonymous()
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .WithSummary("Refresh user tokens")
+            .WithSummary("Refresh user access token")
             .WithOpenApi();
 
         group.MapDelete("revoke/", Revoke)
@@ -49,13 +49,23 @@ public static class UserEndpoint
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Revoke all tokens")
             .WithOpenApi();
-        
+
         group.MapGet("joinFamily/{token:guid}", JoinFamily)
             .AllowAnonymous()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Adds user to a family")
+            .WithOpenApi();
+
+        group.MapGet("/me", GetLoggedUser)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .Produces(StatusCodes.Status200OK, typeof(UserResponse), "application/json")
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Retrieves information about the logged user")
             .WithOpenApi();
     }
 
@@ -96,9 +106,13 @@ public static class UserEndpoint
     private static async Task<IResult> JoinFamily([FromRoute] Guid token,
         IFamilyInvitationService service, HttpContext httpContext)
     {
-
         await service.AddUserToFamily(token.ToString());
-        
         return Results.Ok();
+    }
+
+    private static async Task<IResult> GetLoggedUser(IUserService service, HttpContext httpContext)
+    {
+        UserResponse response = await service.GetUserInformation(httpContext);
+        return Results.Ok(response);
     }
 }

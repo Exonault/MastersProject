@@ -2,6 +2,7 @@
 using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.API.ExceptionHandlers;
 using FamilyBudgetTracker.Backend.API.OpenApi;
+using FamilyBudgetTracker.Backend.API.Policy;
 using FamilyBudgetTracker.Backend.Authentication.Constants;
 using FamilyBudgetTracker.Backend.Data;
 using FamilyBudgetTracker.Backend.Domain.Email;
@@ -20,7 +21,8 @@ public static class ServiceCollectionExtensions
 {
     public static void AddOpenApiServices(this IServiceCollection services)
     {
-        services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
+        services.AddOpenApi();
+        // services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
     }
 
     public static void AddDatabase(this IServiceCollection services, ConfigurationManager configuration)
@@ -74,7 +76,10 @@ public static class ServiceCollectionExtensions
 
     public static void AddApplicationCachingServices(this IServiceCollection service, ConfigurationManager configuration)
     {
-        service.AddOutputCache()
+        service.AddOutputCache(options =>
+            {
+                options.AddPolicy(nameof(AuthenticatedUserCachePolicy), AuthenticatedUserCachePolicy.Instance);
+            })
             .AddStackExchangeRedisOutputCache(options =>
             {
                 options.InstanceName = configuration["Redis:Name"]!;
@@ -131,7 +136,6 @@ public static class ServiceCollectionExtensions
 
                         return Task.CompletedTask;
                     }
-                    
                 };
             });
     }
@@ -142,23 +146,23 @@ public static class ServiceCollectionExtensions
             .AddPolicy(ApplicationConstants.PolicyNames.AdminRolePolicyName, p =>
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.AdminRoleClaimName);
+                    ApplicationConstants.ClaimValues.AdminRoleClaimName);
 
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
             })
             .AddPolicy(ApplicationConstants.PolicyNames.UserRolePolicyName, p =>
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.UserRoleClaimName);
+                    ApplicationConstants.ClaimValues.UserRoleClaimName);
 
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
             })
             .AddPolicy(ApplicationConstants.PolicyNames.FamilyAdminPolicyName, p =>
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.UserRoleClaimName);
+                    ApplicationConstants.ClaimValues.UserRoleClaimName);
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.FamilyAdminClaimName);
+                    ApplicationConstants.ClaimValues.FamilyAdminClaimName);
 
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimFamilyIdType);
@@ -166,9 +170,9 @@ public static class ServiceCollectionExtensions
             .AddPolicy(ApplicationConstants.PolicyNames.FamilyMemberPolicyName, p =>
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.UserRoleClaimName);
+                    ApplicationConstants.ClaimValues.UserRoleClaimName);
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.FamilyMemberClaimName);
+                    ApplicationConstants.ClaimValues.FamilyMemberClaimName);
 
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimFamilyIdType);

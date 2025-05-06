@@ -1,7 +1,9 @@
+using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.Authentication.Util;
 using FamilyBudgetTracker.Backend.Domain.Services.Personal;
 using FamilyBudgetTracker.Shared.Contracts.Personal.Transaction;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace FamilyBudgetTracker.Backend.API.Endpoints.Personal;
@@ -13,7 +15,7 @@ public static class PersonalTransactionEndpoints
         var transactionsGroup = group.MapGroup("transaction");
 
         transactionsGroup.MapPost("/", CreateTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -25,7 +27,7 @@ public static class PersonalTransactionEndpoints
             .WithOpenApi();
 
         transactionsGroup.MapPut("/{id:int}", UpdateTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -37,7 +39,7 @@ public static class PersonalTransactionEndpoints
             .WithOpenApi();
 
         transactionsGroup.MapDelete("/{id:int}", DeleteTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -48,7 +50,7 @@ public static class PersonalTransactionEndpoints
             .WithOpenApi();
 
         transactionsGroup.MapGet("/{id:int}", GetTransactionById)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK, typeof(PersonalTransactionResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -59,7 +61,8 @@ public static class PersonalTransactionEndpoints
             .WithOpenApi();
 
         transactionsGroup.MapGet("/period", GetTransactionsForPeriod)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .CacheOutput("PerUser")
             .Produces(StatusCodes.Status200OK, typeof(List<PersonalTransactionResponse>), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -70,7 +73,7 @@ public static class PersonalTransactionEndpoints
             .WithOpenApi();
 
         transactionsGroup.MapGet("/period/summary", GetTransactionsForPeriodSummary)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK, typeof(TransactionsForPeriodSummaryResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
@@ -137,7 +140,7 @@ public static class PersonalTransactionEndpoints
         string userId = httpContext.GetUserIdFromAuth();
 
         var summary = await service.GetTransactionsForPeriodSummary(startDate, endDate, userId);
-
+        
         return Results.Ok(summary);
     }
 }

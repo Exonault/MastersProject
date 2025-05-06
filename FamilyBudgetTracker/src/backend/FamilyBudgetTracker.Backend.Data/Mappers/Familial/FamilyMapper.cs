@@ -15,7 +15,7 @@ public static class FamilyMapper
         };
     }
     
-    public static FamilyResponse ToFamilyResponse(this Family family, List<UserResponse> familyMembers)
+    public static FamilyResponse ToFamilyResponse(this Family family, List<FamilyMemberResponse> familyMembers)
     {
         return new FamilyResponse
         {

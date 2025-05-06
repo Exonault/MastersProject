@@ -2,7 +2,7 @@
 
 namespace FamilyBudgetTracker.Shared.Contracts.User;
 
-public class UserResponse
+public class FamilyMemberResponse
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }
@@ -13,6 +13,6 @@ public class UserResponse
     [JsonPropertyName("email")]
     public string Email { get; set; }
 
-    [JsonPropertyName("roles")]
-    public List<string> Roles { get; set; }
+    [JsonPropertyName("familyRole")]
+    public string FamilyRole { get; set; }
 }

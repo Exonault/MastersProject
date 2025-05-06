@@ -1,4 +1,5 @@
-﻿using FamilyBudgetTracker.Backend.Authentication.Util;
+﻿using FamilyBudgetTracker.Backend.API.Constants;
+using FamilyBudgetTracker.Backend.Authentication.Util;
 using FamilyBudgetTracker.Backend.Domain.Services.Personal;
 using FamilyBudgetTracker.Shared.Contracts.Personal.RecurringTransaction;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ public static class RecurringTransactionEndpoints
         RouteGroupBuilder transactionGroup = group.MapGroup("recurringTransaction");
 
         transactionGroup.MapPost("/", CreateTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -25,7 +26,7 @@ public static class RecurringTransactionEndpoints
             .WithOpenApi();
 
         transactionGroup.MapDelete("/{id:int}", DeleteTransaction)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
@@ -37,7 +38,7 @@ public static class RecurringTransactionEndpoints
             .WithOpenApi();
 
         transactionGroup.MapGet("/{id:int}", GetTransactionById)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK, typeof(RecurringTransactionResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
@@ -49,7 +50,7 @@ public static class RecurringTransactionEndpoints
             .WithOpenApi();
 
         transactionGroup.MapGet("/user", GetTransactionsByUserId)
-            // .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK, typeof(List<RecurringTransactionResponse>), "application/json")
             .Produces(StatusCodes.Status400BadRequest)

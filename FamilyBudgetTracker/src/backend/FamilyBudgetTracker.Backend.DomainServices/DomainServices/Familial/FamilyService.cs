@@ -41,6 +41,7 @@ public class FamilyService : IFamilyService
         await _userRepository.UpdateUser(user);
 
         await _userRepository.AddToRole(user, UserConstants.RoleTypes.FamilyAdminRoleType);
+        await _userRepository.AddToRole(user, UserConstants.RoleTypes.FamilyMemberRoleType);
     }
 
 
@@ -86,7 +87,7 @@ public class FamilyService : IFamilyService
 
         foreach (Family family in allFamilies)
         {
-            List<UserResponse> familyMembersResponse = await GetFamilyMembersResponse(family.FamilyMembers);
+            List<FamilyMemberResponse> familyMembersResponse = await GetFamilyMembersResponse(family.FamilyMembers);
 
             FamilyResponse familyResponse = family.ToFamilyResponse(familyMembersResponse);
             
@@ -97,19 +98,19 @@ public class FamilyService : IFamilyService
     }
 
 
-    private async Task<List<UserResponse>> GetFamilyMembersResponse(List<User> familyMembers)
+    private async Task<List<FamilyMemberResponse>> GetFamilyMembersResponse(List<User> familyMembers)
     {
-        List<UserResponse> familyMemberResponse = [];
+        List<FamilyMemberResponse> familyMembersResponse = [];
 
         foreach (User familyMember in familyMembers)
         {
             string mainFamilyRole = await _userRepository.GetMainFamilyRole(familyMember);
 
-            UserResponse userResponse = familyMember.ToUserResponse(mainFamilyRole);
+            FamilyMemberResponse familyMemberResponse = familyMember.ToUserResponse(mainFamilyRole);
 
-            familyMemberResponse.Add(userResponse);
+            familyMembersResponse.Add(familyMemberResponse);
         }
 
-        return familyMemberResponse;
+        return familyMembersResponse;
     }
 }

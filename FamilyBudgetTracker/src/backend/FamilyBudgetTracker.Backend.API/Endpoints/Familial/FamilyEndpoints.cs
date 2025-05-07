@@ -44,7 +44,7 @@ public static class FamilyEndpoints
 
         familyGroup.MapGet("{id:guid}", GetFamilyById)
             .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
-            .Produces(StatusCodes.Status200OK, typeof(FamilyResponse), "application/json")
+            .Produces(StatusCodes.Status200OK, typeof(FamilyDetailedResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -55,7 +55,7 @@ public static class FamilyEndpoints
 
         familyGroup.MapGet("/all", GetAllFamilies)
             .RequireAuthorization(ApplicationConstants.PolicyNames.AdminRolePolicyName)
-            .Produces(StatusCodes.Status200OK, typeof(List<FamilyResponse>), "application/json")
+            .Produces(StatusCodes.Status200OK, typeof(List<FamilyDetailedResponse>), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -102,14 +102,14 @@ public static class FamilyEndpoints
     {
         var userId = httpContext.GetUserIdFromAuth();
 
-        FamilyResponse response = await service.GetFamilyById(id.ToString(), userId);
+        FamilyDetailedResponse detailedResponse = await service.GetFamilyById(id.ToString(), userId);
 
-        return Results.Ok(response);
+        return Results.Ok(detailedResponse);
     }
 
     private static async Task<IResult> GetAllFamilies(IFamilyService service)
     {
-        List<FamilyResponse> response = await service.GetAllFamilies();
+        List<FamilyDetailedResponse> response = await service.GetAllFamilies();
 
         return Results.Ok(response);
     }

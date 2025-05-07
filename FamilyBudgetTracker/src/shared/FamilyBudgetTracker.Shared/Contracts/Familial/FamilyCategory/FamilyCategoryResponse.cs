@@ -19,7 +19,4 @@ public class FamilyCategoryResponse
 
     [JsonPropertyName("limit")]
     public decimal? Limit { get; set; } //Monthly limit
-
-    [JsonPropertyName("family")]
-    public FamilyResponse Family { get; set; }
 }

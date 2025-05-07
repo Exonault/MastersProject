@@ -29,6 +29,8 @@ public class FamilyService : IFamilyService
 
         user = user.ValidateUser();
 
+        user = user.ValidateUserHasFamily();
+
         Family family = new Family
         {
             Name = request.Name,
@@ -60,7 +62,7 @@ public class FamilyService : IFamilyService
         await _familyRepository.DeleteFamily(family);
     }
 
-    public async Task<FamilyResponse> GetFamilyById(string id, string userId)
+    public async Task<FamilyDetailedResponse> GetFamilyById(string id, string userId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -74,24 +76,24 @@ public class FamilyService : IFamilyService
 
         var familyMemberResponse = await GetFamilyMembersResponse(family.FamilyMembers);
 
-        FamilyResponse familyResponse = family.ToFamilyResponse(familyMemberResponse);
+        FamilyDetailedResponse familyDetailedResponse = family.ToFamilyDetailedResponse(familyMemberResponse);
 
-        return familyResponse;
+        return familyDetailedResponse;
     }
 
-    public async Task<List<FamilyResponse>> GetAllFamilies()
+    public async Task<List<FamilyDetailedResponse>> GetAllFamilies()
     {
         List<Family> allFamilies = await _familyRepository.GetAllFamilies();
 
-        List<FamilyResponse> familyResponses = [];
+        List<FamilyDetailedResponse> familyResponses = [];
 
         foreach (Family family in allFamilies)
         {
             List<FamilyMemberResponse> familyMembersResponse = await GetFamilyMembersResponse(family.FamilyMembers);
 
-            FamilyResponse familyResponse = family.ToFamilyResponse(familyMembersResponse);
+            FamilyDetailedResponse familyDetailedResponse = family.ToFamilyDetailedResponse(familyMembersResponse);
             
-            familyResponses.Add(familyResponse);
+            familyResponses.Add(familyDetailedResponse);
         }
 
         return familyResponses;
@@ -106,7 +108,7 @@ public class FamilyService : IFamilyService
         {
             string mainFamilyRole = await _userRepository.GetMainFamilyRole(familyMember);
 
-            FamilyMemberResponse familyMemberResponse = familyMember.ToUserResponse(mainFamilyRole);
+            FamilyMemberResponse familyMemberResponse = familyMember.ToFamilyMemberResponse(mainFamilyRole);
 
             familyMembersResponse.Add(familyMemberResponse);
         }

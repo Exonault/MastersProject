@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using FamilyBudgetTracker.Shared.Contracts.User;
 
 namespace FamilyBudgetTracker.Shared.Contracts.Familial.Family;
 
@@ -10,7 +9,4 @@ public class FamilyResponse
 
     [JsonPropertyName("name")]
     public string Name { get; set; }
-
-    [JsonPropertyName("familyMembers")]
-    public List<FamilyMemberResponse> FamilyMembers { get; set; }
 }

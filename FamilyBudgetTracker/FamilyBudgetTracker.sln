@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Backend
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Test", "test\FamilyBudgetTracker.Test\FamilyBudgetTracker.Test.csproj", "{8D404778-D73E-4498-9D19-4CE1ADF2D1D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyBudgetTracker.Frontend", "FamilyBudgetTracker.Frontend\FamilyBudgetTracker.Frontend.csproj", "{54A65C76-D6BF-4F15-B6DB-D56F85A85105}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,7 @@ Global
 		{24F036C7-C18B-47D5-A719-446696D9589C} = {62786BFB-C0C2-47BE-9DF5-DDF6497AAA66}
 		{D1271CC4-3CA9-4C97-88BA-4060236006DA} = {62786BFB-C0C2-47BE-9DF5-DDF6497AAA66}
 		{8D404778-D73E-4498-9D19-4CE1ADF2D1D1} = {F31D01D6-2299-44BC-A5C3-94E033A1CFB8}
+		{54A65C76-D6BF-4F15-B6DB-D56F85A85105} = {88A787B0-6D46-44C3-958F-EA9A73BF2E21}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D68F7C99-AA91-46C6-8284-3226D9608574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -84,5 +87,9 @@ Global
 		{8D404778-D73E-4498-9D19-4CE1ADF2D1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D404778-D73E-4498-9D19-4CE1ADF2D1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D404778-D73E-4498-9D19-4CE1ADF2D1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54A65C76-D6BF-4F15-B6DB-D56F85A85105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A65C76-D6BF-4F15-B6DB-D56F85A85105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54A65C76-D6BF-4F15-B6DB-D56F85A85105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54A65C76-D6BF-4F15-B6DB-D56F85A85105}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

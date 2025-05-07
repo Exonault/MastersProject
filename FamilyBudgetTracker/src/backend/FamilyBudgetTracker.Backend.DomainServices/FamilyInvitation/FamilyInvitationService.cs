@@ -46,7 +46,7 @@ public class FamilyInvitationService : IFamilyInvitationService
         {
             User? user = await _userRepository.GetByEmail(email);
 
-            bool userInApplicationFlag = user is null;
+            bool userInApplicationFlag = user is not null;
 
             var dateUtc = DateTime.UtcNow;
             var familyInvitationToken = new FamilyInvitationToken

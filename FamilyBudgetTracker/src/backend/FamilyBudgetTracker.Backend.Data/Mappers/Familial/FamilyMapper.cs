@@ -8,16 +8,16 @@ public static class FamilyMapper
 {
     public static FamilyResponse ToFamilyResponse(this Family family)
     {
-        return new FamilyResponse
+        return new FamilyResponse()
         {
             Id = family.Id,
             Name = family.Name,
         };
     }
     
-    public static FamilyResponse ToFamilyResponse(this Family family, List<FamilyMemberResponse> familyMembers)
+    public static FamilyDetailedResponse ToFamilyDetailedResponse(this Family family, List<FamilyMemberResponse> familyMembers)
     {
-        return new FamilyResponse
+        return new FamilyDetailedResponse
         {
             Id = family.Id,
             Name = family.Name,

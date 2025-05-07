@@ -82,7 +82,7 @@ public class FamilyCategoryService : IFamilyCategoryService
         await _familyCategoryRepository.DeleteFamilyCategory(familyCategory);
     }
 
-    public async Task<FamilyCategoryResponse> GetFamilyCategoryById(int id, string userId, string familyId)
+    public async Task<FamilyCategorySingleResponse> GetFamilyCategoryById(int id, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
 
@@ -98,7 +98,7 @@ public class FamilyCategoryService : IFamilyCategoryService
 
         familyCategory = familyCategory.ValidateFamilyCategory(family.Id);
 
-        FamilyCategoryResponse response = familyCategory.ToFamilyCategoryResponse();
+        FamilyCategorySingleResponse response = familyCategory.ToFamilyCategorySingleResponse();
 
         return response;
     }

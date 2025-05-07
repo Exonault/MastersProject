@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
 using FamilyBudgetTracker.Shared.Contracts.Familial.FamilyCategory;
 using FamilyBudgetTracker.Shared.Contracts.User;
 
@@ -24,5 +25,6 @@ public class FamilyTransactionResponse
     [JsonPropertyName("user")]
     public FamilyMemberResponse FamilyMember { get; set; }
 
-    // public FamilyResponse Family { get; set; }
+    // [JsonPropertyName("family")]
+    // public FamilyResponse FamilyDetailed { get; set; }
 }

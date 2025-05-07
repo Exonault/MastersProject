@@ -32,6 +32,12 @@ public static class UserEndpoint
             .WithSummary("Log in for a user")
             .WithOpenApi();
 
+        group.MapDelete("logout/", Logout)
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Log out a user")
+            .WithOpenApi();
+
         group.MapPost("refresh/", Refresh)
             .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .Produces(StatusCodes.Status200OK)
@@ -89,6 +95,13 @@ public static class UserEndpoint
         return Results.Ok();
     }
 
+    private static Task<IResult> Logout(IApplicationAuthenticationService service, HttpContext context)
+    {
+        service.RemoveTokensInsideCookie(context);
+
+        return Task.FromResult(Results.Ok());
+    }
+
     private static async Task<IResult> Refresh(IUserService service, HttpContext httpContext)
     {
         httpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
@@ -106,7 +119,8 @@ public static class UserEndpoint
     private static async Task<IResult> JoinFamily([FromRoute] Guid token,
         IFamilyInvitationService service, HttpContext httpContext)
     {
-        await service.AddUserToFamily(token.ToString());
+        string tokenId = token.ToString();
+        await service.AddUserToFamily(tokenId);
         return Results.Ok();
     }
 

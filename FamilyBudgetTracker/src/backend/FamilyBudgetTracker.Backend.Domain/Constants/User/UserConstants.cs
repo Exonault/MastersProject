@@ -6,7 +6,7 @@ public static class UserConstants
     {
         public const string AdminRoleType = "Admin";
 
-        public const string UserRoleType = "FamilyMember";
+        public const string UserRoleType = "User";
 
         public const string FamilyAdminRoleType = "FamilyAdmin";
 

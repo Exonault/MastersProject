@@ -54,7 +54,7 @@ public static class FamilyCategoryEndpoints
         familyCategoryGroup.MapGet("/{id:int}", GetFamilyCategoryById)
             .AddFluentValidationAutoValidation()
             .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
-            .Produces(StatusCodes.Status200OK, typeof(FamilyCategoryResponse), "application/json")
+            .Produces(StatusCodes.Status200OK, typeof(FamilyCategorySingleResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -116,7 +116,7 @@ public static class FamilyCategoryEndpoints
         var userId = httpContext.GetUserIdFromAuth();
         var familyId = httpContext.GetFamilyIdFromAuth();
 
-        FamilyCategoryResponse response = await service.GetFamilyCategoryById(id, userId, familyId);
+        FamilyCategorySingleResponse response = await service.GetFamilyCategoryById(id, userId, familyId);
 
         return Results.Ok(response);
     }

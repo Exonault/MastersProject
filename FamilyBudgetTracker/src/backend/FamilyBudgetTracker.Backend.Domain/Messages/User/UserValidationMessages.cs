@@ -2,19 +2,21 @@ namespace FamilyBudgetTracker.Backend.Domain.Messages.User;
 
 public static class UserValidationMessages
 {
-    public const string UserNotFound = "FamilyMember not found.";
+    public const string UserNotFound = "User not found.";
     
-    public const string NoFamilyForUser = "FamilyMember does not have a family";
+    public const string NoFamilyForUser = "User does not have a family";
 
-    public const string UserIsNotFromFamily = "FamilyMember is not from this family";
+    public const string UserHasFamily = "User already has a family. Cannot create another";
+
+    public const string UserIsNotFromFamily = "User is not from this family";
     
-    public const string AlreadyRegistered = "FamilyMember already registered.";
+    public const string AlreadyRegistered = "User already registered.";
     
     public const string RegisterFailed = "Register failed";
     
     public const string InvalidEmailPassword = "Invalid email/password.";
     
-    public const string UserNameRequired = "FamilyMember name is required";
+    public const string UserNameRequired = "Username is required";
     
     public const string EmailRequired = "Email address is required";
     

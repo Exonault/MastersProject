@@ -33,6 +33,23 @@ public static class AdditionalFamilialValidation
     }
 
     /// <summary>
+    /// Validates if the user is associated with a family.
+    /// </summary>
+    /// <param name="user">The user whose family association is being validated.</param>
+    /// <exception cref="OperationNotAllowedException">
+    /// Thrown when the user does belong to any family.
+    /// </exception>
+    public static User  ValidateUserHasFamily(this User user)
+    {
+        if (user.Family is not null)
+        {
+            throw new OperationNotAllowedException(UserValidationMessages.UserHasFamily);
+        }
+
+        return user;
+    }
+
+    /// <summary>
     /// Validates the given family.
     /// </summary>
     /// <param name="family">The family to be validated.</param>

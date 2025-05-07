@@ -7,19 +7,21 @@ namespace FamilyBudgetTracker.Backend.Email.Services;
 
 public class SendEmailService : ISendEmailService
 {
-    private readonly IFluentEmail _fluentEmail;
+    private readonly IFluentEmailFactory _fluentEmailFactory;
     private readonly IFamilyInvitationLinkFactory _invitationLinkFactory;
 
-    public SendEmailService(IFluentEmail fluentEmail, IFamilyInvitationLinkFactory invitationLinkFactory)
+    public SendEmailService(IFluentEmailFactory fluentEmailFactory, IFamilyInvitationLinkFactory invitationLinkFactory)
     {
-        _fluentEmail = fluentEmail;
+        _fluentEmailFactory = fluentEmailFactory;
         _invitationLinkFactory = invitationLinkFactory;
     }
 
 
     public async Task SendTestEmail()
     {
-        await _fluentEmail.To("test@test.test")
+        await _fluentEmailFactory
+            .Create()
+            .To("test@test.test")
             .Subject("test subject")
             .Body("test body", isHtml: false)
             .SendAsync();
@@ -29,7 +31,9 @@ public class SendEmailService : ISendEmailService
     {
         string invitationLink = _invitationLinkFactory.Create(token);
 
-        await _fluentEmail.To(token.Email)
+        await _fluentEmailFactory
+            .Create()
+            .To(token.Email)
             .Subject("Family invite")
             .Body($"You have been invited to join family. <a href='{invitationLink}'>Click here</a>", isHtml: true)
             .SendAsync();

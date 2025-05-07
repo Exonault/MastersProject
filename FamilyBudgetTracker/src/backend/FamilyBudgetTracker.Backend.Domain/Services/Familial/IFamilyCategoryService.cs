@@ -10,7 +10,7 @@ public interface IFamilyCategoryService
 
     Task DeleteFamilyCategory(int id, string userId, string familyId);
 
-    Task<FamilyCategoryResponse> GetFamilyCategoryById(int id, string userId,  string familyId);
+    Task<FamilyCategorySingleResponse> GetFamilyCategoryById(int id, string userId,  string familyId);
 
     Task<List<FamilyCategoryResponse>> GetFamilyCategoriesByFamilyId(string familyId, string userId);
 }

@@ -38,7 +38,19 @@ public static class FamilyCategoryMapper
             Icon = category.Icon,
             Type = category.Type.ToString(),
             Limit = category.Limit,
-            Family = category.Family.ToFamilyResponse()
+        };
+    }
+
+    public static FamilyCategorySingleResponse ToFamilyCategorySingleResponse(this FamilyCategory category)
+    {
+        return new FamilyCategorySingleResponse
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Icon = category.Icon,
+            Type = category.Type.ToString(),
+            Limit = category.Limit,
+            FamilyResponse = category.Family.ToFamilyResponse()
         };
     }
 }

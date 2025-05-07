@@ -29,7 +29,7 @@ public static class EntityServicesExtensions
         services.AddPersonalTransactionServices();
         services.AddRecurringTransactionServices();
 
-        //Family services
+        //Familial services
         services.AddFamilyServices();
         services.AddFamilyCategoryServices();
         services.AddFamilyTransactionServices();

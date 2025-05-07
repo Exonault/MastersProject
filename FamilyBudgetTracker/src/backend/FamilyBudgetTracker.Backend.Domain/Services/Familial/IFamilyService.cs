@@ -8,7 +8,7 @@ public interface IFamilyService
 
     Task DeleteFamily(string id, string userId);
 
-    Task<FamilyResponse> GetFamilyById(string id, string userId);
+    Task<FamilyDetailedResponse> GetFamilyById(string id, string userId);
 
-    Task<List<FamilyResponse>> GetAllFamilies();
+    Task<List<FamilyDetailedResponse>> GetAllFamilies();
 }

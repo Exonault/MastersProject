@@ -1,3 +1,4 @@
+using FamilyBudgetTracker.Backend.API.Messages;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +8,13 @@ namespace FamilyBudgetTracker.Backend.API.ExceptionHandlers;
 public class ValidationExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<ValidationExceptionHandler> _logger;
+    private readonly IProblemDetailsService _problemDetailsService;
 
-    public ValidationExceptionHandler(ILogger<ValidationExceptionHandler> logger)
+
+    public ValidationExceptionHandler(ILogger<ValidationExceptionHandler> logger, IProblemDetailsService problemDetailsService)
     {
         _logger = logger;
+        _problemDetailsService = problemDetailsService;
     }
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
@@ -27,15 +31,17 @@ public class ValidationExceptionHandler : IExceptionHandler
         var problemDetails = new ProblemDetails()
         {
             Status = StatusCodes.Status400BadRequest,
-            Title = "Bad Request",
+            Title = ExceptionHandlerMessages.BadRequest,
             Detail = validationException.Message
         };
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;
 
-        await httpContext.Response
-            .WriteAsJsonAsync(problemDetails, cancellationToken);
-
-        return true;
+        return await _problemDetailsService.TryWriteAsync(
+            new ProblemDetailsContext()
+            {
+                HttpContext = httpContext,
+                ProblemDetails = problemDetails,
+            });
     }
 }

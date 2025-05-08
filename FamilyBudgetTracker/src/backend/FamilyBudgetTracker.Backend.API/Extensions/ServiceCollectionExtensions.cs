@@ -1,15 +1,16 @@
 ﻿using System.Text;
 using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.API.ExceptionHandlers;
-using FamilyBudgetTracker.Backend.API.OpenApi;
 using FamilyBudgetTracker.Backend.API.Policy;
 using FamilyBudgetTracker.Backend.Authentication.Constants;
 using FamilyBudgetTracker.Backend.Data;
+using FamilyBudgetTracker.Backend.Data.Validators.User;
 using FamilyBudgetTracker.Backend.Domain.Email;
 using FamilyBudgetTracker.Backend.Domain.Entities;
 using FamilyBudgetTracker.Backend.Email.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -41,7 +42,19 @@ public static class ServiceCollectionExtensions
 
     public static void AddApplicationExceptionHandlers(this IServiceCollection services)
     {
-        services.AddProblemDetails();
+        services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
+            {
+                context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+            
+                context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+            
+                var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+            
+                context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
+            };
+        });
 
         services.AddExceptionHandler<InvalidEmailExceptionHandler>();
         services.AddExceptionHandler<OperationNotAllowedExceptionHandler>();
@@ -57,7 +70,8 @@ public static class ServiceCollectionExtensions
 
     public static void AddFluentValidationServices(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<Program>();
+        services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>(); // Any validator works just to get assembly
+        
         services.AddFluentValidationAutoValidation();
     }
 

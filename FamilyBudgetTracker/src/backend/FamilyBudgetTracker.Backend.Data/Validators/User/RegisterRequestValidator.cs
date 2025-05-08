@@ -1,4 +1,3 @@
-using FamilyBudgetTracker.Backend.Data.Constants;
 using FamilyBudgetTracker.Backend.Domain.Messages.User;
 using FamilyBudgetTracker.Shared.Contracts.User;
 using FluentValidation;

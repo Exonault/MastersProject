@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization.Formatters.Binary;
-using FamilyBudgetTracker.Backend.API.Constants;
-using FamilyBudgetTracker.Backend.API.Policy;
+﻿using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.Authentication.Util;
 using FamilyBudgetTracker.Backend.Domain.Services.Personal;
 using FamilyBudgetTracker.Shared.Contracts.Personal.Category;

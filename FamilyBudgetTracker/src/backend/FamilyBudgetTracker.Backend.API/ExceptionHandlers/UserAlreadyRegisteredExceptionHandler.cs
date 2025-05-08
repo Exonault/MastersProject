@@ -1,3 +1,4 @@
+using FamilyBudgetTracker.Backend.API.Messages;
 using FamilyBudgetTracker.Backend.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +8,13 @@ namespace FamilyBudgetTracker.Backend.API.ExceptionHandlers;
 public class UserAlreadyRegisteredExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<UserAlreadyRegisteredExceptionHandler> _logger;
+    private readonly IProblemDetailsService _problemDetailsService;
 
-    public UserAlreadyRegisteredExceptionHandler(ILogger<UserAlreadyRegisteredExceptionHandler> logger)
+    
+    public UserAlreadyRegisteredExceptionHandler(ILogger<UserAlreadyRegisteredExceptionHandler> logger, IProblemDetailsService problemDetailsService)
     {
         _logger = logger;
+        _problemDetailsService = problemDetailsService;
     }
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
@@ -27,14 +31,17 @@ public class UserAlreadyRegisteredExceptionHandler : IExceptionHandler
         ProblemDetails problemDetails = new ProblemDetails()
         {
             Status = StatusCodes.Status409Conflict,
-            Title = "Conflict",
+            Title = ExceptionHandlerMessages.Conflict,
             Detail = userAlreadyRegisteredException.Message,
         };
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;
 
-        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
-
-        return true;
+        return await _problemDetailsService.TryWriteAsync(
+            new ProblemDetailsContext()
+            {
+                HttpContext = httpContext,
+                ProblemDetails = problemDetails,
+            });
     }
 }

@@ -39,6 +39,7 @@ public static class EntityServicesExtensions
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IBearerUserService, BearerUserService>();
 
         services.AddScoped<IGenerateTokenService, GenerateTokenService>();
         services.AddScoped<IApplicationAuthenticationService, ApplicationAuthenticationService>();

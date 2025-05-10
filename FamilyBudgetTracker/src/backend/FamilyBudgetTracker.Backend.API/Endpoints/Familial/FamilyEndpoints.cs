@@ -2,12 +2,10 @@
 using FamilyBudgetTracker.Backend.Authentication.Interfaces;
 using FamilyBudgetTracker.Backend.Authentication.Token;
 using FamilyBudgetTracker.Backend.Authentication.Util;
-using FamilyBudgetTracker.Backend.Domain.Constants.User;
 using FamilyBudgetTracker.Backend.Domain.Invite;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Family;
 using FamilyBudgetTracker.Shared.Contracts.Familial.Invite;
-using FamilyBudgetTracker.Shared.Contracts.User;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
@@ -19,7 +17,7 @@ public static class FamilyEndpoints
     {
         var familyGroup = group.MapGroup("family");
 
-        familyGroup.MapPost("/", CreateFamily)
+        familyGroup.MapPost("/", CreateFamilyBearer) // Temporary because FE
             .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
             .AddFluentValidationAutoValidation()
             .Produces(StatusCodes.Status200OK)
@@ -85,6 +83,21 @@ public static class FamilyEndpoints
         await userService.UpdateUserAccessToken(httpContext);
 
         return Results.Ok();
+    }
+    
+    private static async Task<IResult> CreateFamilyBearer([FromBody] FamilyRequest request,
+        IFamilyService service, HttpContext httpContext, IUserService userService, IGenerateTokenService tokenService)
+    {
+        var userId = httpContext.GetUserIdFromAuth();
+
+        await service.CreateFamily(request, userId);
+        string newAccessToken = await tokenService.GenerateAccessToken(userId);
+        // await userService.UpdateUserAccessToken(httpContext);
+
+        return Results.Ok(new 
+        {
+            NewAccessToken = newAccessToken
+        });
     }
 
     private static async Task<IResult> DeleteFamily([FromRoute] Guid id,

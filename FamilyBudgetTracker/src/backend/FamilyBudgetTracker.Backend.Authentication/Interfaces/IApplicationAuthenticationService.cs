@@ -1,4 +1,4 @@
-﻿using FamilyBudgetTracker.Backend.Domain.DTO.User;
+﻿using FamilyBudgetTracker.Shared.DTO.User;
 using Microsoft.AspNetCore.Http;
 
 namespace FamilyBudgetTracker.Backend.Authentication.Interfaces;

@@ -5,6 +5,8 @@ using System.Text;
 using FamilyBudgetTracker.Backend.Authentication.Constants;
 using FamilyBudgetTracker.Backend.Authentication.Messages;
 using FamilyBudgetTracker.Backend.Domain.Entities;
+using FamilyBudgetTracker.Backend.Domain.Exceptions;
+using FamilyBudgetTracker.Backend.Domain.Messages.User;
 using FamilyBudgetTracker.Backend.Domain.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +29,56 @@ public class GenerateTokenService : IGenerateTokenService
     
     public async Task<string> GenerateAccessToken(User user)
     {
+        List<string> roles = await _userRepository.GetAllRoles(user);
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException(AuthenticationMessages.SecretNotConfigured);
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+
+        List<Claim> claims =
+        [
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Name, user.UserName!),
+            new Claim(AuthenticationConstants.ClaimTypes.ClaimUserIdType, user.Id),
+        ];
+
+        if (user.Family is not null)
+        {
+            claims.Add(new Claim(AuthenticationConstants.ClaimTypes.ClaimFamilyIdType, user.Family.Id.ToString()));
+        }
+
+        foreach (string role in roles)
+        {
+            claims.Add(new Claim(AuthenticationConstants.ClaimTypes.ClaimRoleType, role));
+        }
+
+        SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.Add(TokenDuration),
+            Issuer = _config["Jwt:Issuer"],
+            IssuedAt = DateTime.UtcNow,
+            NotBefore = DateTime.UtcNow,
+            Audience = _config["Jwt:Audience"],
+            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
+        };
+
+        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+        string jwt = tokenHandler.WriteToken(token);
+
+        return jwt;
+    }
+
+    public async Task<string> GenerateAccessToken(string userId)
+    {
+        User? user = await _userRepository.GetById(userId);
+
+        if (user is null)
+        {
+            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
+        }
+        
         List<string> roles = await _userRepository.GetAllRoles(user);
 
         var tokenHandler = new JwtSecurityTokenHandler();

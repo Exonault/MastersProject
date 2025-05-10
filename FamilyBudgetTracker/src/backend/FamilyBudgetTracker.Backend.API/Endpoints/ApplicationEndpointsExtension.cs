@@ -35,6 +35,7 @@ public static class ApplicationEndpointsExtension
     {
         var userGroup = app.MapGroup("user");
 
-        userGroup.MapUserEndpoints();
+        // userGroup.MapUserEndpoints(); // Temporary because FE
+        userGroup.MapBearerUserGroups();
     }
 }

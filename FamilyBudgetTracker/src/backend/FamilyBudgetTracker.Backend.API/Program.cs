@@ -54,6 +54,8 @@ app.UseAuthorization();
 
 app.UseOutputCache();
 
+// app.UseHangfireDashboard();
+
 //Map endpoints
 app.MapApplicationEndpoints();
 

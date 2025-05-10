@@ -1,0 +1,104 @@
+﻿@page "/login"
+@using FamilyBudgetTracker.Frontend.Authentication
+@using FamilyBudgetTracker.Frontend.Interfaces
+@using FamilyBudgetTracker.Frontend.Messages
+@using FamilyBudgetTracker.Frontend.Models.User
+@using FamilyBudgetTracker.Shared.Contracts.User
+@attribute [AllowAnonymous]
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject IJSRuntime JsRuntime;
+@inject IUserService UserService;
+
+<PageTitle>Login</PageTitle>
+<h3 class="text-center mb-4">Login</h3>
+@if (_error)
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem md="4" xs="4">
+            <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                @_errorMessage
+            </MudAlert>
+        </MudItem>
+    </MudGrid>
+}
+<EditForm Model="_model" OnValidSubmit="OnValidSubmit" FormName="test">
+    <DataAnnotationsValidator/>
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="4">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Email" @bind-Value="_model.Email" For="@(() => _model.Email)"/>
+                    <MudTextField Label="Password" Class="mt-3" @bind-Value="_model.Password"
+                                  For="@(() => _model.Password)" InputType="InputType.Password"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                               Class="ml-auto">Login
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code
+{
+    private LoginModel _model = new();
+    private bool _shouldRender = false;
+    private bool _error = false;
+    private string _errorMessage = UserMessages.ErrorLogging;
+
+    protected override bool ShouldRender() => _shouldRender;
+
+    private async void OnValidSubmit()
+    {
+        try
+        {
+            LoginResponse? loginResponse = await UserService.Login(_model);
+            if (loginResponse is null)
+            {
+                _error = true;
+                _errorMessage = UserMessages.ErrorLogging;
+                _shouldRender = true;
+                StateHasChanged();
+            }
+            else
+            {
+                await JsRuntime.InvokeVoidAsync("addCookie", $"{loginResponse.Token}", $"{loginResponse.RefreshToken}");
+
+                ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState(loginResponse.Token);
+
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        catch (ArgumentException e)
+        {
+            _error = true;
+            _errorMessage = UserMessages.InvalidUserNameAndPassword;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (InvalidOperationException e)
+        {
+            _error = true;
+            _errorMessage = UserMessages.NoUser;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _error = true;
+            _errorMessage = UserMessages.ErrorLogging;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
+}

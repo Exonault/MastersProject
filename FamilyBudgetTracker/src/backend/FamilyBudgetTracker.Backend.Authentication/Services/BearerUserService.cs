@@ -1,5 +1,7 @@
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using FamilyBudgetTracker.Backend.Authentication.Interfaces;
-using FamilyBudgetTracker.Backend.Authentication.Messages;
 using FamilyBudgetTracker.Backend.Authentication.Token;
 using FamilyBudgetTracker.Backend.Data.Mappers;
 using FamilyBudgetTracker.Backend.Domain.Constants.User;
@@ -8,26 +10,30 @@ using FamilyBudgetTracker.Backend.Domain.Exceptions;
 using FamilyBudgetTracker.Backend.Domain.Messages.User;
 using FamilyBudgetTracker.Backend.Domain.Repositories;
 using FamilyBudgetTracker.Shared.Contracts.User;
-using FamilyBudgetTracker.Shared.DTO.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyBudgetTracker.Backend.Authentication.Services;
 
-public class UserService : IUserService
+public class BearerUserService : IBearerUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IGenerateTokenService _generateTokenService;
-    private readonly IApplicationAuthenticationService _applicationAuthenticationService;
+    private readonly IConfiguration _config;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-    public UserService(IUserRepository userRepository, IGenerateTokenService generateTokenService,
-        IApplicationAuthenticationService applicationAuthenticationService)
+    public BearerUserService(IConfiguration config, IGenerateTokenService generateTokenService, IUserRepository userRepository,
+        IHttpContextAccessor httpContextAccessor)
     {
-        _userRepository = userRepository;
+        _config = config;
         _generateTokenService = generateTokenService;
-        _applicationAuthenticationService = applicationAuthenticationService;
+        _userRepository = userRepository;
+        _httpContextAccessor = httpContextAccessor;
     }
+
 
     public async Task<RegisterResponse> RegisterAccount(RegisterRequest request)
     {
@@ -72,7 +78,7 @@ public class UserService : IUserService
         return response;
     }
 
-    public async Task LoginAccount(LoginRequest request, HttpContext httpContext)
+    public async Task<LoginResponse> LoginAccount(LoginRequest request)
     {
         User? user = await _userRepository.GetByEmail(request.Email);
 
@@ -97,43 +103,46 @@ public class UserService : IUserService
 
         await _userRepository.UpdateUser(user);
 
-        TokenDto tokenDto = new TokenDto
+        LoginResponse response = new LoginResponse
         {
-            AccessToken = accessToken,
+            Message = UserMessages.LoginComplete,
+            Token = accessToken,
             RefreshToken = refreshToken
         };
 
-        _applicationAuthenticationService.SetTokensInsideCookie(tokenDto, httpContext);
+        return response;
     }
 
-    public async Task Refresh(string? refreshToken, HttpContext httpContext)
+    public async Task<LoginResponse> Refresh(RefreshRequest request)
     {
-        if (refreshToken is null)
-        {
-            throw new OperationNotAllowedException(AuthenticationMessages.RefreshTokenNotProvided);
-        }
+        ClaimsPrincipal? principal = GetUserFromExpiredToken(request.AccessToken);
 
-        User? user = await _userRepository.GetByRefreshToken(refreshToken);
-
-        if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
+        if (principal?.Identity?.Name is null)
         {
             throw new UserNotFoundException(UserValidationMessages.UserNotFound);
         }
 
-        string newAccessToken = await _generateTokenService.GenerateAccessToken(user);
+        User? user = await _userRepository.GetByName(principal.Identity.Name);
 
-        TokenDto tokenDto = new TokenDto
+        if (user is null || user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
         {
-            AccessToken = newAccessToken,
-            RefreshToken = refreshToken
-        };
+            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
+        }
 
-        _applicationAuthenticationService.SetTokensInsideCookie(tokenDto, httpContext);
+        string token = await _generateTokenService.GenerateAccessToken(user);
+
+        LoginResponse response = new LoginResponse
+        {
+            Token = token,
+            RefreshToken = request.RefreshToken,
+            Message = UserMessages.RefreshComplete,
+        };
+        return response;
     }
 
-    public async Task Revoke(HttpContext httpContext)
+    public async Task Revoke()
     {
-        string? userName = httpContext.User.Identity?.Name;
+        string? userName = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
         if (userName is null)
         {
@@ -150,70 +159,22 @@ public class UserService : IUserService
         user.RefreshToken = null;
 
         await _userRepository.UpdateUser(user);
-
-        _applicationAuthenticationService.RemoveTokensInsideCookie(httpContext);
     }
 
-    public async Task UpdateUserAccessToken(HttpContext httpContext)
+    private ClaimsPrincipal? GetUserFromExpiredToken(string token)
     {
-        string? userName = httpContext.User.Identity?.Name;
+        string secret = _config["Jwt:Secret"] ?? throw new InvalidOperationException("Secret not configured");
 
-        if (userName is null)
+        TokenValidationParameters validation = new TokenValidationParameters()
         {
-            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
-        }
-
-        User? user = await _userRepository.GetByName(userName);
-
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
-        }
-
-        string newAccessToken = await _generateTokenService.GenerateAccessToken(user);
-
-        httpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
-
-        if (refreshToken is null)
-        {
-            throw new OperationNotAllowedException(AuthenticationMessages.RefreshTokenNotProvided);
-        }
-
-        TokenDto updatedTokens = new TokenDto
-        {
-            AccessToken = newAccessToken,
-            RefreshToken = refreshToken
+            ValidIssuer = _config["Jwt:Issuer"],
+            ValidAudience = _config["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
+            ValidateLifetime = false,
         };
 
-        _applicationAuthenticationService.SetTokensInsideCookie(updatedTokens, httpContext);
-    }
+        ClaimsPrincipal claimsPrincipal = new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
 
-    public async Task<UserResponse> GetUserInformation(HttpContext httpContext)
-    {
-        string? userName = httpContext.User.Identity?.Name;
-
-        if (userName is null)
-        {
-            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
-        }
-
-        User? user = await _userRepository.GetByName(userName);
-
-        if (user is null)
-        {
-            throw new UserNotFoundException(UserValidationMessages.UserNotFound);
-        }
-
-        List<string> roles = await _userRepository.GetAllRoles(user);
-
-        UserResponse userResponse = new UserResponse
-        {
-            Id = user.Id,
-            UserName = user.UserName!,
-            Email = user.Email!,
-            Roles = roles
-        };
-
-        return userResponse;
+        return claimsPrincipal;
     }
 }

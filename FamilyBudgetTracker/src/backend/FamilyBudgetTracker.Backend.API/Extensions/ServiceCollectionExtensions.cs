@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.API.ExceptionHandlers;
+using FamilyBudgetTracker.Backend.API.OpenApi;
 using FamilyBudgetTracker.Backend.API.Policy;
 using FamilyBudgetTracker.Backend.Authentication.Constants;
 using FamilyBudgetTracker.Backend.Data;
@@ -22,8 +23,8 @@ public static class ServiceCollectionExtensions
 {
     public static void AddOpenApiServices(this IServiceCollection services)
     {
-        services.AddOpenApi();
-        // services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
+        // services.AddOpenApi();
+        services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
     }
 
     public static void AddDatabase(this IServiceCollection services, ConfigurationManager configuration)
@@ -47,11 +48,11 @@ public static class ServiceCollectionExtensions
             options.CustomizeProblemDetails = context =>
             {
                 context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
-            
+
                 context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
-            
+
                 var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
-            
+
                 context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
             };
         });
@@ -71,7 +72,7 @@ public static class ServiceCollectionExtensions
     public static void AddFluentValidationServices(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>(); // Any validator works just to get assembly
-        
+
         services.AddFluentValidationAutoValidation();
     }
 
@@ -85,6 +86,20 @@ public static class ServiceCollectionExtensions
 
     public static void AddHangfireServices(this IServiceCollection services, ConfigurationManager configuration)
     {
+        // services.AddHangfire(x =>
+        // {
+        //     x.UseSimpleAssemblyNameTypeSerializer()
+        //         .UseRecommendedSerializerSettings()
+        //         .UsePostgreSqlStorage(options =>
+        //         {
+        //             options.UseNpgsqlConnection("");
+        //         });
+        // });
+        //
+        // services.AddHangfireServer(x =>
+        // {
+        //     // x.SchedulePollingInterval
+        // });
     }
 
 
@@ -137,20 +152,20 @@ public static class ServiceCollectionExtensions
                     ClockSkew = TimeSpan.FromSeconds(5),
                 };
 
-                options.Events = new JwtBearerEvents()
-                {
-                    OnMessageReceived = ctx =>
-                    {
-                        ctx.Request.Cookies.TryGetValue(AuthenticationConstants.CookiesName.AccessToken, out var accessToken);
-
-                        if (!string.IsNullOrEmpty(accessToken))
-                        {
-                            ctx.Token = accessToken;
-                        }
-
-                        return Task.CompletedTask;
-                    }
-                };
+                // options.Events = new JwtBearerEvents()
+                // {
+                //     OnMessageReceived = ctx =>
+                //     {
+                //         ctx.Request.Cookies.TryGetValue(AuthenticationConstants.CookiesName.AccessToken, out var accessToken);
+                //
+                //         if (!string.IsNullOrEmpty(accessToken))
+                //         {
+                //             ctx.Token = accessToken;
+                //         }
+                //
+                //         return Task.CompletedTask;
+                //     }
+                // };
             });
     }
 

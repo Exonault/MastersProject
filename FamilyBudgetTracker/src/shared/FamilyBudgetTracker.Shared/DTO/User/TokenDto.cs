@@ -1,4 +1,4 @@
-﻿namespace FamilyBudgetTracker.Backend.Domain.DTO.User;
+﻿namespace FamilyBudgetTracker.Shared.DTO.User;
 
 public class TokenDto
 {

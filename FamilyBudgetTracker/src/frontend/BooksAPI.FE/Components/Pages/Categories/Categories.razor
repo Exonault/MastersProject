@@ -1,0 +1,203 @@
+﻿@page "/categories"
+@using BooksAPI.FE.Authentication
+@using BooksAPI.FE.Constants
+@using BooksAPI.FE.Contracts.Personal.Category
+@using BooksAPI.FE.Interfaces
+@using BooksAPI.FE.Util
+
+
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject ICategoriesService CategoriesService
+
+@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)]
+
+<PageTitle>Categories</PageTitle>
+
+<h3>Categories</h3>
+
+<h3 class="text-center">Categories</h3>
+
+@if (_isDataFetched)
+{
+    @if (_error)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudItem md="4" xs="4">
+                <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                    Unable to get categories. Please try again later.
+                </MudAlert>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <MudTabs Elevation="2" ApplyEffectsToContainer="true" Centered="true">
+            <MudTabPanel Text="All">
+                <MudGrid>
+                    @foreach (var category in _categories)
+                    {
+                        <MudItem xs="3">
+                            <MudCard Outlined="true">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h4">@category.Name</MudText>
+                                    </CardHeaderContent>
+                                    <CardHeaderActions>
+                                        <MudIcon Icon="@category.Icon" Size="Size.Large"/>
+                                    </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h5">@($"Type: {category.Type}")</MudText>
+                                    <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
+                                </MudCardContent>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary">Update</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+
+            @* <MudTabPanel Text="Income"> *@
+            @*     <CategoriesTable Categories="@(_categories.Where(x => x.Type == "Income").ToList())"/> *@
+            @* </MudTabPanel> *@
+            @* *@
+            @* <MudTabPanel Text="Expense"> *@
+            @*     <CategoriesTable Categories="@(_categories.Where(x => x.Type == "Expense").ToList())"/> *@
+            @* </MudTabPanel> *@
+        </MudTabs>
+
+        <div class="d-flex justify-content-center mt-3">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick=@(() => NavigationManager.NavigateTo($"/createCategory"))>Create
+            </MudButton>
+        </div>
+    }
+}
+else
+{
+    <div class="mt-4">
+        <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+    </div>
+}
+
+
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private bool _shouldRender = false;
+    private bool _error = false;
+    private bool _isDataFetched = false;
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+
+    private List<CategoryResponse> _categories = new();
+
+    protected override bool ShouldRender() => _shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+            // await GetCategories();
+
+
+            _categories.Add(new CategoryResponse
+            {
+                Id = 1,
+                Name = "test income",
+                Icon = Icons.Custom.Brands.Apple,
+                Type = "Income",
+                Limit = 500
+            });
+
+            _categories.Add(new CategoryResponse
+            {
+                Id = 3,
+                Name = "test expense",
+                Icon = Icons.Custom.Brands.Discord,
+                Type = "Expense",
+                Limit = 500
+            });
+
+            _categories.Add(new CategoryResponse
+            {
+                Id = 5,
+                Name = "test income 2",
+                Icon = Icons.Custom.Brands.Facebook,
+                Type = "Income",
+                Limit = 500
+            });
+
+
+            _categories.Add(new CategoryResponse
+            {
+                Id = 7,
+                Name = "test expense 2",
+                Icon = Icons.Custom.Brands.Instagram,
+                Type = "Expense",
+                Limit = 500
+            });
+
+
+            _categories.Add(new CategoryResponse
+            {
+                Id = 9,
+                Name = "test expense 3",
+                Icon = Icons.Custom.Brands.LinkedIn,
+                Type = "Expense",
+                Limit = 500
+            });
+
+
+            _isDataFetched = true;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _isDataFetched = false;
+        }
+    }
+
+    private async Task GetCategories()
+    {
+        try
+        {
+            _categories = await CategoriesService.GetCategories(_token, _refreshToken, _userId);
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            _error = true;
+            _shouldRender = true;
+        }
+    }
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
+}

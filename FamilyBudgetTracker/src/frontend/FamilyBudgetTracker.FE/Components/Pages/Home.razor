@@ -1,0 +1,100 @@
+﻿@page "/"
+
+@attribute [AllowAnonymous]
+
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+
+<PageTitle>Home</PageTitle>
+<h1>Welcome!</h1>
+
+@* <AuthorizeView Policy="@ApplicationConstants.PolicyNames.UserRolePolicyName"> *@
+@*     <Authorized> *@
+@* *@
+@* *@
+@*         @if (_error && _isDataFetched) *@
+@*         { *@
+@*             <MudGrid Justify="Justify.Center"> *@
+@*                 <MudItem md="4" xs="4"> *@
+@*                     <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())"> *@
+@*                         Error *@
+@*                     </MudAlert> *@
+@*                 </MudItem> *@
+@*             </MudGrid> *@
+@*         } *@
+@* *@
+@*         @if (_isDataFetched) *@
+@*         { *@
+@*                 <MudItem xs="3"> *@
+@*                     <MudCard Outlined="true"> *@
+@*                         <MudCardHeader> *@
+@*                             <CardHeaderContent> *@
+@*                                 <MudText Typo="Typo.h5">Information about collection</MudText> *@
+@*                             </CardHeaderContent> *@
+@*                         </MudCardHeader> *@
+@*                         <MudCardContent> *@
+@*                             <MudText Typo="Typo.h6">Total collected volumes: @_stats.TotalCollectedVolumes</MudText> *@
+@*                             <MudText Typo="Typo.h6">Total read volumes: @_stats.TotalReadVolumes</MudText> *@
+@*                             <MudText Typo="Typo.h6">Total spending: @_stats.TotalSpending</MudText> *@
+@*                         </MudCardContent> *@
+@*                     </MudCard> *@
+@*                 </MudItem> *@
+@*         } *@
+@*         else *@
+@*         { *@
+@*             <div class="mt-4"> *@
+@*                 <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/> *@
+@*             </div> *@
+@*         } *@
+@* *@
+@*     </Authorized> *@
+@* </AuthorizeView> *@
+
+
+@code{
+
+    // [CascadingParameter]
+    // private Task<AuthenticationState>? AuthenticationState { get; set; }
+    //
+    // private bool _isDataFetched = false;
+    // private bool _error = false;
+    //
+    // private string _userId;
+    // private string _token;
+    // private string _refreshToken;
+    //
+    // private GeneralStatisticsResponse _stats;
+    //
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     AuthenticationState state = await AuthenticationState;
+    //
+    //     _userId = UserUtil.GetUserId(state.User);
+    //     try
+    //     {
+    //         string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+    //         _token = tokens[0];
+    //         _refreshToken = tokens[1];
+    //
+    //         _stats = await StatisticsService.GetGeneralStatisticsResponse(_token, _refreshToken, _userId);
+    //         _isDataFetched = true;
+    //         StateHasChanged();
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         _isDataFetched = false;
+    //         _error = true;
+    //         StateHasChanged();
+    //     }
+    // }
+    //
+    //
+    // private void CloseAlert()
+    // {
+    //     _error = false;
+    //     StateHasChanged();
+    // }
+
+
+}

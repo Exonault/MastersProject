@@ -1,0 +1,15 @@
+﻿using System.Text.Json.Serialization;
+
+namespace FamilyBudgetTracker.FE.Contracts.Personal.Transaction;
+
+public class TransactionsForPeriodSummaryResponse
+{
+    [JsonPropertyName("incomeAmount")]
+    public decimal IncomeAmount { get; set; }
+    
+    [JsonPropertyName("expenseAmount")]
+    public decimal ExpenseAmount { get; set; }
+    
+    [JsonPropertyName("expenseCategoryAmounts")]
+    public Dictionary<string, decimal> ExpenseCategoryAmounts { get; set; }
+}

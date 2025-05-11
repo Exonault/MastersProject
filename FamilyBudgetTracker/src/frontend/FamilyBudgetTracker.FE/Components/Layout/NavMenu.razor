@@ -1,0 +1,53 @@
+﻿@using FamilyBudgetTracker.FE.Constants
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">FamilyBudgetTracker</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="searchLibraryManga" Match="NavLinkMatch.All"> *@
+        @*         <span class="bi bi-search" aria-hidden="true"></span> Search *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="libraryMangas" Match="NavLinkMatch.All"> *@
+        @*         <span class="bi bi-book" aria-hidden="true"></span> Library Manga *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="userMangas"  Match="NavLinkMatch.All"> *@
+        @*         <span class="bi bi-bookshelf" aria-hidden="true"></span> Users Manga *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="orders" Match="NavLinkMatch.All"> *@
+        @*         <span class="bi bi-box-seam" aria-hidden="true"></span> Orders *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="statistics" Match="NavLinkMatch.All"> *@
+        @*         <span class="bi bi-bar-chart" aria-hidden="true"></span> Statistics *@
+        @*     </NavLink> *@
+        @* </div> *@
+        <AuthorizeView Policy="@ApplicationConstants.PolicyNames.AdminRolePolicyName">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="register/admin" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-fill-add" aria-hidden="true"></span> Register new Admin
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+       
+    </nav>
+</div>

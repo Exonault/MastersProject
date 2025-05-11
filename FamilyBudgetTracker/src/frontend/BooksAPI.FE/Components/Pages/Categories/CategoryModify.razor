@@ -1,0 +1,220 @@
+﻿@page "/createCategory"
+@page "/updateCategory"
+@using System.Reflection
+@using BooksAPI.FE.Authentication
+@using BooksAPI.FE.Extensions
+@using BooksAPI.FE.Interfaces
+@using BooksAPI.FE.Model
+@using BooksAPI.FE.Util
+
+@inject NavigationManager NavigationManager;
+@inject ICategoriesService CategoriesService;
+@inject IJSRuntime JsRuntime;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+
+<PageTitle>@(_isCreate ? "Create" : "Update")</PageTitle>
+
+<h3 class="text-center">
+    @(_isCreate ? "Create a new entry" : "Update current entry")
+</h3>
+
+@if (_error)
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem md="4" xs="4">
+            <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                @_errorMessage
+            </MudAlert>
+        </MudItem>
+    </MudGrid>
+}
+
+@if (_createSuccess)
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem md="4" xs="4">
+            <MudAlert Severity="Severity.Info" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                Create successful
+            </MudAlert>
+        </MudItem>
+    </MudGrid>
+}
+
+@if (_isDataFetched && !_error)
+{
+    <EditForm Model="_model" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator/>
+        @if (context.GetValidationMessages().Count() != 0)
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudItem md="4" xs="4">
+                    <MudAlert Severity="Severity.Error">
+                        <ValidationSummary/>
+                    </MudAlert>
+                </MudItem>
+            </MudGrid>
+        }
+
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="6">
+                <MudTextField T="string" Label="Name" InputType="InputType.Text" Variant="Variant.Text"
+                              @bind-Value="_model.Name"/>
+
+                <MudSelect T="string" Label="Status" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter"
+                           Class="mr-3"
+                           @bind-Value="_model.Type">
+                    <MudSelectItem Value=@("Income")>Income</MudSelectItem>
+                    <MudSelectItem Value=@("Expense")>Expense</MudSelectItem>
+                </MudSelect>
+
+                <MudNumericField T="decimal?" HideSpinButtons="true" Min="0" Format="F2" Label="Amount"
+                                 Variant="Variant.Text" Class="mr-5"
+                                 @bind-Value="_model.Limit"/>
+                
+                <div class="d-flex justify-content-between">
+                    <MudTextField T="string" Label="Icon" InputType="InputType.Text" Variant="Variant.Text"
+                                  @bind-Value="_model.Icon" Disabled="true"/>
+                    <IconPicker SelectedIcon="@CurrentIcon" SelectedIconChanged="OnIconChanged"/>
+                </div>
+                
+                
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+
+else if (!_isDataFetched)
+{
+    <div class="mt-4">
+        <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+    </div>
+}
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private int _categoryId = 0;
+
+    private bool _isCreate;
+    private bool _error;
+    private bool _isDataFetched;
+    private bool _createSuccess;
+
+    private bool _shouldRender = false;
+    protected override bool ShouldRender() => _shouldRender;
+
+    private CategoryModel _model = new();
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+
+    private string myIcon = "";
+
+    private string _errorMessage = "Unable to create category. Try again later";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            AuthenticationState state = await AuthenticationState;
+
+            _userId = UserUtil.GetUserId(state.User);
+
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+
+            NavigationManager.GetQueryString<int>("categoryId", out _categoryId);
+
+            _isCreate = _categoryId == 0;
+
+            if (!_isCreate)
+            {
+                _model = await CategoriesService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
+                _isDataFetched = true;
+                StateHasChanged();
+            }
+
+            _isDataFetched = true;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _error = true;
+            _errorMessage = _isCreate ? "Unable to create category. Try again later" : "Unable to update category. Try again later";
+            _isDataFetched = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnValidSubmit()
+    {
+        _model.Icon = CurrentIcon;
+        
+        try
+        {
+            if (_isCreate)
+            {
+                //Create
+                var createSuccess = await CategoriesService.CreateCategory(_model, _token, _refreshToken, _userId);
+                
+                if (!createSuccess)
+                {
+                    _error = true;
+                    StateHasChanged();
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("category");
+                }
+                
+            }
+            else
+            {
+                var updateSuccess = await CategoriesService.UpdateCategory(_categoryId,_model, _token, _refreshToken, _userId);
+                
+                if (!updateSuccess)
+                {
+                    _error = true;
+                    StateHasChanged();
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("category");
+                }
+            }
+
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            _error = true;
+            StateHasChanged();
+        }
+    }
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
+
+    private string CurrentIcon = Icons.Filled.Home;
+
+    private void OnIconChanged(string newIcon)
+    {
+        CurrentIcon = newIcon;
+        // ...do something with the selected icon...
+    }
+
+}

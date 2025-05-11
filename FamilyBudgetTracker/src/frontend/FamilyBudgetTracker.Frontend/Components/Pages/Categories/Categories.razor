@@ -1,0 +1,148 @@
+﻿@page "/categories"
+@using FamilyBudgetTracker.Frontend.Authentication
+@using FamilyBudgetTracker.Frontend.Constants
+@using FamilyBudgetTracker.Frontend.Contracts.Personal.Category
+@using FamilyBudgetTracker.Frontend.Interfaces
+@using FamilyBudgetTracker.Frontend.Util
+
+@* @attribute [Authorize(Policy = AuthorizationConstants.PolicyNames.UserRolePolicyName)] *@
+
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject ICategoriesService CategoriesService
+
+<PageTitle>Categories</PageTitle>
+
+<h3 class="text-center">Categories</h3>
+
+@if (_isDataFetched)
+{
+    @if (_error)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudItem md="4" xs="4">
+                <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                    Unable to get categories. Please try again later.
+                </MudAlert>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <MudTabs Elevation="2" ApplyEffectsToContainer="true" Centered="true">
+            <MudTabPanel Text="All">
+                <CategoriesTable Categories="@(_categories)"/>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Income">
+                <CategoriesTable Categories="@(_categories.Where(x => x.Type == "Income").ToList())"/>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Expense">
+                <CategoriesTable Categories="@(_categories.Where(x => x.Type == "Expense").ToList())"/>
+            </MudTabPanel>
+        </MudTabs>
+
+        <div class="d-flex justify-content-center mt-3">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick=@(() => NavigationManager.NavigateTo($"/createCategory"))>Create
+            </MudButton>
+        </div>
+    }
+}
+else
+{
+    <div class="mt-4">
+        <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+    </div>
+}
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private bool _shouldRender = false;
+    private bool _error = false;
+    private bool _isDataFetched = false;
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+
+    private List<CategoryResponse> _categories = new();
+
+    protected override bool ShouldRender() => _shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+
+            _categories.Add(new CategoryResponse
+            {
+                Id = 1,
+                Name = "temp income",
+                Icon = "bi bi-0-circle",
+                Type = "Income",
+                Limit = null
+            });
+
+            _categories.Add(new CategoryResponse
+            {
+                Id = 1,
+                Name = "temp expense",
+                Icon = "bi bi-1-circle",
+                Type = "Expense",
+                Limit = null
+            });
+
+            // await GetCategories();
+
+            _isDataFetched = true;
+
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _isDataFetched = false;
+        }
+    }
+
+    private async Task GetCategories()
+    {
+        try
+        {
+            _categories = await CategoriesService.GetCategories(_token, _refreshToken, _userId);
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            _error = true;
+            _shouldRender = true;
+        }
+    }
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
+}

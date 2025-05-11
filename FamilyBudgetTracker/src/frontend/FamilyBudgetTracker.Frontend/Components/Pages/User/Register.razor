@@ -1,0 +1,93 @@
+﻿@page "/register"
+@using FamilyBudgetTracker.Frontend.Contracts.User
+@using FamilyBudgetTracker.Frontend.Interfaces
+@using FamilyBudgetTracker.Frontend.Messages
+@using FamilyBudgetTracker.Frontend.Models.User
+
+@attribute [AllowAnonymous]
+
+
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Register</PageTitle>
+<h3 class="text-center mb-4">Register</h3>
+
+@if (_error)
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem md="4" xs="4">
+            <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                @UserMessages.ErrorRegistering
+            </MudAlert>
+        </MudItem>
+    </MudGrid>
+}
+<EditForm Model="_model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="4">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Username" @bind-Value="_model.Username" For="@(() => _model.Username)"/>
+                    <MudTextField Label="Email" Class="mt-3" @bind-Value="_model.Email" For="@(() => _model.Email)"/>
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                                  @bind-Value="_model.Password" For="@(() => _model.Password)" InputType="InputType.Password"/>
+                    <MudTextField Label="Confirm Password" HelperText="Repeat the password" Class="mt-3"
+                                  @bind-Value="_model.ConfirmPassword" For="@(() => _model.ConfirmPassword)" InputType="InputType.Password"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    RegisterModel _model = new();
+    private bool _shouldRender = false;
+    private bool _error = false;
+
+    protected override bool ShouldRender() => _shouldRender;
+
+    private async void OnValidSubmit()
+    {
+        try
+        {
+            RegisterResponse? registerResponse = await UserService.Register(_model, false);
+            
+            if (registerResponse is not null)
+            {
+                if (!registerResponse.Successful)
+                {
+                    _error = true;
+                    _shouldRender = true;
+                    StateHasChanged();
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/login");
+                }
+            }
+            else
+            {
+                _error = true;
+                _shouldRender = true;
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
+}

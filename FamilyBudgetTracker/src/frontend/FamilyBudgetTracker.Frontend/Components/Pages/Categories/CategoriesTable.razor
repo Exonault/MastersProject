@@ -1,0 +1,103 @@
+﻿@using FamilyBudgetTracker.Frontend.Authentication
+@using FamilyBudgetTracker.Frontend.Contracts.Personal.Category
+@using FamilyBudgetTracker.Frontend.Interfaces
+@using FamilyBudgetTracker.Frontend.Util
+@inject NavigationManager NavigationManager;
+@inject ICategoriesService CategoriesService;
+@inject IJSRuntime JsRuntime;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+
+<MudTable Items="Categories" @bind-SelectedItem="selectedItem">
+    <HeaderContent>
+        <MudTh>Icon</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Limit</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Icon">
+            <MudIcon Icon="@context.Icon"></MudIcon>
+        </MudTd>
+        <MudTd DataLabel="Name">
+            <MudText Typo="Typo.h6">@context.Name</MudText>
+        </MudTd>
+        <MudTd DataLabel="Type">
+            <MudText Typo="Typo.h6">@context.Type</MudText>
+        </MudTd>
+        <MudTd DataLabel="Limit">
+            <MudText Typo="Typo.h6">@context.Limit</MudText>
+        </MudTd>
+        <MudTd DataLabel="Actions">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3"
+                       OnClick="@(() => NavigationManager.NavigateTo($"/updateCategory?categoryId={context.Id}"))">
+                Update
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3"
+                       OnClick="@(() => DeleteCategory(context.Id))">Delete
+            </MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    [Parameter]
+    public List<CategoryResponse> Categories { get; set; }
+
+    private CategoryResponse selectedItem;
+    private string searchString;
+
+    private string _token;
+    private string _refreshToken;
+    private string _userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        try
+        {
+            // bool isDeleteSuccess = await CategoriesService.DeleteCategory(id, _token, _refreshToken);
+
+            // if (isDeleteSuccess)
+            // {
+            // LibraryMangaForPageResponse? libraryMangaResponse = Mangas.FirstOrDefault(x => x.Id == id);
+            // Mangas.Remove(libraryMangaResponse!);
+            // StateHasChanged();
+            // }
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            //ignore
+        }
+    }
+
+}

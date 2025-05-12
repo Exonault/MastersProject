@@ -22,7 +22,7 @@ public class CategoriesService : ICategoriesService
 
     public async Task<List<CategoryResponse>> GetCategories(string token, string refreshToken, string userId)
     {
-        string url = $"{_configuration["Backend:Categories"]!}user";
+        string url = $"{_configuration["Backend:Categories"]!}/user";
 
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -77,7 +77,7 @@ public class CategoriesService : ICategoriesService
     
     public async Task<CategoryResponse> GetCategory(int id, string token, string refreshToken, string userId)
     {
-        string url = $"{_configuration["Backend:Category"]}{id}";
+        string url = $"{_configuration["Backend:Category"]}/{id}";
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -114,14 +114,77 @@ public class CategoriesService : ICategoriesService
         }
     }
 
-    public Task<bool> CreateCategory(CategoryModel model, string token, string refreshToken, string userId)
+    public async Task<bool> CreateCategory(CategoryModel model, string token, string refreshToken, string userId)
     {
-        throw new NotImplementedException();
+        CategoryRequest requestContent = new CategoryRequest
+        {
+            Name = model.Name,
+            Icon = model.Icon,
+            Type = model.Type,
+            Limit = model.Limit
+        };
+        
+        string url = $"{_configuration["Backend:Category"]}/";
+        
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        request.Content = JsonContent.Create(requestContent);
+
+        HttpClient httpClient = _clientFactory.CreateClient();
+
+        HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
+            }
+        }
+        
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        return false;
     }
 
-    public Task<bool> UpdateCategory(int id, CategoryModel model, string token, string refreshToken, string userId)
+    public async Task<bool> UpdateCategory(int id, CategoryModel model, string token, string refreshToken, string userId)
     {
-        throw new NotImplementedException();
+        CategoryRequest requestContent = new CategoryRequest
+        {
+            Name = model.Name,
+            Icon = model.Icon,
+            Type = model.Type,
+            Limit = model.Limit
+        };
+        
+        string url = $"{_configuration["Backend:Category"]}/{id}";
+        
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, url);
+        
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        request.Content = JsonContent.Create(requestContent);
+
+        HttpClient httpClient = _clientFactory.CreateClient();
+
+        HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
+            }
+        }
+        
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<HttpResponseMessage> RefreshRequest(string token, string refreshToken,

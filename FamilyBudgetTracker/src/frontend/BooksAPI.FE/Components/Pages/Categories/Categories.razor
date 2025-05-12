@@ -53,7 +53,10 @@
                                     <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
                                 </MudCardContent>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary">Update</MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/updateCategory?categoryId={category.Id}"))">
+                                        Update
+                                    </MudButton>
                                 </MudCardActions>
                             </MudCard>
                         </MudItem>

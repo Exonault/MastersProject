@@ -2,6 +2,7 @@ using Blazored.SessionStorage;
 using BooksAPI.FE.Authentication;
 using BooksAPI.FE.Components;
 using BooksAPI.FE.Constants;
+using BooksAPI.FE.Extensions;
 using BooksAPI.FE.Interfaces;
 using BooksAPI.FE.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -22,11 +23,9 @@ builder.Services.AddServerSideBlazor()
 builder.Services.AddMudServices();
 builder.Services.AddBlazorBootstrap();
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddApplicationServices();
 
-builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+builder.Services.AddAuthorizationServices();
 
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
@@ -34,22 +33,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddBlazoredSessionStorage();
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy(ApplicationConstants.PolicyNames.AdminRolePolicyName,
-        p =>
-        {
-            p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                ApplicationConstants.ClaimNames.AdminRoleClaimName);
-        });
-
-    options.AddPolicy(ApplicationConstants.PolicyNames.UserRolePolicyName,
-        p =>
-        {
-            p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                ApplicationConstants.ClaimNames.UserRoleClaimName);
-        });
-});
 
 var app = builder.Build();
 

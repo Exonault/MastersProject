@@ -1,0 +1,93 @@
+﻿@using BooksAPI.FE.Contracts.Personal.Transaction
+@using BooksAPI.FE.Util
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime JsRuntime;
+
+<MudTable Items="Transactions">
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<PersonalTransactionResponse, object>(x=> x.TransactionDate)" InitialDirection="SortDirection.Descending">Date</MudTableSortLabel>
+        </MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh>Amount</MudTh>
+        <MudTh>Category</MudTh>
+        <MudTh>Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Date">
+            <MudText Typo="Typo.body1"> @context.TransactionDate.ToShortDateString()</MudText>
+        </MudTd>
+        <MudTd DataLabel="Description">
+            <MudText Typo="Typo.body1" Class="w-50">@context.Description</MudText>
+        </MudTd>
+        <MudTd DataLabel="Amount">
+            <MudText Typo="Typo.body1">@context.Amount</MudText>
+        </MudTd>
+        <MudTd DataLabel="Category">
+            <MudText Typo="Typo.body1">@context.Category.Name</MudText>
+        </MudTd>
+        <MudTd DataLabel="Actions" Style="width: 10% !important;">
+            <div class="justify-content-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                    Update
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3">
+                    Delete
+                </MudButton>
+            </div>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 5, 10, 25,}"/>
+    </PagerContent>
+</MudTable>
+
+@code{
+
+    [Parameter]
+    public List<PersonalTransactionResponse> Transactions { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private string _token;
+    private string _refreshToken;
+    private string _userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteOrder(int id)
+    {
+        try
+        {
+            // bool isDeleteSuccess = await OrderService.DeleteOrder(id, _token, _refreshToken, _userId);
+            // if (isDeleteSuccess)
+            // {
+            //     OrderResponse? orderResponse = Categories.FirstOrDefault(x => x.Id == id);
+            //     Categories.Remove(orderResponse!);
+            //     StateHasChanged();
+            // }
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+        }
+    }
+
+}

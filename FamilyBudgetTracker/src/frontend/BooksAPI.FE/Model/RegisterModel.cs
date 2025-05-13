@@ -13,9 +13,9 @@ public class RegisterModel //TODO add errorMessages
     public string Email { get; set; } = string.Empty;
 
     [Required]
-    [DataType(DataType.Password)]
-    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", 
-        ErrorMessage = UserMessages.PasswordErrorMessage)]
+    // [DataType(DataType.Password)]
+    // [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", 
+    //     ErrorMessage = UserMessages.PasswordErrorMessage)]
     public string Password { get; set; } = string.Empty;
     
     [Required]

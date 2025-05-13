@@ -9,13 +9,11 @@
 @inject IJSRuntime JsRuntime;
 @inject NavigationManager NavigationManager;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
-@inject ICategoriesService CategoriesService
+@inject ICategoryService CategoryService
 
 @attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)]
 
 <PageTitle>Categories</PageTitle>
-
-<h3>Categories</h3>
 
 <h3 class="text-center">Categories</h3>
 
@@ -33,6 +31,12 @@
     }
     else
     {
+        <div class="d-flex justify-content-end mb-3">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick=@(() => NavigationManager.NavigateTo($"/createCategory"))>Create
+            </MudButton>
+        </div>
+        
         <MudTabs Elevation="2" ApplyEffectsToContainer="true" Centered="true">
             <MudTabPanel Text="All">
                 <MudGrid>
@@ -52,10 +56,14 @@
                                     <MudText Typo="Typo.h5">@($"Type: {category.Type}")</MudText>
                                     <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
                                 </MudCardContent>
-                                <MudCardActions>
+                                <MudCardActions Class="d-flex justify-content-between">
                                     <MudButton Variant="Variant.Text" Color="Color.Primary"
                                                OnClick="@(() => NavigationManager.NavigateTo($"/updateCategory?categoryId={category.Id}"))">
                                         Update
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                                               OnClick="@(() => DeleteCategory(category.Id))">
+                                        Delete
                                     </MudButton>
                                 </MudCardActions>
                             </MudCard>
@@ -64,20 +72,76 @@
                 </MudGrid>
             </MudTabPanel>
 
-            @* <MudTabPanel Text="Income"> *@
-            @*     <CategoriesTable Categories="@(_categories.Where(x => x.Type == "Income").ToList())"/> *@
-            @* </MudTabPanel> *@
-            @* *@
-            @* <MudTabPanel Text="Expense"> *@
-            @*     <CategoriesTable Categories="@(_categories.Where(x => x.Type == "Expense").ToList())"/> *@
-            @* </MudTabPanel> *@
+            <MudTabPanel Text="Income">
+                <MudGrid>
+                    @foreach (var category in _categories.Where(x => x.Type == "Income"))
+                    {
+                        <MudItem xs="3">
+                            <MudCard Outlined="true">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h4">@category.Name</MudText>
+                                    </CardHeaderContent>
+                                    <CardHeaderActions>
+                                        <MudIcon Icon="@category.Icon" Size="Size.Large"/>
+                                    </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    @* <MudText Typo="Typo.h5">@($"Type: {category.Type}")</MudText> *@
+                                    <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
+                                </MudCardContent>
+                                <MudCardActions Class="d-flex justify-content-between">
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/updateCategory?categoryId={category.Id}"))">
+                                        Update
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                                               OnClick="@(() => DeleteCategory(category.Id))">
+                                        Delete
+                                    </MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Expense">
+                <MudGrid>
+                    @foreach (var category in _categories.Where(x => x.Type == "Expense"))
+                    {
+                        <MudItem xs="3">
+                            <MudCard Outlined="true">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h4">@category.Name</MudText>
+                                    </CardHeaderContent>
+                                    <CardHeaderActions>
+                                        <MudIcon Icon="@category.Icon" Size="Size.Large"/>
+                                    </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    @* <MudText Typo="Typo.h5">@($"Type: {category.Type}")</MudText> *@
+                                    <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
+                                </MudCardContent>
+                                <MudCardActions Class="d-flex justify-content-between">
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/updateCategory?categoryId={category.Id}"))">
+                                        Update
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                                               OnClick="@(() => DeleteCategory(category.Id))">
+                                        Delete
+                                    </MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
         </MudTabs>
 
-        <div class="d-flex justify-content-center mt-3">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                       OnClick=@(() => NavigationManager.NavigateTo($"/createCategory"))>Create
-            </MudButton>
-        </div>
+        
     }
 }
 else
@@ -117,56 +181,8 @@ else
             string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
             _token = tokens[0];
             _refreshToken = tokens[1];
-            // await GetCategories();
 
-
-            _categories.Add(new CategoryResponse
-            {
-                Id = 1,
-                Name = "test income",
-                Icon = Icons.Custom.Brands.Apple,
-                Type = "Income",
-                Limit = 500
-            });
-
-            _categories.Add(new CategoryResponse
-            {
-                Id = 3,
-                Name = "test expense",
-                Icon = Icons.Custom.Brands.Discord,
-                Type = "Expense",
-                Limit = 500
-            });
-
-            _categories.Add(new CategoryResponse
-            {
-                Id = 5,
-                Name = "test income 2",
-                Icon = Icons.Custom.Brands.Facebook,
-                Type = "Income",
-                Limit = 500
-            });
-
-
-            _categories.Add(new CategoryResponse
-            {
-                Id = 7,
-                Name = "test expense 2",
-                Icon = Icons.Custom.Brands.Instagram,
-                Type = "Expense",
-                Limit = 500
-            });
-
-
-            _categories.Add(new CategoryResponse
-            {
-                Id = 9,
-                Name = "test expense 3",
-                Icon = Icons.Custom.Brands.LinkedIn,
-                Type = "Expense",
-                Limit = 500
-            });
-
+            await GetCategories();
 
             _isDataFetched = true;
             _shouldRender = true;
@@ -182,7 +198,7 @@ else
     {
         try
         {
-            _categories = await CategoriesService.GetCategories(_token, _refreshToken, _userId);
+            _categories = await CategoryService.GetCategories(_token, _refreshToken, _userId);
         }
         catch (InvalidOperationException e)
         {
@@ -194,6 +210,24 @@ else
         {
             _error = true;
             _shouldRender = true;
+        }
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        try
+        {
+            bool isDeleteSuccess = await CategoryService.DeleteCategory(id, _token, _refreshToken, _userId);
+            if (isDeleteSuccess)
+            {
+                CategoryResponse? category = _categories.FirstOrDefault(x => x.Id == id);
+                _categories.Remove(category!);
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
         }
     }
 

@@ -3,7 +3,7 @@ using BooksAPI.FE.Model;
 
 namespace BooksAPI.FE.Interfaces;
 
-public interface ICategoriesService
+public interface ICategoryService
 {
    Task<List<CategoryResponse>> GetCategories(string token, string refreshToken, string userId);
 
@@ -13,4 +13,6 @@ public interface ICategoriesService
    
    Task<bool> CreateCategory(CategoryModel model, string token, string refreshToken, string userId);
    Task<bool> UpdateCategory(int id, CategoryModel model, string token, string refreshToken, string userId);
+
+   Task<bool> DeleteCategory(int id, string token, string refreshToken, string userId);
 }

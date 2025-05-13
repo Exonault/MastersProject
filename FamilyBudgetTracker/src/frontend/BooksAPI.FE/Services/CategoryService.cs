@@ -7,22 +7,24 @@ using BooksAPI.FE.Model;
 
 namespace BooksAPI.FE.Services;
 
-public class CategoriesService : ICategoriesService
+public class CategoryService : ICategoryService
 {
-    private readonly IConfiguration _configuration;
     private readonly IHttpClientFactory _clientFactory;
     private readonly IRefreshTokenService _refreshTokenService;
 
-    public CategoriesService(IConfiguration configuration, IHttpClientFactory clientFactory, IRefreshTokenService refreshTokenService)
+    private readonly string _baseUrl;
+
+    public CategoryService(IConfiguration configuration, IHttpClientFactory clientFactory,
+        IRefreshTokenService refreshTokenService)
     {
-        _configuration = configuration;
         _clientFactory = clientFactory;
         _refreshTokenService = refreshTokenService;
+        _baseUrl = configuration["Backend:Categories"]!;
     }
 
     public async Task<List<CategoryResponse>> GetCategories(string token, string refreshToken, string userId)
     {
-        string url = $"{_configuration["Backend:Categories"]!}/user";
+        string url = $"{_baseUrl}/user";
 
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -74,10 +76,10 @@ public class CategoriesService : ICategoriesService
 
         return model;
     }
-    
+
     public async Task<CategoryResponse> GetCategory(int id, string token, string refreshToken, string userId)
     {
-        string url = $"{_configuration["Backend:Category"]}/{id}";
+        string url = $"{_baseUrl}/{id}";
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -123,9 +125,9 @@ public class CategoriesService : ICategoriesService
             Type = model.Type,
             Limit = model.Limit
         };
-        
-        string url = $"{_configuration["Backend:Category"]}/";
-        
+
+        string url = $"{_baseUrl}/";
+
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -141,7 +143,7 @@ public class CategoriesService : ICategoriesService
                 responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
             }
         }
-        
+
         if (responseMessage.IsSuccessStatusCode)
         {
             return true;
@@ -150,7 +152,8 @@ public class CategoriesService : ICategoriesService
         return false;
     }
 
-    public async Task<bool> UpdateCategory(int id, CategoryModel model, string token, string refreshToken, string userId)
+    public async Task<bool> UpdateCategory(int id, CategoryModel model, string token, string refreshToken,
+        string userId)
     {
         CategoryRequest requestContent = new CategoryRequest
         {
@@ -159,13 +162,13 @@ public class CategoriesService : ICategoriesService
             Type = model.Type,
             Limit = model.Limit
         };
-        
-        string url = $"{_configuration["Backend:Category"]}/{id}";
-        
+
+        string url = $"{_baseUrl}/{id}";
+
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, url);
-        
+
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        
+
         request.Content = JsonContent.Create(requestContent);
 
         HttpClient httpClient = _clientFactory.CreateClient();
@@ -178,7 +181,34 @@ public class CategoriesService : ICategoriesService
                 responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
             }
         }
-        
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<bool> DeleteCategory(int id, string token, string refreshToken, string userId)
+    {
+        string url = $"{_baseUrl}/{id}";
+
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, url);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpClient httpClient = _clientFactory.CreateClient();
+
+        HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
+            }
+            else throw new Exception();
+        }
+
         if (responseMessage.IsSuccessStatusCode)
         {
             return true;

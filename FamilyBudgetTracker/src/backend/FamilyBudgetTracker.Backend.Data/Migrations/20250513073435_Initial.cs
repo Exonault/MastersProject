@@ -345,7 +345,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     { "admin", null, "Admin", "ADMIN" },
                     { "familyAdmin", null, "FamilyAdmin", "FAMILYADMIN" },
                     { "familyMember", null, "FamilyMember", "FAMILYMEMBER" },
-                    { "user", null, "FamilyMember", "USER" }
+                    { "user", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

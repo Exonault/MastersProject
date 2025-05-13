@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FamilyBudgetTracker.Backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250506122835_Initial")]
+    [Migration("20250513073435_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

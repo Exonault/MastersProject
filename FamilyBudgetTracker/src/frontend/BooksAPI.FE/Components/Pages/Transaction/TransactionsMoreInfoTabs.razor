@@ -1,0 +1,120 @@
+﻿@using System.Globalization
+@using BooksAPI.FE.Contracts.Personal.Transaction
+<MudPaper Class="pa-4">
+
+    <div class="d-flex justify-space-between mb-2">
+        <MudButton Variant="Variant.Outlined" OnClick="GoToPrevious">
+            <MudIcon Icon="@Icons.Material.Filled.ChevronLeft"/>
+            Previous
+        </MudButton>
+
+        <MudButton Variant="Variant.Outlined" OnClick="GoToNext">
+            Next
+            <MudIcon Icon="@Icons.Material.Filled.ChevronRight"/>
+        </MudButton>
+    </div>
+
+    <MudTabs @bind-ActivePanelIndex="_selectedTabIndex"
+             OnActivePanelIndexChanged="OnTabChanged"
+             Rounded="true" Centered="true" RoundedBar="true">
+
+        @foreach (var month in _monthTabs)
+        {
+            <MudTabPanel Text="@month.Label">
+                <TransactionTable Transactions="new List<PersonalTransactionResponse>()"/>
+            </MudTabPanel>
+        }
+    </MudTabs>
+
+</MudPaper>
+
+@code {
+
+    private List<MonthTab> _monthTabs = new();
+    private int _selectedTabIndex;
+    private DateTime _centerMonth;
+
+    private const int TabCount = 5; // Change this to 3, 5, 7, etc. (should be odd)
+    private int CenterIndex => TabCount / 2;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _centerMonth = DateTime.Now;
+        await BuildMonthTabsAsync(_centerMonth);
+    }
+
+    private async Task OnTabChanged(int newIndex)
+    {
+        if (newIndex != CenterIndex)
+        {
+            _centerMonth = _monthTabs[newIndex].Date;
+            await BuildMonthTabsAsync(_centerMonth);
+        }
+    }
+
+    private async Task BuildMonthTabsAsync(DateTime center)
+    {
+        _monthTabs = new List<MonthTab>();
+        for (int i = -CenterIndex; i <= CenterIndex; i++)
+        {
+            _monthTabs.Add(new MonthTab(center.AddMonths(i)));
+        }
+
+        _selectedTabIndex = CenterIndex;
+        StateHasChanged();
+
+        var loadTasks = _monthTabs.Select(async tab =>
+        {
+            // tab.Content = await LoadContentAsync(tab.Date);
+            tab.IsLoading = false;
+        });
+
+        await Task.WhenAll(loadTasks);
+        StateHasChanged();
+    }
+
+    private async Task<string> LoadContentAsync(DateTime date)
+    {
+        //call personal transaction service 
+
+
+        return "";
+        // try
+        // {
+        //     var response = await Http.GetAsync($"api/month-content?year={date.Year}&month={date.Month}");
+        //     response.EnsureSuccessStatusCode();
+        //     return await response.Content.ReadAsStringAsync();
+        // }
+        // catch (Exception ex)
+        // {
+        //     return $"<i>Failed to load content for {date:MMMM yyyy}</i><br/>{ex.Message}";
+        // }
+    }
+
+    private async Task GoToPrevious()
+    {
+        _centerMonth = _centerMonth.AddMonths(-1);
+        await BuildMonthTabsAsync(_centerMonth);
+    }
+
+    private async Task GoToNext()
+    {
+        _centerMonth = _centerMonth.AddMonths(1);
+        await BuildMonthTabsAsync(_centerMonth);
+    }
+
+    public class MonthTab
+    {
+        public string Label { get; }
+        public DateTime Date { get; }
+        public string? Content { get; set; }
+        public bool IsLoading { get; set; } = true;
+
+        public MonthTab(DateTime date)
+        {
+            Date = date;
+            Label = date.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
+        }
+    }
+
+}

@@ -2,7 +2,7 @@
 
 namespace BooksAPI.FE.Contracts.Personal.Transaction;
 
-public class TransactionsForPeriodSummaryResponse
+public class PersonalTransactionPeriodSummaryResponse
 {
     [JsonPropertyName("incomeAmount")]
     public decimal IncomeAmount { get; set; }

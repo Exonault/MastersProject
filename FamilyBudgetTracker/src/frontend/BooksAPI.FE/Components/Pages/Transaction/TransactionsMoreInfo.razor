@@ -27,10 +27,13 @@
     }
     else
     {
-        <div class="d-flex justify-content-end mb-3">
+        <div class="d-flex justify-content-between mb-3">
             <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                OnClick="@(() => NavigationManager.NavigateTo("transactionsSummary"))">
+                       OnClick="@(() => NavigationManager.NavigateTo("transactionsSummary"))">
                 To summary
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                Add transaction
             </MudButton>
         </div>
 

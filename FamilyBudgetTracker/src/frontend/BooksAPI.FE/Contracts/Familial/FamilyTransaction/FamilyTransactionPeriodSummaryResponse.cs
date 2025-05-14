@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FamilyBudgetTracker.Shared.Contracts.Familial.FamilyTransaction;
+namespace BooksAPI.FE.Contracts.Familial.FamilyTransaction;
 
-public class FamilyTransactionsForPeriodSummaryResponse
+public class FamilyTransactionPeriodSummaryResponse
 {
     [JsonPropertyName("totalIncomeAmount")]
     public decimal TotalIncomeAmount { get; set; }

@@ -108,7 +108,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         return response;
     }
 
-    public async Task<TransactionsForPeriodSummaryResponse> GetTransactionsForPeriodSummary(DateOnly startDate, DateOnly endDate,
+    public async Task<PersonalTransactionPeriodSummaryResponse> GetTransactionsForPeriodSummary(DateOnly startDate, DateOnly endDate,
         string userId)
     {
         User? user = await _userRepository.GetById(userId);
@@ -124,7 +124,7 @@ public class PersonalTransactionService : IPersonalTransactionService
     }
 
 
-    private static TransactionsForPeriodSummaryResponse GenerateTransactionForPeriodSummaryResponse(List<PersonalTransaction> transactions)
+    private static PersonalTransactionPeriodSummaryResponse GenerateTransactionForPeriodSummaryResponse(List<PersonalTransaction> transactions)
     {
         var expenseSum = 0.0m;
         var incomeSum = 0.0m;
@@ -148,7 +148,7 @@ public class PersonalTransactionService : IPersonalTransactionService
             }
         }
 
-        var result = new TransactionsForPeriodSummaryResponse
+        var result = new PersonalTransactionPeriodSummaryResponse
         {
             IncomeAmount = incomeSum,
             ExpenseAmount = expenseSum,

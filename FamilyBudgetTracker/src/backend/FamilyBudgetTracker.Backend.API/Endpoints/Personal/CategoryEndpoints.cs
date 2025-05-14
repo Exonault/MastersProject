@@ -53,11 +53,6 @@ public static class CategoryEndpoints
 
         categoryGroup.MapGet("/{id:int}", GetCategoryById)
             .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
-            // .CacheOutput(options =>
-            // {
-            //     options.AddPolicy(typeof(AuthenticatedUserCachePolicy));
-            //     // options.Tag("test");
-            // })
             .Produces(StatusCodes.Status200OK, typeof(CategoryResponse), "application/json")
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -87,7 +82,7 @@ public static class CategoryEndpoints
     }
 
     private static async Task<IResult> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request,
-        ICategoryService service, HttpContext httpContext, IOutputCacheStore cacheStore)
+        ICategoryService service, HttpContext httpContext)
     {
         var userId = httpContext.GetUserIdFromAuth();
 

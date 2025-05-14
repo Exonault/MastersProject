@@ -60,7 +60,7 @@ public static class FamilyTransactionEndpoints
 
         familyTransactionGroup.MapGet("/period/summary", GetFamilyTransactionsForPeriod)
             .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)
-            .Produces(StatusCodes.Status200OK, typeof(FamilyTransactionsForPeriodSummaryResponse), "application/json")
+            .Produces(StatusCodes.Status200OK, typeof(FamilyTransactionPeriodSummaryResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
@@ -131,7 +131,7 @@ public static class FamilyTransactionEndpoints
         var userId = httpContext.GetUserIdFromAuth();
         var familyId = httpContext.GetFamilyIdFromAuth();
 
-        FamilyTransactionsForPeriodSummaryResponse response =
+        FamilyTransactionPeriodSummaryResponse response =
             await service.GetFamilyTransactionsForPeriodSummary(startDate, endDate, userId, familyId);
 
         return Results.Ok(response);

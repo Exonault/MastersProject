@@ -1,4 +1,12 @@
 ﻿@using System.Globalization
+@using BooksAPI.FE.Contracts.Personal.Transaction
+@using BooksAPI.FE.Interfaces
+@using BooksAPI.FE.Util
+@inject IJSRuntime JsRuntime;
+@inject IPersonalTransactionService TransactionService;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+
 <MudPaper Class="pa-4">
 
     <div class="d-flex justify-space-between mb-2">
@@ -19,9 +27,20 @@
 
         @foreach (var month in _monthTabs)
         {
-            <MudTabPanel Text="@month.Label">
-                @*Card with summary*@
-            </MudTabPanel>
+            @if (month.IsLoading)
+            {
+                <div class="mt-4">
+                    <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+                </div>
+            }
+            else
+            {
+                var response = month.Content;
+
+                <MudTabPanel Text="@month.Label">
+                    <SummaryCard Response="response"/>
+                </MudTabPanel>
+            }
         }
     </MudTabs>
 
@@ -29,15 +48,37 @@
 
 @code {
 
-    private List<MonthTab> _monthTabs = new();
+    private List<MonthTabSummaryInfo> _monthTabs = new();
     private int _selectedTabIndex;
     private DateTime _centerMonth;
 
     private const int TabCount = 5; // Change this to 3, 5, 7, etc. (should be odd)
     private int CenterIndex => TabCount / 2;
 
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+
+
     protected override async Task OnInitializedAsync()
     {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+        }
+        catch (Exception e)
+        {
+        }
+
         _centerMonth = DateTime.Now;
         await BuildMonthTabsAsync(_centerMonth);
     }
@@ -53,41 +94,23 @@
 
     private async Task BuildMonthTabsAsync(DateTime center)
     {
-        _monthTabs = new List<MonthTab>();
+        _monthTabs = new List<MonthTabSummaryInfo>();
         for (int i = -CenterIndex; i <= CenterIndex; i++)
         {
-            _monthTabs.Add(new MonthTab(center.AddMonths(i)));
+            _monthTabs.Add(new MonthTabSummaryInfo(center.AddMonths(i)));
         }
-
-        _selectedTabIndex = CenterIndex;
-        StateHasChanged();
 
         var loadTasks = _monthTabs.Select(async tab =>
         {
-            // tab.Content = await LoadContentAsync(tab.Date);
+            // tab.Content = new PersonalTransactionPeriodSummaryResponse();
+            tab.Content = await TransactionService.GetSummary(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
 
         await Task.WhenAll(loadTasks);
+
+        _selectedTabIndex = CenterIndex;
         StateHasChanged();
-    }
-
-    private async Task<string> LoadContentAsync(DateTime date)
-    {
-     //call personalTransactionService
-
-
-        return "";
-        // try
-        // {
-        //     var response = await Http.GetAsync($"api/month-content?year={date.Year}&month={date.Month}");
-        //     response.EnsureSuccessStatusCode();
-        //     return await response.Content.ReadAsStringAsync();
-        // }
-        // catch (Exception ex)
-        // {
-        //     return $"<i>Failed to load content for {date:MMMM yyyy}</i><br/>{ex.Message}";
-        // }
     }
 
     private async Task GoToPrevious()
@@ -102,18 +125,29 @@
         await BuildMonthTabsAsync(_centerMonth);
     }
 
-    public class MonthTab
+    public class MonthTabSummaryInfo
     {
         public string Label { get; }
         public DateTime Date { get; }
-        public string? Content { get; set; }
+        public PersonalTransactionPeriodSummaryResponse Content { get; set; }
         public bool IsLoading { get; set; } = true;
 
-        public MonthTab(DateTime date)
+        public MonthTabSummaryInfo(DateTime date)
         {
             Date = date;
             Label = date.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
         }
     }
+
+    private List<ExpenseItem> expenses = new()
+    {
+        new ExpenseItem("Bills", "400,00 BGN"),
+        new ExpenseItem("General", "290,00 BGN"),
+        new ExpenseItem("Lunch", "76,00 BGN"),
+        new ExpenseItem("Going out", "70,00 BGN"),
+        new ExpenseItem("Groceries", "65,00 BGN"),
+    };
+
+    public record ExpenseItem(string Name, string Amount);
 
 }

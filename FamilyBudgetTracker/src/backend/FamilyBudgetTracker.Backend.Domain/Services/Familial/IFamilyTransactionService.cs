@@ -15,6 +15,6 @@ public interface IFamilyTransactionService
     Task<List<FamilyTransactionResponse>> GetFamilyTransactionsForPeriod(DateOnly startDate, DateOnly endDate, string userId,
         string familyId);
 
-    Task<FamilyTransactionsForPeriodSummaryResponse> GetFamilyTransactionsForPeriodSummary(DateOnly startDate, DateOnly endDate,
+    Task<FamilyTransactionPeriodSummaryResponse> GetFamilyTransactionsForPeriodSummary(DateOnly startDate, DateOnly endDate,
         string userId, string familyId);
 }

@@ -147,7 +147,7 @@ public class FamilyTransactionService : IFamilyTransactionService
         return response;
     }
 
-    public async Task<FamilyTransactionsForPeriodSummaryResponse> GetFamilyTransactionsForPeriodSummary(DateOnly startDate,
+    public async Task<FamilyTransactionPeriodSummaryResponse> GetFamilyTransactionsForPeriodSummary(DateOnly startDate,
         DateOnly endDate, string userId, string familyId)
     {
         User? user = await _userRepository.GetById(userId);
@@ -163,12 +163,12 @@ public class FamilyTransactionService : IFamilyTransactionService
         List<FamilyTransaction> transactions =
             await _familyTransactionRepository.GetFamilyTransactionsForPeriod(family.Id, startDate, endDate);
 
-        FamilyTransactionsForPeriodSummaryResponse response = GenerateFamilyTransactionForPeriodSummaryResponse(transactions);
+        FamilyTransactionPeriodSummaryResponse response = GenerateFamilyTransactionForPeriodSummaryResponse(transactions);
 
         return response;
     }
 
-    private static FamilyTransactionsForPeriodSummaryResponse GenerateFamilyTransactionForPeriodSummaryResponse(
+    private static FamilyTransactionPeriodSummaryResponse GenerateFamilyTransactionForPeriodSummaryResponse(
         List<FamilyTransaction> transactions)
     {
         
@@ -194,7 +194,7 @@ public class FamilyTransactionService : IFamilyTransactionService
             }
         }
 
-        return new FamilyTransactionsForPeriodSummaryResponse
+        return new FamilyTransactionPeriodSummaryResponse
         {
             TotalIncomeAmount = incomeSum,
             TotalExpenseAmount = expenseSum,

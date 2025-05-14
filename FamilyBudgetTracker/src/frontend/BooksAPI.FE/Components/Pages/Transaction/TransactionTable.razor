@@ -6,7 +6,10 @@
 <MudTable Items="Transactions">
     <HeaderContent>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<PersonalTransactionResponse, object>(x=> x.TransactionDate)" InitialDirection="SortDirection.Descending">Date</MudTableSortLabel>
+            <MudTableSortLabel SortBy="new Func<PersonalTransactionResponse, object>(x => x.TransactionDate)" 
+                               InitialDirection="SortDirection.Descending">
+                Date
+            </MudTableSortLabel>
         </MudTh>
         <MudTh>Description</MudTh>
         <MudTh>Amount</MudTh>

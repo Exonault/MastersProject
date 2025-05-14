@@ -1,0 +1,54 @@
+﻿@using BooksAPI.FE.Contracts.Personal.Transaction
+
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="6">
+        @* <MudCard Style="background-color: #2b2b2b; color: white;"> *@
+        <MudCard>
+            <MudCardContent>
+              
+                <div class="d-flex justify-content-between mb-1">
+                    <MudText Typo="Typo.h5" Style="color: #4CAF50;">Income</MudText>
+                    <MudText Typo="Typo.h5" Style="color: #4CAF50;">@Response.IncomeAmount</MudText>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-3">
+                    <MudText Typo="Typo.h5" Style="color: #F44336;">Expense</MudText>
+                    <MudText Typo="Typo.h5" Style="color: #F44336;">@Response.ExpenseAmount</MudText>
+                </div>
+
+                @if (Response.ExpenseCategoryAmounts.Count != 0)
+                {
+                    <MudDivider Class="my-2"/>
+                }
+
+                <MudStack Spacing="1">
+                    @foreach (var item in Response.ExpenseCategoryAmounts)
+                    {
+                        <div class="d-flex justify-content-between ms-3">
+                            <MudText Typo="Typo.body1">@item.Key</MudText>
+                            <MudText Typo="Typo.body1">@item.Value</MudText>
+                        </div>
+                    }
+                </MudStack>
+
+                <MudDivider Class="my-3"/>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <MudText Typo="Typo.h6" Style="color: #3F51B5;">Balance</MudText>
+                    <MudText Typo="Typo.h6" Style="color: #3F51B5;">@(Response.IncomeAmount - Response.ExpenseAmount)</MudText>
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+
+
+    </MudItem>
+</MudGrid>
+
+@code {
+
+    [Parameter]
+    public PersonalTransactionPeriodSummaryResponse Response { get; set; }
+
+}

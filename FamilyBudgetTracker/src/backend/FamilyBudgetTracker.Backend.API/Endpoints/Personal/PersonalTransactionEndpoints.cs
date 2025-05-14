@@ -74,7 +74,7 @@ public static class PersonalTransactionEndpoints
 
         transactionsGroup.MapGet("/period/summary", GetTransactionsForPeriodSummary)
             .RequireAuthorization(ApplicationConstants.PolicyNames.UserRolePolicyName)
-            .Produces(StatusCodes.Status200OK, typeof(TransactionsForPeriodSummaryResponse), "application/json")
+            .Produces(StatusCodes.Status200OK, typeof(PersonalTransactionPeriodSummaryResponse), "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)

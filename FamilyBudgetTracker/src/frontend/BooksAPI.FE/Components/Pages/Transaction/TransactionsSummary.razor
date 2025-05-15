@@ -33,7 +33,8 @@
                 More information
             </MudButton>
             
-            <MudButton Variant="Variant.Filled" Color="Color.Primary">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick="@(() => NavigationManager.NavigateTo("createTransaction"))">
                 Add transaction
             </MudButton>
         </div>

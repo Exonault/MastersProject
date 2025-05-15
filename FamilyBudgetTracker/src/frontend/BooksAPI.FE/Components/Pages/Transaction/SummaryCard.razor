@@ -19,7 +19,7 @@
 
                 @if (Response.ExpenseCategoryAmounts.Count != 0)
                 {
-                    <MudDivider Class="my-2"/>
+                    <MudDivider Class="my-2" Light="true"/>
                 }
 
                 <MudStack Spacing="1">
@@ -32,11 +32,11 @@
                     }
                 </MudStack>
 
-                <MudDivider Class="my-3"/>
+                <MudDivider Class="my-3" Light="true"/>
 
                 <div class="d-flex justify-content-between mb-3">
-                    <MudText Typo="Typo.h6" Style="color: #3F51B5;">Balance</MudText>
-                    <MudText Typo="Typo.h6" Style="color: #3F51B5;">@(Response.IncomeAmount - Response.ExpenseAmount)</MudText>
+                    <MudText Typo="Typo.h5" Style="color: #3F51B5;">Balance</MudText>
+                    <MudText Typo="Typo.h5" Style="color: #3F51B5;">@(Response.IncomeAmount - Response.ExpenseAmount)</MudText>
                 </div>
 
             </MudCardContent>

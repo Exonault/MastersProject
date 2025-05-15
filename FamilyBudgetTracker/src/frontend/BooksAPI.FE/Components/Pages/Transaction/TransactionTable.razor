@@ -20,8 +20,8 @@
         <MudTd DataLabel="Date">
             <MudText Typo="Typo.body1"> @context.TransactionDate.ToShortDateString()</MudText>
         </MudTd>
-        <MudTd DataLabel="Description">
-            <MudText Typo="Typo.body1" Class="w-50">@context.Description</MudText>
+        <MudTd DataLabel="Description" Class="w-50">
+            <MudText Typo="Typo.body1">@context.Description</MudText>
         </MudTd>
         <MudTd DataLabel="Amount">
             <MudText Typo="Typo.body1">@context.Amount</MudText>
@@ -31,10 +31,11 @@
         </MudTd>
         <MudTd DataLabel="Actions" Style="width: 10% !important;">
             <div class="justify-content-center">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" 
+                           OnClick="@(() => NavigationManager.NavigateTo($"updateTransaction?transactionId={context.Id}"))">
                     Update
                 </MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3">
                     Delete
                 </MudButton>
             </div>
@@ -75,7 +76,7 @@
         }
     }
 
-    private async Task DeleteOrder(int id)
+    private async Task DeleteTransaction(int id)
     {
         try
         {

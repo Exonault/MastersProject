@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using BooksAPI.FE.Contracts.Personal.Transaction;
 using BooksAPI.FE.Interfaces;
+using BooksAPI.FE.Model;
 
 namespace BooksAPI.FE.Services;
 
@@ -113,6 +114,166 @@ public class PersonalTransactionService : IPersonalTransactionService
         {
             return new List<PersonalTransactionResponse>();
         }
+    }
+
+    public async Task<PersonalTransactionModel> GetTransactionModel(int id, string token, string refreshToken,
+        string userId)
+    {
+        PersonalTransactionResponse response = await GetTransactionById(id, token, refreshToken, userId);
+
+
+        return new PersonalTransactionModel
+        {
+            Amount = response.Amount,
+            Description = response.Description,
+            TransactionDate = response.TransactionDate.ToDateTime(new TimeOnly(0, 0, 0)),
+            Category = response.Category.Name
+        };
+    }
+
+    public async Task<PersonalTransactionResponse> GetTransactionById(int id, string token, string refreshToken,
+        string userId)
+    {
+        string url = $"{_baseUrl}/{id}";
+
+
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpClient httpClient = _clientFactory.CreateClient();
+
+        HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
+            }
+        }
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            await using (Stream responseStream = await responseMessage.Content.ReadAsStreamAsync())
+            {
+                PersonalTransactionResponse? response =
+                    await JsonSerializer.DeserializeAsync<PersonalTransactionResponse>(responseStream);
+
+                if (response is null)
+                {
+                    throw new Exception();
+                }
+
+                return response;
+            }
+        }
+        else
+        {
+            throw new Exception();
+        }
+    }
+
+    public async Task<bool> CreateTransaction(PersonalTransactionModel model, int categoryId, string token,
+        string refreshToken, string userId)
+    {
+        PersonalTransactionRequest requestContent = new PersonalTransactionRequest
+        {
+            Amount = model.Amount,
+            Description = model.Description,
+            TransactionDate = DateOnly.FromDateTime(model.TransactionDate!.Value),
+            CategoryId = categoryId, //TODO
+        };
+
+        string url = $"{_baseUrl}/";
+
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        request.Content = JsonContent.Create(requestContent);
+
+        HttpClient httpClient = _clientFactory.CreateClient();
+
+        HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
+            }
+        }
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<bool> UpdateTransaction(int id, PersonalTransactionModel model, int categoryId, string token,
+        string refreshToken,
+        string userId)
+    {
+        PersonalTransactionRequest requestContent = new PersonalTransactionRequest
+        {
+            Amount = model.Amount,
+            Description = model.Description,
+            TransactionDate = DateOnly.FromDateTime(model.TransactionDate!.Value),
+            CategoryId = categoryId, //TODO
+        };
+
+        string url = $"{_baseUrl}/{id}";
+
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, url);
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        request.Content = JsonContent.Create(requestContent);
+
+        HttpClient httpClient = _clientFactory.CreateClient();
+
+        HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
+            }
+        }
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<bool> DeleteTransaction(int id, string token, string refreshToken, string userId)
+    {
+        string url = $"{_baseUrl}/{id}";
+
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, url);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpClient httpClient = _clientFactory.CreateClient();
+
+        HttpResponseMessage responseMessage = await httpClient.SendAsync(request);
+        if (!responseMessage.IsSuccessStatusCode)
+        {
+            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                responseMessage = await RefreshRequest(token, refreshToken, request, httpClient);
+            }
+            else throw new Exception();
+        }
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private static (DateOnly Start, DateOnly End) GetMonthRange(DateTime date)

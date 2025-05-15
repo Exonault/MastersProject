@@ -8,6 +8,7 @@ public class CategoryModel
     public string Name { get; set; } = string.Empty;
 
     public string? Icon { get; set; }
+    
     [Required(ErrorMessage = "Type is required")]
     public string Type { get; set; } = string.Empty;
     

@@ -91,6 +91,7 @@
 
         var loadTasks = _monthTabs.Select(async tab =>
         {
+            // tab.Content = new List<PersonalTransactionResponse>();
             tab.Content = await TransactionService.GetTransactionsForPeriod(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
@@ -124,6 +125,7 @@
         {
             Date = date;
             Label = date.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
+            Content = new List<PersonalTransactionResponse>();
         }
     }
 

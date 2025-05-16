@@ -1,5 +1,5 @@
-﻿@page "/createTransaction"
-@page "/updateTransaction"
+﻿@page "/createRecurringTransaction"
+@page "/updateRecurringTransaction"
 @using BooksAPI.FE.Authentication
 @using BooksAPI.FE.Contracts.Personal.Category
 @using BooksAPI.FE.Extensions
@@ -8,15 +8,15 @@
 @using BooksAPI.FE.Util
 
 @inject NavigationManager NavigationManager;
+@inject IRecurringTransactionService RecurringTransactionService;
 @inject ICategoryService CategoryService;
-@inject IPersonalTransactionService PersonalTransactionService;
 @inject IJSRuntime JsRuntime;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <PageTitle>@(_isCreate ? "Create" : "Update")</PageTitle>
 
 <h3 class="text-center">
-    @(_isCreate ? "Create a new transaction entry" : "Update current entry")
+    @(_isCreate ? "Create a new template" : "Update current entry")
 </h3>
 
 @if (_error)
@@ -60,8 +60,12 @@
             <MudItem xs="6">
 
                 <MudDatePicker Editable="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy"
-                               Label="Transaction date"
-                               @bind-Date="_model.TransactionDate"/>
+                               Label="Start date"
+                               @bind-Date="_model.StartDate"/>
+
+                <MudDatePicker Editable="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy"
+                               Label="End date"
+                               @bind-Date="_model.EndDate"/>
 
                 <MudNumericField T="decimal" HideSpinButtons="true" Min="0" Format="F2" Label="Amount"
                                  Variant="Variant.Text"
@@ -114,13 +118,14 @@ else if (!_isDataFetched)
     private bool _isDataFetched;
     private bool _createSuccess;
 
-    private string _categoryType = "Expense";
 
     private bool _shouldRender = false;
     protected override bool ShouldRender() => _shouldRender;
 
-    private PersonalTransactionModel _model = new();
+    private RecurringTransactionModel _model = new();
     private List<CategoryResponse> _categories = [];
+    private string _categoryType = "Expense";
+
 
     private string _userId;
     private string _token;
@@ -146,7 +151,7 @@ else if (!_isDataFetched)
 
             if (!_isCreate)
             {
-                _model = await PersonalTransactionService.GetTransactionModel(_transactionId, _token, _refreshToken, _userId);
+                _model = await RecurringTransactionService.GetRecurringTransactionModel(_transactionId, _token, _refreshToken, _userId);
                 // _model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
                 _isDataFetched = true;
                 StateHasChanged();
@@ -154,7 +159,6 @@ else if (!_isDataFetched)
 
             _categories = await CategoryService.GetCategories(_token, _refreshToken, _userId);
 
-            _categories = _categories.OrderBy(x => x.Type).ToList();
             _isDataFetched = true;
             _shouldRender = true;
             StateHasChanged();
@@ -183,7 +187,7 @@ else if (!_isDataFetched)
             if (_isCreate)
             {
                 //Create
-                _createSuccess = await PersonalTransactionService.CreateTransaction(_model, category!.Id, _token, _refreshToken, _userId);
+                _createSuccess = await RecurringTransactionService.CreateTransaction(_model, category!.Id, _token, _refreshToken, _userId);
 
                 if (!_createSuccess)
                 {
@@ -194,17 +198,7 @@ else if (!_isDataFetched)
             }
             else
             {
-                var updateSuccess = await PersonalTransactionService.UpdateTransaction(_transactionId, _model, category!.Id, _token, _refreshToken, _userId);
-
-                if (!updateSuccess)
-                {
-                    _error = true;
-                    StateHasChanged();
-                }
-                else
-                {
-                    NavigationManager.NavigateTo("/transactionsSummary");
-                }
+                NavigationManager.NavigateTo("/recurringTransactions");
             }
         }
         catch (InvalidOperationException e)
@@ -220,11 +214,11 @@ else if (!_isDataFetched)
         }
     }
 
+
     private void CloseAlert()
     {
         _error = false;
         StateHasChanged();
     }
-
 
 }

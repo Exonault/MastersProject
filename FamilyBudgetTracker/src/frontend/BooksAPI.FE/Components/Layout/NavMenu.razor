@@ -11,7 +11,7 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+                <span class="bi bi-house-door" aria-hidden="true"></span> Home
             </NavLink>
         </div>
         <div class="nav-item px-3">
@@ -24,33 +24,41 @@
                 <span class="bi bi-cart4" aria-hidden="true"></span> Transactions
             </NavLink>
         </div>
-        
-        
-        @* <div class="nav-item px-3"> *@
-        @*     <NavLink class="nav-link" href="searchLibraryManga" Match="NavLinkMatch.All"> *@
-        @*         <span class="bi bi-search" aria-hidden="true"></span> Search *@
-        @*     </NavLink> *@
-        @* </div> *@
-        @* <div class="nav-item px-3"> *@
-        @*     <NavLink class="nav-link" href="libraryMangas" Match="NavLinkMatch.All"> *@
-        @*         <span class="bi bi-book" aria-hidden="true"></span> Library Manga *@
-        @*     </NavLink> *@
-        @* </div> *@
-        @* <div class="nav-item px-3"> *@
-        @*     <NavLink class="nav-link" href="userMangas"  Match="NavLinkMatch.All"> *@
-        @*         <span class="bi bi-bookshelf" aria-hidden="true"></span> Users Manga *@
-        @*     </NavLink> *@
-        @* </div> *@
-        @* <div class="nav-item px-3"> *@
-        @*     <NavLink class="nav-link" href="orders" Match="NavLinkMatch.All"> *@
-        @*         <span class="bi bi-box-seam" aria-hidden="true"></span> Orders *@
-        @*     </NavLink> *@
-        @* </div> *@
-        @* <div class="nav-item px-3"> *@
-        @*     <NavLink class="nav-link" href="statistics" Match="NavLinkMatch.All"> *@
-        @*         <span class="bi bi-bar-chart" aria-hidden="true"></span> Statistics *@
-        @*     </NavLink> *@
-        @* </div> *@
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="recurringTransactions" Match="NavLinkMatch.All">
+                <span class="bi bi-arrow-counterclockwise" aria-hidden="true"></span> Recurring transactions
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="family" Match="NavLinkMatch.All">
+                <span class="bi bi-house-heart" aria-hidden="true"></span> Family
+            </NavLink>
+        </div>
+        @* <AuthorizeView Policy="@ApplicationConstants.PolicyNames.FamilyAdminPolicyName"> *@
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="familyCategories" Match="NavLinkMatch.All">
+                <span class="bi bi-clipboard2" aria-hidden="true"></span> Family category
+            </NavLink>
+        </div>
+        @* </AuthorizeView> *@
+        @* <AuthorizeView Policy="@ApplicationConstants.PolicyNames.FamilyMemberPolicyName"> *@
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="familyCategories" Match="NavLinkMatch.All">
+                <span class="bi bi-clipboard2" aria-hidden="true"></span> Family category
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="familyTransactions" Match="NavLinkMatch.All">
+                <span class="bi bi-piggy-bank" aria-hidden="true"></span> Family transactions
+            </NavLink>
+        </div>
+        @* </AuthorizeView> *@
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="statistics" Match="NavLinkMatch.All">
+                <span class="bi bi-bar-chart" aria-hidden="true"></span> Statistics
+            </NavLink>
+        </div>
         <AuthorizeView Policy="@ApplicationConstants.PolicyNames.AdminRolePolicyName">
             <Authorized>
                 <div class="nav-item px-3">
@@ -60,6 +68,6 @@
                 </div>
             </Authorized>
         </AuthorizeView>
-       
+
     </nav>
 </div>

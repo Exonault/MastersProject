@@ -1,0 +1,52 @@
+﻿<MudPopover Open="_open" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+            CloseOnOutsideClick="true" OnClose="() => _open = false">
+    <ChildContent>
+        <MudPaper Class="p-4" Style="max-height:300px;overflow:auto;">
+            <MudGrid>
+                @foreach (var icon in Icons)
+                {
+                    <MudItem xs="2">
+                        <MudIconButton Icon="@icon" OnClick="(() => SelectIcon(icon))" Color="Color.Primary"
+                                       Style="min-width:48px;min-height:48px;" Class="mt-2"/>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudPaper>
+    </ChildContent>
+</MudPopover>
+
+<!-- Trigger button only shows icon, no text -->
+<MudIconButton Icon="@SelectedIcon" OnClick="TogglePopover" Color="Color.Default" Edge="Edge.End"/>
+
+@code {
+    private bool _open;
+
+    [Parameter]
+    public List<string> Icons { get; set; } = new()
+    {
+        MudBlazor.Icons.Material.Filled.Home,
+        MudBlazor.Icons.Material.Filled.AccountCircle,
+        MudBlazor.Icons.Material.Filled.Settings,
+        MudBlazor.Icons.Material.Filled.Notifications,
+        MudBlazor.Icons.Material.Filled.Info,
+        MudBlazor.Icons.Material.Filled.Favorite,
+        MudBlazor.Icons.Material.Filled.Search,
+        MudBlazor.Icons.Material.Filled.Delete
+    };
+
+    [Parameter]
+    public string SelectedIcon { get; set; } = MudBlazor.Icons.Material.Filled.Home;
+
+    [Parameter]
+    public EventCallback<string> SelectedIconChanged { get; set; }
+
+    private void TogglePopover() => _open = !_open;
+
+    private async Task SelectIcon(string icon)
+    {
+        SelectedIcon = icon;
+        _open = false;
+        await SelectedIconChanged.InvokeAsync(icon);
+    }
+
+}

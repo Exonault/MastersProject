@@ -1,7 +1,6 @@
-﻿@page "/createTransaction"
-@page "/updateTransaction"
+﻿@page "/createCategory"
+@page "/updateCategory"
 @using BooksAPI.FE.Authentication
-@using BooksAPI.FE.Contracts.Personal.Category
 @using BooksAPI.FE.Extensions
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Model
@@ -9,14 +8,13 @@
 
 @inject NavigationManager NavigationManager;
 @inject ICategoryService CategoryService;
-@inject IPersonalTransactionService PersonalTransactionService;
 @inject IJSRuntime JsRuntime;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <PageTitle>@(_isCreate ? "Create" : "Update")</PageTitle>
 
 <h3 class="text-center">
-    @(_isCreate ? "Create a new transaction entry" : "Update current entry")
+    @(_isCreate ? "Create a new entry" : "Update current entry")
 </h3>
 
 @if (_error)
@@ -58,35 +56,28 @@
 
         <MudGrid Justify="Justify.Center">
             <MudItem xs="6">
+                <MudTextField T="string" Label="Name" InputType="InputType.Text" Variant="Variant.Text"
+                              @bind-Value="_model.Name"/>
 
-                <MudDatePicker Editable="true" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy"
-                               Label="Transaction date"
-                               @bind-Date="_model.TransactionDate"/>
-
-                <MudNumericField T="decimal" HideSpinButtons="true" Min="0" Format="F2" Label="Amount"
-                                 Variant="Variant.Text"
-                                 @bind-Value="_model.Amount"/>
-
-                <MudTextField T="string" Label="Description" InputType="InputType.Text" Variant="Variant.Text"
-                              AutoGrow
-                              @bind-Value="_model.Description"/>
-
-                <MudText Typo="Typo.body1" Class="mt-3">Category type</MudText>
-                <MudToggleGroup T="string" SelectionMode="SelectionMode.SingleSelection"
-                                @bind-Value="_categoryType">
-                    <MudToggleItem Value="@("Expense")" Text="Expense"/>
-                    <MudToggleItem Value="@("Income")" Text="Income"/>
-                </MudToggleGroup>
-
-                <MudSelect T="string" Label="Category" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter"
-                           @bind-Value="_model.Category">
-                    @foreach (var category in _categories.Where(x => x.Type == _categoryType))
-                    {
-                        <MudSelectItem Value="category.Name">@category.Name</MudSelectItem>
-                    }
+                <MudSelect T="string" Label="Type" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter"
+                           Class="mr-3"
+                           @bind-Value="_model.Type">
+                    <MudSelectItem Value=@("Income")>Income</MudSelectItem>
+                    <MudSelectItem Value=@("Expense")>Expense</MudSelectItem>
                 </MudSelect>
 
-                <div class="d-flex justify-content-center mt-3">
+                <MudNumericField T="decimal?" HideSpinButtons="true" Min="0" Format="F2" Label="Limit"
+                                 Variant="Variant.Text" Class="mr-5"
+                                 @bind-Value="_model.Limit"/>
+
+                <div class="d-flex justify-content-between">
+                    <MudTextField T="string" Label="Icon" InputType="InputType.Text" Variant="Variant.Text"
+                                  Disabled="true"/>
+                    <IconPicker SelectedIcon="@CurrentIcon" SelectedIconChanged="OnIconChanged"/>
+                </div>
+
+                <br/>
+                <div class="d-flex justify-content-center">
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled"
                                Color="Color.Primary">@(_isCreate ? "Create" : "Update")</MudButton>
                 </div>
@@ -95,6 +86,7 @@
         </MudGrid>
     </EditForm>
 }
+
 else if (!_isDataFetched)
 {
     <div class="mt-4">
@@ -107,26 +99,25 @@ else if (!_isDataFetched)
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationState { get; set; }
 
-    private int _transactionId = 0;
+    private int _categoryId = 0;
 
     private bool _isCreate;
     private bool _error;
     private bool _isDataFetched;
     private bool _createSuccess;
 
-    private string _categoryType = "Expense";
-
     private bool _shouldRender = false;
     protected override bool ShouldRender() => _shouldRender;
 
-    private PersonalTransactionModel _model = new();
-    private List<CategoryResponse> _categories = [];
+    private CategoryModel _model = new();
 
     private string _userId;
     private string _token;
     private string _refreshToken;
 
-    private string _errorMessage = "Unable to create transaction. Try again later";
+    private string myIcon = "";
+
+    private string _errorMessage = "Unable to create category. Try again later";
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,21 +131,17 @@ else if (!_isDataFetched)
             _token = tokens[0];
             _refreshToken = tokens[1];
 
-            NavigationManager.GetQueryString<int>("transactionId", out _transactionId);
+            NavigationManager.GetQueryString<int>("categoryId", out _categoryId);
 
-            _isCreate = _transactionId == 0;
+            _isCreate = _categoryId == 0;
 
             if (!_isCreate)
             {
-                _model = await PersonalTransactionService.GetTransactionModel(_transactionId, _token, _refreshToken, _userId);
-                // _model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
+                _model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
                 _isDataFetched = true;
                 StateHasChanged();
             }
 
-            _categories = await CategoryService.GetCategories(_token, _refreshToken, _userId);
-
-            _categories = _categories.OrderBy(x => x.Type).ToList();
             _isDataFetched = true;
             _shouldRender = true;
             StateHasChanged();
@@ -170,31 +157,26 @@ else if (!_isDataFetched)
 
     private async Task OnValidSubmit()
     {
+        _model.Icon = CurrentIcon;
+
         try
         {
-            CategoryResponse? category = _categories.FirstOrDefault(x => x.Name == _model.Category);
-
-            if (category is null)
-            {
-                _error = true;
-                StateHasChanged();
-            }
-
             if (_isCreate)
             {
                 //Create
-                _createSuccess = await PersonalTransactionService.CreateTransaction(_model, category!.Id, _token, _refreshToken, _userId);
+                _createSuccess = await CategoryService.CreateCategory(_model, _token, _refreshToken, _userId);
 
-                if (!_createSuccess)
+                if (_createSuccess)
                 {
                     _error = true;
                 }
 
                 StateHasChanged();
+
             }
             else
             {
-                var updateSuccess = await PersonalTransactionService.UpdateTransaction(_transactionId, _model, category!.Id, _token, _refreshToken, _userId);
+                var updateSuccess = await CategoryService.UpdateCategory(_categoryId, _model, _token, _refreshToken, _userId);
 
                 if (!updateSuccess)
                 {
@@ -203,7 +185,7 @@ else if (!_isDataFetched)
                 }
                 else
                 {
-                    NavigationManager.NavigateTo("/transactionsSummary");
+                    NavigationManager.NavigateTo("categories");
                 }
             }
         }
@@ -226,5 +208,13 @@ else if (!_isDataFetched)
         StateHasChanged();
     }
 
+
+    private string CurrentIcon = Icons.Filled.Home;
+
+    private void OnIconChanged(string newIcon)
+    {
+        CurrentIcon = newIcon;
+        // ...do something with the selected icon...
+    }
 
 }

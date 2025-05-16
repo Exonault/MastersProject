@@ -1,0 +1,175 @@
+﻿@page "/recurringTransactions"
+@using BooksAPI.FE.Authentication
+@using BooksAPI.FE.Constants
+@using BooksAPI.FE.Contracts.Personal.RecurringTransaction
+@using BooksAPI.FE.Interfaces
+@using BooksAPI.FE.Util
+
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject IRecurringTransactionService RecurringTransactionService;
+
+@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)]
+
+<PageTitle>Recurring transactions</PageTitle>
+
+<h3 class="text-center">Recurring Transactions</h3>
+
+@if (_isDataFetched)
+{
+    @if (_error)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudItem md="4" xs="4">
+                <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                    Unable to get recurring transactions. Please try again later.
+                </MudAlert>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="d-flex justify-content-end mb-3"
+                   OnClick="@(() => NavigationManager.NavigateTo("createRecurringTransaction"))">
+            Create
+        </MudButton>
+
+        <MudTable Items="_recurringTransactions">
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<RecurringTransactionResponse, object>(x => x.StartDate)"
+                                       InitialDirection="SortDirection.Descending">
+                        Start date
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh>End date</MudTh>
+                <MudTh>Description</MudTh>
+                <MudTh>Amount</MudTh>
+                <MudTh>Category</MudTh>
+                <MudTh>Recurring type</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Start date">
+                    <MudText Typo="Typo.body1"> @context.StartDate.ToShortDateString()</MudText>
+                </MudTd>
+                <MudTd DataLabel="End date">
+                    <MudText Typo="Typo.body1"> @context.EndDate.ToShortDateString()</MudText>
+                </MudTd>
+                <MudTd DataLabel="Description" Class="w-50">
+                    <MudText Typo="Typo.body1">@context.Description</MudText>
+                </MudTd>
+                <MudTd DataLabel="Amount">
+                    <MudText Typo="Typo.body1">@context.Amount</MudText>
+                </MudTd>
+                <MudTd DataLabel="Category">
+                    <MudText Typo="Typo.body1">@context.Category.Name</MudText>
+                </MudTd>
+                <MudTd DataLabel="Actions" Style="width: 10% !important;">
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3"
+                               OnClick="@(() => DeleteTransaction(context.Id))">
+                        Delete
+                    </MudButton>
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager PageSizeOptions="new int[] { 5, 10, 25,}"/>
+            </PagerContent>
+        </MudTable>
+    }
+}
+else
+{
+    <div class="mt-4">
+        <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+    </div>
+}
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private bool _shouldRender = false;
+    private bool _error = false;
+    private bool _isDataFetched = false;
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+
+    private List<RecurringTransactionResponse> _recurringTransactions = [];
+
+    protected override bool ShouldRender() => _shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+
+            await GetTransactions();
+
+            _isDataFetched = true;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _isDataFetched = false;
+        }
+    }
+
+    private async Task GetTransactions()
+    {
+        try
+        {
+            _recurringTransactions = await RecurringTransactionService.GetRecurringTransactions(_token, _refreshToken, _userId);
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            _error = true;
+            _shouldRender = true;
+        }
+    }
+
+    private async Task DeleteTransaction(int id)
+    {
+        try
+        {
+            bool deleteSuccess = await RecurringTransactionService.DeleteTransaction(id, _token, _refreshToken, _userId);
+
+            if (deleteSuccess)
+            {
+                RecurringTransactionResponse? transactionResponse = _recurringTransactions.FirstOrDefault(x => x.Id == id);
+                _recurringTransactions.Remove(transactionResponse!);
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
+}

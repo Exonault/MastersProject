@@ -1,0 +1,237 @@
+﻿@page "/familyCategories"
+@using BooksAPI.FE.Authentication
+@using BooksAPI.FE.Constants
+@using BooksAPI.FE.Contracts.Familial.FamilyCategory
+@using BooksAPI.FE.Interfaces
+@using BooksAPI.FE.Util
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject IFamilyCategoryService CategoryService
+
+@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.FamilyAdminPolicyName)]
+
+<PageTitle>Family categories</PageTitle>
+
+<h3 class="text-center">Family categories</h3>
+
+@if (_isDataFetched)
+{
+    @if (_error)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudItem md="4" xs="4">
+                <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                    Unable to get categories. Please try again later.
+                </MudAlert>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <div class="d-flex justify-content-end mb-3">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick=@(() => NavigationManager.NavigateTo($"/createFamilyCategory"))>Create
+            </MudButton>
+        </div>
+        
+        <MudTabs Elevation="2" ApplyEffectsToContainer="true" Centered="true">
+            <MudTabPanel Text="All">
+                <MudGrid>
+                    @foreach (var category in _categories)
+                    {
+                        <MudItem xs="3">
+                            <MudCard Outlined="true">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h4">@category.Name</MudText>
+                                    </CardHeaderContent>
+                                    <CardHeaderActions>
+                                        <MudIcon Icon="@category.Icon" Size="Size.Large"/>
+                                    </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h5">@($"Type: {category.Type}")</MudText>
+                                    <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
+                                </MudCardContent>
+                                <MudCardActions Class="d-flex justify-content-between">
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/updateFamilyCategory?categoryId={category.Id}"))">
+                                        Update
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                                               OnClick="@(() => DeleteCategory(category.Id))">
+                                        Delete
+                                    </MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Income">
+                <MudGrid>
+                    @foreach (var category in _categories.Where(x => x.Type == "Income"))
+                    {
+                        <MudItem xs="3">
+                            <MudCard Outlined="true">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h4">@category.Name</MudText>
+                                    </CardHeaderContent>
+                                    <CardHeaderActions>
+                                        <MudIcon Icon="@category.Icon" Size="Size.Large"/>
+                                    </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
+                                </MudCardContent>
+                                <MudCardActions Class="d-flex justify-content-between">
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/updateCategoryFamily?categoryId={category.Id}"))">
+                                        Update
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                                               OnClick="@(() => DeleteCategory(category.Id))">
+                                        Delete
+                                    </MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Expense">
+                <MudGrid>
+                    @foreach (var category in _categories.Where(x => x.Type == "Expense"))
+                    {
+                        <MudItem xs="3">
+                            <MudCard Outlined="true">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h4">@category.Name</MudText>
+                                    </CardHeaderContent>
+                                    <CardHeaderActions>
+                                        <MudIcon Icon="@category.Icon" Size="Size.Large"/>
+                                    </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    @* <MudText Typo="Typo.h5">@($"Type: {category.Type}")</MudText> *@
+                                    <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
+                                </MudCardContent>
+                                <MudCardActions Class="d-flex justify-content-between">
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/updateCategoryFamily?categoryId={category.Id}"))">
+                                        Update
+                                    </MudButton>
+                                    <MudButton Variant="Variant.Text" Color="Color.Error"
+                                               OnClick="@(() => DeleteCategory(category.Id))">
+                                        Delete
+                                    </MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudTabPanel>
+        </MudTabs>
+
+        
+    }
+}
+else
+{
+    <div class="mt-4">
+        <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+    </div>
+}
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private bool _shouldRender = false;
+    private bool _error = false;
+    private bool _isDataFetched = false;
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+    private string _familyId;
+
+    private List<FamilyCategoryResponse> _categories = new();
+
+    protected override bool ShouldRender() => _shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+        _familyId = UserUtil.GetFamilyId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+
+            await GetCategories();
+
+            _isDataFetched = true;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _isDataFetched = false;
+        }
+    }
+
+    private async Task GetCategories()
+    {
+        try
+        {
+            _categories = await CategoryService.GetFamilyCategories(_token, _refreshToken, _userId, _familyId);
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            _error = true;
+            _shouldRender = true;
+        }
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        try
+        {
+            bool isDeleteSuccess = await CategoryService.DeleteCategory(id, _token, _refreshToken, _userId, _familyId);
+            if (isDeleteSuccess)
+            {
+                FamilyCategoryResponse? category = _categories.FirstOrDefault(x => x.Id == id);
+                _categories.Remove(category!);
+                StateHasChanged();
+            }
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
+}

@@ -1,7 +1,9 @@
 ﻿@using BooksAPI.FE.Contracts.Personal.Transaction
+@using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
+@inject IPersonalTransactionService TransactionService;
 
 <MudTable Items="Transactions">
     <HeaderContent>
@@ -35,7 +37,8 @@
                            OnClick="@(() => NavigationManager.NavigateTo($"updateTransaction?transactionId={context.Id}"))">
                     Update
                 </MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3"
+                           OnClick="@(() => DeleteTransaction(context.Id))">
                     Delete
                 </MudButton>
             </div>
@@ -80,13 +83,15 @@
     {
         try
         {
-            // bool isDeleteSuccess = await OrderService.DeleteOrder(id, _token, _refreshToken, _userId);
-            // if (isDeleteSuccess)
-            // {
-            //     OrderResponse? orderResponse = Categories.FirstOrDefault(x => x.Id == id);
-            //     Categories.Remove(orderResponse!);
-            //     StateHasChanged();
-            // }
+            bool deleteSuccess = await TransactionService.DeleteTransaction(id, _token, _refreshToken, _userId);
+
+            if (deleteSuccess)
+            {
+                PersonalTransactionResponse? transactionResponse = Transactions.FirstOrDefault(x => x.Id == id);
+                Transactions.Remove(transactionResponse!);
+                StateHasChanged();
+
+            }
         }
         catch (Exception e)
         {

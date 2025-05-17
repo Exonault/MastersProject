@@ -1,6 +1,123 @@
 ﻿@page "/family"
-<h3>Family</h3>
+@using BooksAPI.FE.Contracts.Familial.Family
+@using BooksAPI.FE.Interfaces
+@using BooksAPI.FE.Util
+
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject IFamilyService FamilyService
+
+
+<PageTitle>Family</PageTitle>
+
+<h3 class="text-center">Family</h3>
+
+@if (_isDataFetched)
+{
+    @if (_error)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudItem md="4" xs="4">
+                <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                    Unable to get categories. Please try again later.
+                </MudAlert>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <MudText Typo="Typo.h4" Align="Align.Center">@_family.Name</MudText>
+
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="6">
+                <MudTable Items="_family.FamilyMembers">
+                    <HeaderContent>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Email</MudTh>
+                        <MudTh>Role</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Name">
+                            <MudText Typo="Typo.body1">@context.UserName</MudText>
+                        </MudTd>
+                        <MudTd DataLabel="Email">
+                            <MudText Typo="Typo.body1">@context.Email</MudText>
+                        </MudTd>
+                        <MudTd DataLabel="Role">
+                            <MudText Typo="Typo.body1">@context.FamilyRole</MudText>
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudItem>
+        </MudGrid>
+    }
+}
+else
+{
+    <div class="mt-4">
+        <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+    </div>
+}
+
+
 
 @code {
-    
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private bool _shouldRender = false;
+    private bool _error = false;
+    private bool _isDataFetched = false;
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+    private string _familyId;
+
+    private FamilyDetailedResponse _family;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+        _familyId = UserUtil.GetFamilyId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+
+            if (String.IsNullOrEmpty(_familyId))
+            {
+                NavigationManager.NavigateTo("/createFamily");
+            }
+            else
+            {
+                _family = await FamilyService.GetFamily(_familyId, _token, _refreshToken, _userId);
+                
+                _isDataFetched = true;
+                _shouldRender = true;
+                StateHasChanged();
+                
+            }
+
+            
+        }
+        catch (Exception e)
+        {
+            _isDataFetched = false;
+        }
+    }
+
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
 }

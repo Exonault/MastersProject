@@ -147,7 +147,6 @@ else if (!_isDataFetched)
             if (!_isCreate)
             {
                 _model = await PersonalTransactionService.GetTransactionModel(_transactionId, _token, _refreshToken, _userId);
-                // _model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
                 _isDataFetched = true;
                 StateHasChanged();
             }

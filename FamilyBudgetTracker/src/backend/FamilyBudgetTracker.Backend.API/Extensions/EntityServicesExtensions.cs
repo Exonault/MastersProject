@@ -11,8 +11,10 @@ using FamilyBudgetTracker.Backend.Domain.Repositories.Personal;
 using FamilyBudgetTracker.Backend.Domain.Services;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
 using FamilyBudgetTracker.Backend.Domain.Services.Personal;
+using FamilyBudgetTracker.Backend.Domain.Services.Statistics;
 using FamilyBudgetTracker.Backend.DomainServices.DomainServices.Familial;
 using FamilyBudgetTracker.Backend.DomainServices.DomainServices.Personal;
+using FamilyBudgetTracker.Backend.DomainServices.DomainServices.Statistics;
 using FamilyBudgetTracker.Backend.DomainServices.FamilyInvitation;
 
 namespace FamilyBudgetTracker.Backend.API.Extensions;
@@ -33,6 +35,8 @@ public static class EntityServicesExtensions
         services.AddFamilyServices();
         services.AddFamilyCategoryServices();
         services.AddFamilyTransactionServices();
+
+        services.AddScoped<IStatisticsService, StatisticService>();
     }
 
     private static void AddUserServices(this IServiceCollection services)

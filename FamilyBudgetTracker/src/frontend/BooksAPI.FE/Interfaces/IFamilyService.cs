@@ -5,7 +5,7 @@ namespace BooksAPI.FE.Interfaces;
 
 public interface IFamilyService
 {
-    Task<FamilyResponse> GetFamily(string id, string token, string refreshToken, string userId);
+    Task<FamilyDetailedResponse> GetFamily(string id, string token, string refreshToken, string userId);
 
     Task<FamilyModel> GetFamilyModel(string id, string token, string refreshToken, string userId);
 

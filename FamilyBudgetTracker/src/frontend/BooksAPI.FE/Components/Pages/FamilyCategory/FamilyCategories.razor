@@ -9,7 +9,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 @inject IFamilyCategoryService CategoryService
 
-@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.FamilyAdminPolicyName)]
+@* @attribute [Authorize(Policy = ApplicationConstants.PolicyNames.FamilyAdminPolicyName)] *@
 
 <PageTitle>Family categories</PageTitle>
 
@@ -179,7 +179,9 @@ else
             _token = tokens[0];
             _refreshToken = tokens[1];
 
-            await GetCategories();
+            _categories = GetMockResponse();
+            
+            // await GetCategories();
 
             _isDataFetched = true;
             _shouldRender = true;
@@ -232,6 +234,15 @@ else
     {
         _error = false;
         StateHasChanged();
+    }
+
+    private List<FamilyCategoryResponse> GetMockResponse()
+    {
+        List<FamilyCategoryResponse> repsonse = new List<FamilyCategoryResponse>();
+        
+        
+        
+        return repsonse;
     }
 
 }

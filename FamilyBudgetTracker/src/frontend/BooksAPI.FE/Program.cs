@@ -23,8 +23,10 @@ builder.Services.AddServerSideBlazor()
 builder.Services.AddMudServices();
 builder.Services.AddBlazorBootstrap();
 
+//Application services
 builder.Services.AddApplicationServices();
 
+//Authorization policies
 builder.Services.AddAuthorizationServices();
 
 builder.Services.AddHttpClient();

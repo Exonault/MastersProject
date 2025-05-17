@@ -1,15 +1,117 @@
 ﻿google.charts.load('current', {'packages': ['corechart']});
 
-google.charts.setOnLoadCallback(generateTotalSpendingChart);
+google.charts.setOnLoadCallback(generateMonthlySpendingChart);
+google.charts.setOnLoadCallback(generatePersonalMonthChart);
+google.charts.setOnLoadCallback(generatePersonalCategoryChart);
 
-google.charts.setOnLoadCallback(generateDemographicChart); //#3366CC
-google.charts.setOnLoadCallback(generateTypeChart); //#DC3912
-google.charts.setOnLoadCallback(generateReadingChart);// #FF9900
-google.charts.setOnLoadCallback(generateCollectionChart);// #109618
-google.charts.setOnLoadCallback(generatePublishingChart);// #990099
+// google.charts.setOnLoadCallback(generateTotalSpendingChart);
+//
+// google.charts.setOnLoadCallback(generateDemographicChart); //#3366CC
+// google.charts.setOnLoadCallback(generateTypeChart); //#DC3912
+// google.charts.setOnLoadCallback(generateReadingChart);// #FF9900
+// google.charts.setOnLoadCallback(generateCollectionChart);// #109618
+// google.charts.setOnLoadCallback(generatePublishingChart);// #990099
+//
+// google.charts.setOnLoadCallback(generateOrderByYearCharts);//#3366CC #DC3912
+// google.charts.setOnLoadCallback(generateOrderByPlaceCharts);//#109618 #FF9900
 
-google.charts.setOnLoadCallback(generateOrderByYearCharts);//#3366CC #DC3912
-google.charts.setOnLoadCallback(generateOrderByPlaceCharts);//#109618 #FF9900
+
+function generateMonthlySpendingChart(spendingData, chartId) {
+    let data = new google.visualization.DataTable();
+    data.addColumn('string', 'Category');
+    data.addColumn('number', 'Amount');
+
+    var result = Object.keys(spendingData).map((key) => [key, spendingData[key]]);
+
+    console.log(result);
+
+    result.forEach(item => {
+        data.addRow(item);
+    })
+
+    const options = {
+        legend: {
+            position: 'labeled',
+        },
+        chartArea: {
+            width: '75%',
+            height: '75%'
+        },
+        pieSliceText: 'value',
+        title: "Monthly spending",
+        titleTextStyle: {
+            bold: true,
+            fontSize: 18
+        }
+    };
+
+    const chart = new google.visualization.PieChart(document.getElementById(chartId));
+    chart.draw(data, options);
+}
+
+function generatePersonalMonthChart(monthlyStatistics, chartId) {
+    // console.log(monthlyStatistics);
+
+    let data = new google.visualization.DataTable();
+
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    data.addColumn('string', 'Month');
+    data.addColumn('number', 'Income');
+    data.addColumn('number', 'Expense');
+
+    const months = Object.keys(monthlyStatistics).map(Number).sort((a, b) => a - b);
+
+    months.forEach(monthNumber => {
+        const monthData = monthlyStatistics[monthNumber];
+        const monthName = monthNames[monthNumber] || `Month ${monthNumber}`;
+        data.addRow([monthName, monthData.income || 0, monthData.expense || 0]);
+    });
+
+    const options = {
+        title: 'Monthly Income and Expense comparison',
+        legend: {position: 'labeled',},
+        // hAxis: {title: 'Month'},
+        // vAxis: {title: 'Amount'},
+        colors: ['#3366CC', '#DC3912'],
+    };
+
+    
+    
+    const chart = new google.visualization.ColumnChart(document.getElementById(chartId));
+    chart.draw(data, options);
+
+}
+
+
+function generatePersonalCategoryChart(categoryStatistics, chartId) {
+    console.log(categoryStatistics);
+
+    let data = new google.visualization.DataTable();
+
+    data.addColumn('string', 'Category');
+    data.addColumn('number', 'Amount');
+    
+    categoryStatistics.forEach(entry =>{
+        data.addRow([entry.categoryName, entry.totalAmount])
+    })
+
+    const options = {
+        pieSliceText: 'value',
+        title: "Yearly spending per category",
+        titleTextStyle: {
+            bold: true,
+            fontSize: 18
+        },
+        colors: ['#109618'],
+    };
+    
+    const chart = new google.visualization.ColumnChart(document.getElementById(chartId));
+    chart.draw(data, options);
+}
 
 function generateDemographicChart(demographicStatistic, chartId) {
 
@@ -107,7 +209,7 @@ function generateReadingChart(readingStatistics, chartId) {
             bold: true,
             fontSize: 18
         }
-        
+
     };
 
     const chart = new google.visualization.BarChart(document.getElementById(chartId));
@@ -216,7 +318,7 @@ function generateTotalSpendingChart(mangas, chartId) {
 
 function generateOrderByYearCharts(orders, countChartId, priceChartId) {
     console.log(orders);
-    
+
     let countData = new google.visualization.DataTable();
     let sumData = new google.visualization.DataTable();
 
@@ -280,7 +382,7 @@ function generateOrderByYearCharts(orders, countChartId, priceChartId) {
 function generateOrderByPlaceCharts(orders, countChartId, priceChartId) {
     let countData = new google.visualization.DataTable();
     let sumData = new google.visualization.DataTable();
-    
+
     countData.addColumn('string', 'Place');
     countData.addColumn('number', 'Count');
 
@@ -329,7 +431,7 @@ function generateOrderByPlaceCharts(orders, countChartId, priceChartId) {
             type: "string",
             role: "annotation"
         }]);
-    
+
 
     const countChart = new google.visualization.ColumnChart(document.getElementById(countChartId));
     const priceChart = new google.visualization.ColumnChart(document.getElementById(priceChartId));

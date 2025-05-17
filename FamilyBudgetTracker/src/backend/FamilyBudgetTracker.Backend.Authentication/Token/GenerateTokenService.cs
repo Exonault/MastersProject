@@ -5,9 +5,11 @@ using System.Text;
 using FamilyBudgetTracker.Backend.Authentication.Constants;
 using FamilyBudgetTracker.Backend.Authentication.Messages;
 using FamilyBudgetTracker.Backend.Domain.Entities;
+using FamilyBudgetTracker.Backend.Domain.Entities.Familial;
 using FamilyBudgetTracker.Backend.Domain.Exceptions;
 using FamilyBudgetTracker.Backend.Domain.Messages.User;
 using FamilyBudgetTracker.Backend.Domain.Repositories;
+using FamilyBudgetTracker.Backend.Domain.Repositories.Familial;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,11 +19,13 @@ public class GenerateTokenService : IGenerateTokenService
 {
     private readonly IConfiguration _config;
     private readonly IUserRepository _userRepository;
+    private readonly IFamilyRepository _familyRepository;
 
-    public GenerateTokenService(IConfiguration config, IUserRepository userRepository)
+    public GenerateTokenService(IConfiguration config, IUserRepository userRepository, IFamilyRepository familyRepository)
     {
         _config = config;
         _userRepository = userRepository;
+        _familyRepository = familyRepository;
     }
 
     private static readonly TimeSpan TokenDuration = TimeSpan.FromHours(8); // test
@@ -42,9 +46,11 @@ public class GenerateTokenService : IGenerateTokenService
             new Claim(AuthenticationConstants.ClaimTypes.ClaimUserIdType, user.Id),
         ];
 
-        if (user.Family is not null)
+        Family? family = await _familyRepository.GetFamilyByUserId(user.Id);
+
+        if (family is not null)
         {
-            claims.Add(new Claim(AuthenticationConstants.ClaimTypes.ClaimFamilyIdType, user.Family.Id.ToString()));
+            claims.Add(new Claim(AuthenticationConstants.ClaimTypes.ClaimFamilyIdType, family.Id.ToString()));
         }
 
         foreach (string role in roles)
@@ -92,9 +98,11 @@ public class GenerateTokenService : IGenerateTokenService
             new Claim(AuthenticationConstants.ClaimTypes.ClaimUserIdType, user.Id),
         ];
 
-        if (user.Family is not null)
+        Family? family = await _familyRepository.GetFamilyByUserId(user.Id);
+
+        if (family is not null)
         {
-            claims.Add(new Claim(AuthenticationConstants.ClaimTypes.ClaimFamilyIdType, user.Family.Id.ToString()));
+            claims.Add(new Claim(AuthenticationConstants.ClaimTypes.ClaimFamilyIdType, family.Id.ToString()));
         }
 
         foreach (string role in roles)

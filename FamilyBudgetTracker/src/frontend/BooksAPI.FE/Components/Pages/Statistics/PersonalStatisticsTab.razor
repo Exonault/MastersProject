@@ -1,0 +1,222 @@
+﻿@using System.Globalization
+@using BooksAPI.FE.Authentication
+@using BooksAPI.FE.Contracts.Personal.Category
+@using BooksAPI.FE.Contracts.Personal.Transaction
+@using BooksAPI.FE.Contracts.Statistics
+@using BooksAPI.FE.Util
+
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+
+<MudPaper Class="pa-4">
+
+    <div class="d-flex justify-space-between mb-2">
+        <MudButton Variant="Variant.Outlined" OnClick="GoToPrevious">
+            <MudIcon Icon="@Icons.Material.Filled.ChevronLeft"/>
+            Previous
+        </MudButton>
+
+        <MudButton Variant="Variant.Outlined" OnClick="GoToNext">
+            Next
+            <MudIcon Icon="@Icons.Material.Filled.ChevronRight"/>
+        </MudButton>
+    </div>
+
+    <MudTabs @bind-ActivePanelIndex="_selectedTabIndex"
+             OnActivePanelIndexChanged="OnTabChanged"
+             Rounded="true" Centered="true" RoundedBar="true">
+
+        @foreach (var year in _yearTabs)
+        {
+            <MudTabPanel Text="@year.Label" Class="pe-none">
+                <div id="personalMonthChart" style="width: 100%; height: 30em">
+
+                </div>
+                <div id="personalCategoryChart" style="width: 100%; height: 30em">
+
+                </div>
+            </MudTabPanel>
+        }
+    </MudTabs>
+
+</MudPaper>
+
+@code{
+
+    private List<YearTab> _yearTabs = new();
+    private int _selectedTabIndex;
+    private DateTime _centerYear;
+
+    private const int TabCount = 5; // Change this to 3, 5, 7, etc. (should be odd)
+    private int CenterIndex => TabCount / 2;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private string _userId;
+    private string _token;
+    private string _refreshToken;
+
+
+    private async Task GeneratePersonalMonthChart(YearlyStatisticsResponse data)
+    {
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("generatePersonalMonthChart", data.MonthlyStatistics, "personalMonthChart");
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task GeneratePersonalCategoryChart(YearlyStatisticsResponse data)
+    {
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("generatePersonalCategoryChart", data.CategoryStatistics, "personalCategoryChart");
+        }
+        catch (InvalidOperationException e)
+        {
+            ((CustomAuthenticationStateProvider)AuthenticationStateProvider).UpdateUserState("");
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception e)
+        {
+            StateHasChanged();
+        }
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var response = GetPersonalMock();
+
+            await GeneratePersonalMonthChart(response);
+            await GeneratePersonalCategoryChart(response);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+        }
+        catch (Exception e)
+        {
+        }
+
+        _centerYear = DateTime.Now;
+        await BuildYearTabsAsync(_centerYear);
+    }
+
+    private async Task OnTabChanged(int newIndex)
+    {
+        if (newIndex != CenterIndex)
+        {
+            _centerYear = _yearTabs[newIndex].Date;
+            await BuildYearTabsAsync(_centerYear);
+        }
+    }
+
+    private async Task BuildYearTabsAsync(DateTime center)
+    {
+        _yearTabs = new List<YearTab>();
+        for (int i = -CenterIndex; i <= CenterIndex; i++)
+        {
+            _yearTabs.Add(new YearTab(center.AddYears(i)));
+        }
+
+        var loadTasks = _yearTabs.Select(async tab =>
+        {
+            tab.Content = GetPersonalMock();
+            // tab.Content = await TransactionService.GetTransactionsForPeriod(tab.Date, _token, _refreshToken, _userId);
+            tab.IsLoading = false;
+        });
+
+        await Task.WhenAll(loadTasks);
+
+        _selectedTabIndex = CenterIndex;
+        StateHasChanged();
+    }
+
+    private async Task GoToPrevious()
+    {
+        _centerYear = _centerYear.AddYears(-1);
+        await BuildYearTabsAsync(_centerYear);
+
+        await GeneratePersonalMonthChart(GetPersonalMock());
+        await GeneratePersonalCategoryChart(GetPersonalMock());
+    }
+
+    private async Task GoToNext()
+    {
+        _centerYear = _centerYear.AddYears(1);
+        await BuildYearTabsAsync(_centerYear);
+
+        await GeneratePersonalMonthChart(GetPersonalMock());
+        await GeneratePersonalCategoryChart(GetPersonalMock());
+    }
+
+    public class YearTab
+    {
+        public string Label { get; }
+        public DateTime Date { get; }
+        public YearlyStatisticsResponse? Content { get; set; }
+        public bool IsLoading { get; set; } = true;
+
+        public YearTab(DateTime date)
+        {
+            Date = date;
+            Label = date.ToString("yyyy", CultureInfo.InvariantCulture);
+            Content = new();
+        }
+    }
+
+    private YearlyStatisticsResponse GetPersonalMock()
+    {
+        List<MonthlyStatistics> monthlyStatistics = Enumerable.Range(1, 12).Select(x => new MonthlyStatistics
+            {
+                Month = x,
+                Income = 3000.00m,
+                Expense = Random.Shared.Next(1, 10) * 0.1m * 2000m
+            })
+            .ToList();
+
+        List<CategoryStatistics> categoryStatistics = Enumerable.Range(1, 5)
+            .Select(x => new CategoryStatistics
+            {
+                CategoryId = x,
+                CategoryName = $"test category {x}",
+                TotalAmount = x * 120.00m
+            })
+            .ToList();
+
+        return new YearlyStatisticsResponse
+        {
+            Year = 2025,
+            TotalIncome = monthlyStatistics.Sum(x => x.Income),
+            TotalExpense = monthlyStatistics.Sum(x => x.Expense),
+            MonthlyStatistics = monthlyStatistics,
+            CategoryStatistics = categoryStatistics
+        };
+    }
+
+}

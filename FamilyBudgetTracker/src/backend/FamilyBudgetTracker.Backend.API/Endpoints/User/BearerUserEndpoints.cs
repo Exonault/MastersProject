@@ -1,5 +1,6 @@
 ﻿using FamilyBudgetTracker.Backend.API.Constants;
 using FamilyBudgetTracker.Backend.Authentication.Interfaces;
+using FamilyBudgetTracker.Backend.Domain.Invite;
 using FamilyBudgetTracker.Shared.Contracts.User;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
@@ -48,6 +49,14 @@ public static class BearerUserEndpoints
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Revoke all tokens")
             .WithOpenApi();
+        
+        group.MapGet("joinFamily/{token:guid}", JoinFamily)
+            .AllowAnonymous()
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Adds user to a family")
+            .WithOpenApi();
     }
 
     private static async Task<IResult> Register([FromBody] RegisterRequest request,
@@ -79,6 +88,14 @@ public static class BearerUserEndpoints
     private static async Task<IResult> Revoke(IBearerUserService service)
     {
         await service.Revoke();
+        return Results.Ok();
+    }
+    
+    private static async Task<IResult> JoinFamily([FromRoute] Guid token,
+        IFamilyInvitationService service, HttpContext httpContext)
+    {
+        string tokenId = token.ToString();
+        await service.AddUserToFamily(tokenId);
         return Results.Ok();
     }
 }

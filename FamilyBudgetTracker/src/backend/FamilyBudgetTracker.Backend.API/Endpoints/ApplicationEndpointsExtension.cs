@@ -1,5 +1,6 @@
 ﻿using FamilyBudgetTracker.Backend.API.Endpoints.Familial;
 using FamilyBudgetTracker.Backend.API.Endpoints.Personal;
+using FamilyBudgetTracker.Backend.API.Endpoints.Statistics;
 using FamilyBudgetTracker.Backend.API.Endpoints.User;
 
 namespace FamilyBudgetTracker.Backend.API.Endpoints;
@@ -20,6 +21,8 @@ public static class ApplicationEndpointsExtension
         personalGroup.MapCategoryEndpoints();
         personalGroup.MapPersonalTransactionEndpoints();
         personalGroup.MapRecurringTransactionEndpoints();
+        
+        personalGroup.MapPersonalStatisticsEndpoint();
     }
 
     private static void MapFamilialEndpoints(this WebApplication app)
@@ -29,6 +32,8 @@ public static class ApplicationEndpointsExtension
         familyGroup.MapFamilyEndpoints();
         familyGroup.MapFamilyCategoryEndpoints();
         familyGroup.MapFamilyTransactionEndpoints();
+        
+        familyGroup.MapFamilialStatisticsEndpoints();
     }
 
     private static void MapUserEndpoints(this WebApplication app)

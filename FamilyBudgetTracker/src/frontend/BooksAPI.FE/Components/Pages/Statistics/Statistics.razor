@@ -1,6 +1,105 @@
 ﻿@page "/statistics"
-<h3>Statistics</h3>
+@using BooksAPI.FE.Contracts.Statistics
+@using BooksAPI.FE.Util
+@inject IJSRuntime JsRuntime;
+@inject NavigationManager NavigationManager;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
+
+<PageTitle>Statistics</PageTitle>
+
+<h3 class="text-center">Statistics</h3>
+
+@if (_isDataFetched)
+{
+    @if (_error)
+    {
+        <MudGrid Justify="Justify.Center">
+            <MudItem md="4" xs="4">
+                <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                    Unable to get categories. Please try again later.
+                </MudAlert>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <MudTabs Elevation="2" ApplyEffectsToContainer="true" Centered="true">
+            <MudTabPanel Text="Personal">
+                <PersonalStatisticsTab/>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Family">
+                <FamilyStatisticsTab/>
+            </MudTabPanel>
+            
+        </MudTabs>
+    }
+}
+else
+{
+    <div class="mt-4">
+        <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+    </div>
+}
 
 @code {
-    
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private bool _shouldRender = false;
+    private bool _error = false;
+    private bool _isDataFetched = false;
+
+    private string _userId;
+    private string _familyId;
+    private string _token;
+    private string _refreshToken;
+
+    protected override bool ShouldRender() => _shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState state = await AuthenticationState;
+
+        _userId = UserUtil.GetUserId(state.User);
+        _familyId = UserUtil.GetFamilyId(state.User);
+
+
+        try
+        {
+            string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
+            _token = tokens[0];
+            _refreshToken = tokens[1];
+
+            _isDataFetched = true;
+            _shouldRender = true;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _isDataFetched = false;
+        }
+    }
+
+    private FamilyYearlyStatisticsResponse GetFamilyMock()
+    {
+        return new FamilyYearlyStatisticsResponse
+        {
+            Year = 0,
+            TotalIncome = 0,
+            TotalExpense = 0,
+            MonthlyStatistics = null,
+            CategoryStatistics = null
+        };
+    }
+
+  
+
+    private void CloseAlert()
+    {
+        _error = false;
+        StateHasChanged();
+    }
+
 }

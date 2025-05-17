@@ -40,4 +40,9 @@ public class FamilyRepository : IFamilyRepository
             .Include(f => f.FamilyMembers)
             .ToListAsync();
     }
+
+    public async Task<Family?> GetFamilyByUserId(string userId)
+    {
+        return await _dbContext.Family.FirstOrDefaultAsync(f => f.FamilyMembers.Any(x => x.Id == userId));
+    }
 }

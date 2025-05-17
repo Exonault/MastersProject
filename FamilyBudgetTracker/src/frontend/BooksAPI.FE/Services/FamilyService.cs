@@ -14,17 +14,16 @@ public class FamilyService : IFamilyService
     private readonly IRefreshTokenService _refreshTokenService;
 
     private readonly string _baseUrl;
-    
+
     public FamilyService(IConfiguration configuration, IHttpClientFactory clientFactory,
         IRefreshTokenService refreshTokenService)
     {
         _clientFactory = clientFactory;
         _refreshTokenService = refreshTokenService;
         _baseUrl = configuration["Backend:Family"]!;
-
     }
-    
-    public async Task<FamilyResponse> GetFamily(string id, string token, string refreshToken, string userId)
+
+    public async Task<FamilyDetailedResponse> GetFamily(string id, string token, string refreshToken, string userId)
     {
         string url = $"{_baseUrl}/{id}";
 
@@ -47,8 +46,8 @@ public class FamilyService : IFamilyService
         {
             await using (Stream responseStream = await responseMessage.Content.ReadAsStreamAsync())
             {
-                FamilyResponse? response =
-                    await JsonSerializer.DeserializeAsync<FamilyResponse>(responseStream);
+                FamilyDetailedResponse? response =
+                    await JsonSerializer.DeserializeAsync<FamilyDetailedResponse>(responseStream);
 
                 if (response is null)
                 {
@@ -66,7 +65,7 @@ public class FamilyService : IFamilyService
 
     public async Task<FamilyModel> GetFamilyModel(string id, string token, string refreshToken, string userId)
     {
-        FamilyResponse response = await GetFamily(id, token, refreshToken, userId);
+        FamilyDetailedResponse response = await GetFamily(id, token, refreshToken, userId);
 
         FamilyModel model = new FamilyModel();
 
@@ -76,7 +75,7 @@ public class FamilyService : IFamilyService
     public async Task<bool> CreateFamily(string token, string refreshToken, string userId)
     {
         FamilyRequest requestContent = new FamilyRequest();
-        
+
         string url = $"{_baseUrl}/";
 
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -138,7 +137,7 @@ public class FamilyService : IFamilyService
         };
 
         string url = $"{_baseUrl}/invite";
-        
+
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -162,8 +161,8 @@ public class FamilyService : IFamilyService
 
         return false;
     }
-    
-    
+
+
     private async Task<HttpResponseMessage> RefreshRequest(string token, string refreshToken,
         HttpRequestMessage request, HttpClient httpClient)
     {

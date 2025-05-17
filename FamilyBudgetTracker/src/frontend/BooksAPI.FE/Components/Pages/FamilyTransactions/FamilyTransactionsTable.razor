@@ -1,9 +1,11 @@
-﻿@using BooksAPI.FE.Contracts.Personal.Transaction
+﻿@using BooksAPI.FE.Contracts.Familial.FamilyTransaction
+@using BooksAPI.FE.Contracts.Personal.Transaction
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
+
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
-@inject IPersonalTransactionService TransactionService;
+@inject IFamilyTransactionService TransactionService;
 
 <MudTable Items="Transactions">
     <HeaderContent>
@@ -13,6 +15,7 @@
                 Date
             </MudTableSortLabel>
         </MudTh>
+        <MudTh>User</MudTh>
         <MudTh>Description</MudTh>
         <MudTh>Amount</MudTh>
         <MudTh>Category</MudTh>
@@ -21,6 +24,9 @@
     <RowTemplate>
         <MudTd DataLabel="Date">
             <MudText Typo="Typo.body1"> @context.TransactionDate.ToShortDateString()</MudText>
+        </MudTd>
+        <MudTd>
+            <MudText Typo="Typo.body1"> @context.FamilyMember.UserName</MudText>
         </MudTd>
         <MudTd DataLabel="Description" Class="w-50">
             <MudText Typo="Typo.body1">@context.Description</MudText>
@@ -49,10 +55,10 @@
     </PagerContent>
 </MudTable>
 
-@code{
+@code {
 
     [Parameter]
-    public List<PersonalTransactionResponse> Transactions { get; set; }
+    public List<FamilyTransactionResponse> Transactions { get; set; }
 
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationState { get; set; }
@@ -60,12 +66,14 @@
     private string _token;
     private string _refreshToken;
     private string _userId;
+    private string _familyId;
 
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState state = await AuthenticationState;
 
         _userId = UserUtil.GetUserId(state.User);
+        _familyId = UserUtil.GetFamilyId(state.User);
 
         try
         {
@@ -83,12 +91,12 @@
     {
         try
         {
-            // bool deleteSuccess = await TransactionService.DeleteTransaction(id, _token, _refreshToken, _userId);
-
             bool deleteSuccess = true;
+            // bool deleteSuccess = await TransactionService.DeleteTransaction(id, _token, _refreshToken, _userId, _familyId);
+
             if (deleteSuccess)
             {
-                PersonalTransactionResponse? transactionResponse = Transactions.FirstOrDefault(x => x.Id == id);
+                FamilyTransactionResponse? transactionResponse = Transactions.FirstOrDefault(x => x.Id == id);
                 Transactions.Remove(transactionResponse!);
                 StateHasChanged();
             }

@@ -1,9 +1,9 @@
 ﻿@using System.Globalization
-@using BooksAPI.FE.Contracts.Personal.Transaction
+@using BooksAPI.FE.Contracts.Familial.FamilyTransaction
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
 @inject IJSRuntime JsRuntime;
-@inject IPersonalTransactionService TransactionService;
+@inject IFamilyTransactionService TransactionService;
 @inject NavigationManager NavigationManager;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
@@ -38,10 +38,10 @@
                 var response = month.Content;
 
                 <MudTabPanel Text="@month.Label" Class="pe-none">
-                    <SummaryCard Response="response"/>
+                    <FamilyTransactionsSummaryCard Response="response"/>
                     <MudGrid Justify="Justify.Center">
                         <MudItem xs="6">
-                            <div id="spendingChart" style="width: 100%; height: 500px">
+                            <div id="familySpendingChart" style="width: 100%; height: 500px">
 
                             </div>
                         </MudItem>
@@ -53,7 +53,6 @@
 </MudPaper>
 
 @code {
-
     private List<MonthTabSummaryInfo> _monthTabs = new();
     private int _selectedTabIndex;
     private DateTime _centerMonth;
@@ -65,26 +64,27 @@
     private Task<AuthenticationState>? AuthenticationState { get; set; }
 
     private string _userId;
+    private string _familyId;
     private string _token;
     private string _refreshToken;
 
-    private async Task GenerateSpendingChart(PersonalTransactionPeriodSummaryResponse response)
+    private async Task GenerateSpendingChart(FamilyTransactionPeriodSummaryResponse response)
     {
-        await JsRuntime.InvokeVoidAsync("generateMonthlySpendingChart", response.ExpenseCategoryAmounts, "spendingChart");
+        await JsRuntime.InvokeVoidAsync("generateMonthlySpendingChart", response.ExpenseCategoryAmounts, "familySpendingChart");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // var summary = await TransactionService.GetSummary(DateTime.Now, _token, _refreshToken, _userId);
-            var summary = GetMockResponse();
+            // var summary = await TransactionService.GetSummary(DateTime.Now, _token, _refreshToken, _userId, _familyId);
 
+            var summary = GetMockResponse();
             await GenerateSpendingChart(summary);
         }
         else
         {
-            // var summary = await TransactionService.GetSummary(_centerMonth, _token, _refreshToken, _userId);
+            // var summary = await TransactionService.GetSummary(_centerMonth, _token, _refreshToken, _userId, _familyId);
             var summary = GetMockResponse();
             await GenerateSpendingChart(summary);
         }
@@ -96,6 +96,7 @@
         AuthenticationState state = await AuthenticationState;
 
         _userId = UserUtil.GetUserId(state.User);
+        _familyId = UserUtil.GetFamilyId(state.User);
 
         try
         {
@@ -132,7 +133,7 @@
         var loadTasks = _monthTabs.Select(async tab =>
         {
             tab.Content = GetMockResponse();
-            // tab.Content = await TransactionService.GetSummary(tab.Date, _token, _refreshToken, _userId);
+            // tab.Content = await TransactionService.GetSummary(tab.Date, _token, _refreshToken, _userId, _familyId);
             tab.IsLoading = false;
         });
 
@@ -158,7 +159,7 @@
     {
         public string Label { get; }
         public DateTime Date { get; }
-        public PersonalTransactionPeriodSummaryResponse Content { get; set; }
+        public FamilyTransactionPeriodSummaryResponse Content { get; set; }
         public bool IsLoading { get; set; } = true;
 
         public MonthTabSummaryInfo(DateTime date)
@@ -168,20 +169,17 @@
         }
     }
 
-
-    private PersonalTransactionPeriodSummaryResponse GetMockResponse()
+    private FamilyTransactionPeriodSummaryResponse GetMockResponse()
     {
         var expenses = new Dictionary<string, decimal>();
         expenses.Add("Bills", 400.00m);
-        expenses.Add("General", 290.00m);
-        expenses.Add("Lunch", 76.00m);
-        expenses.Add("Going out", 70.00m);
-        expenses.Add("Groceries", 65.00m);
+        expenses.Add("General", 30.00m);
+        expenses.Add("Groceries", 200.00m);
 
-        return new PersonalTransactionPeriodSummaryResponse
+        return new FamilyTransactionPeriodSummaryResponse
         {
-            IncomeAmount = 3300.00m,
-            ExpenseAmount = expenses.Sum(x => x.Value),
+            TotalIncomeAmount = 1200.00m,
+            TotalExpenseAmount = expenses.Sum(x => x.Value),
             ExpenseCategoryAmounts = expenses
         };
     }

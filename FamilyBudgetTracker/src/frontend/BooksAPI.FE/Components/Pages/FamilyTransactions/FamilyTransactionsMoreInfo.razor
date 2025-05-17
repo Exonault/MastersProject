@@ -1,17 +1,13 @@
-﻿@page "/transactionsSummary"
-@using BooksAPI.FE.Constants
+﻿@page "/familyTransactionsMoreInfo"
 @using BooksAPI.FE.Util
-
 
 @inject IJSRuntime JsRuntime;
 @inject NavigationManager NavigationManager;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
-@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)]
+<PageTitle>More information</PageTitle>
 
-<PageTitle>Transactions</PageTitle>
-
-<h3 class="text-center">Transactions</h3>
+<h3 class="text-center">More information</h3>
 
 @if (_isDataFetched)
 {
@@ -20,7 +16,7 @@
         <MudGrid Justify="Justify.Center">
             <MudItem md="4" xs="4">
                 <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
-                    Unable to get transactions. Please try again later.
+                    Unable to get categories. Please try again later.
                 </MudAlert>
             </MudItem>
         </MudGrid>
@@ -29,17 +25,16 @@
     {
         <div class="d-flex justify-content-between mb-3">
             <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                       OnClick="@(() => NavigationManager.NavigateTo("transactionsMoreInfo"))">
-                More information
+                       OnClick="@(() => NavigationManager.NavigateTo("transactionsSummary"))">
+                To summary
             </MudButton>
-            
-            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" 
                        OnClick="@(() => NavigationManager.NavigateTo("createTransaction"))">
                 Add transaction
             </MudButton>
         </div>
 
-        <TransactionsSummaryTabs/>
+        <FamilyTransactionsMoreInfoTabs/>
     }
 }
 else
@@ -49,9 +44,7 @@ else
     </div>
 }
 
-
-@code {
-
+@code{
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationState { get; set; }
 
@@ -60,17 +53,18 @@ else
     private bool _isDataFetched = false;
 
     private string _userId;
+    private string _familyId;
     private string _token;
     private string _refreshToken;
 
-
     protected override bool ShouldRender() => _shouldRender;
-
+    
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState state = await AuthenticationState;
 
         _userId = UserUtil.GetUserId(state.User);
+        _familyId = UserUtil.GetFamilyId(state.User);
 
 
         try
@@ -88,6 +82,11 @@ else
             _isDataFetched = false;
         }
     }
+
+    private async Task GetTransactions()
+    {
+    }
+
 
     private void CloseAlert()
     {

@@ -1,17 +1,15 @@
-﻿@page "/transactionsSummary"
+﻿@page "/familyTransactionsSummary"
 @using BooksAPI.FE.Constants
 @using BooksAPI.FE.Util
-
-
 @inject IJSRuntime JsRuntime;
 @inject NavigationManager NavigationManager;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
-@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)]
+@* @attribute [Authorize(Policy = ApplicationConstants.PolicyNames.FamilyMemberPolicyName)] *@
 
-<PageTitle>Transactions</PageTitle>
+<PageTitle>Family Transactions</PageTitle>
 
-<h3 class="text-center">Transactions</h3>
+<h3 class="text-center">Family Transactions</h3>
 
 @if (_isDataFetched)
 {
@@ -29,17 +27,17 @@
     {
         <div class="d-flex justify-content-between mb-3">
             <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                       OnClick="@(() => NavigationManager.NavigateTo("transactionsMoreInfo"))">
+                       OnClick="@(() => NavigationManager.NavigateTo("familyTransactionsMoreInfo"))">
                 More information
             </MudButton>
             
             <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                       OnClick="@(() => NavigationManager.NavigateTo("createTransaction"))">
+                       OnClick="@(() => NavigationManager.NavigateTo("createFamilyTransaction"))">
                 Add transaction
             </MudButton>
         </div>
-
-        <TransactionsSummaryTabs/>
+        
+        <FamilyTransactionsSummaryTabs/>
     }
 }
 else
@@ -60,9 +58,9 @@ else
     private bool _isDataFetched = false;
 
     private string _userId;
+    private string _familyId;
     private string _token;
     private string _refreshToken;
-
 
     protected override bool ShouldRender() => _shouldRender;
 
@@ -71,7 +69,7 @@ else
         AuthenticationState state = await AuthenticationState;
 
         _userId = UserUtil.GetUserId(state.User);
-
+        _familyId = UserUtil.GetFamilyId(state.User);
 
         try
         {

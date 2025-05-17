@@ -11,4 +11,6 @@ public interface IFamilyRepository
     Task<Family?> GetFamilyById(string id);
 
     Task<List<Family>> GetAllFamilies();
+
+    Task<Family?> GetFamilyByUserId(string userId);
 }

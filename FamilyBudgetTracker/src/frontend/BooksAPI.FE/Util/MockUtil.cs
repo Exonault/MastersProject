@@ -1,10 +1,7 @@
-﻿using BooksAPI.FE.Contracts.Familial.FamilyCategory;
-using BooksAPI.FE.Contracts.Familial.FamilyTransaction;
-using BooksAPI.FE.Contracts.Personal.Category;
+﻿using BooksAPI.FE.Contracts.Personal.Category;
 using BooksAPI.FE.Contracts.Personal.RecurringTransaction;
 using BooksAPI.FE.Contracts.Personal.Transaction;
 using BooksAPI.FE.Contracts.Statistics;
-using BooksAPI.FE.Contracts.User;
 using MudBlazor;
 
 namespace BooksAPI.FE.Util;

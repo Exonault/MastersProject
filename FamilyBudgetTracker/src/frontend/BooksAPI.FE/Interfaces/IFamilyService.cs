@@ -9,7 +9,7 @@ public interface IFamilyService
 
     Task<FamilyModel> GetFamilyModel(string id, string token, string refreshToken, string userId);
 
-    Task<bool> CreateFamily(string token, string refreshToken, string userId);
+    Task<bool> CreateFamily(string name, string token, string refreshToken, string userId);
 
     Task<bool> DeleteFamily(string id, string token, string refreshToken, string userId);
 

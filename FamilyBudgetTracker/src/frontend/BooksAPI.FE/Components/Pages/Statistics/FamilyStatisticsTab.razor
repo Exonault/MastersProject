@@ -63,7 +63,7 @@
     {
         try
         {
-            await JsRuntime.InvokeVoidAsync("generatePersonalMonthChart", data.MonthlyStatistics, "familySpendingMonthChart");
+            await JsRuntime.InvokeVoidAsync("generateYearMonthChart", data.MonthlyStatistics, "familySpendingMonthChart");
         }
         catch (InvalidOperationException e)
         {
@@ -81,7 +81,7 @@
     {
         try
         {
-            await JsRuntime.InvokeVoidAsync("generatePersonalCategoryChart", data.CategoryStatistics, "familyCategoryChart");
+            await JsRuntime.InvokeVoidAsync("generateYearlyCategoryChart", data.CategoryStatistics, "familyCategoryChart");
         }
         catch (InvalidOperationException e)
         {
@@ -100,7 +100,7 @@
     {
         if (firstRender)
         {
-            var response = GetFamilyMock();
+            var response = FamilyMockUtil.GetFamilyStatisticsResponseMock();
 
             await GeneratePersonalMonthChart(response);
             await GeneratePersonalCategoryChart(response);
@@ -148,7 +148,7 @@
 
         var loadTasks = _yearTabs.Select(async tab =>
         {
-            tab.Content = GetFamilyMock();
+            tab.Content = FamilyMockUtil.GetFamilyStatisticsResponseMock();
             // tab.Content = await TransactionService.GetTransactionsForPeriod(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
@@ -164,8 +164,9 @@
         _centerYear = _centerYear.AddYears(-1);
         await BuildYearTabsAsync(_centerYear);
         
-        await GeneratePersonalMonthChart(GetFamilyMock());
-        await GeneratePersonalCategoryChart(GetFamilyMock());
+      
+        await GeneratePersonalMonthChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
+        await GeneratePersonalCategoryChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
         
     }
 
@@ -174,8 +175,8 @@
         _centerYear = _centerYear.AddYears(1);
         await BuildYearTabsAsync(_centerYear);
         
-        await GeneratePersonalMonthChart(GetFamilyMock());
-        await GeneratePersonalCategoryChart(GetFamilyMock());
+        await GeneratePersonalMonthChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
+        await GeneratePersonalCategoryChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
         
     }
 
@@ -194,33 +195,6 @@
         }
     }
 
-    private FamilyYearlyStatisticsResponse GetFamilyMock()
-    {
-        List<MonthlyStatistics> monthlyStatistics = Enumerable.Range(1, 12).Select(x => new MonthlyStatistics
-            {
-                Month = x,
-                Income = 3000.00m,
-                Expense = Random.Shared.Next(1, 10) * 0.1m * 2000m
-            })
-            .ToList();
-
-        List<CategoryStatistics> categoryStatistics = Enumerable.Range(1, 5)
-            .Select(x => new CategoryStatistics
-            {
-                CategoryId = x,
-                CategoryName = $"test category {x}",
-                TotalAmount = x * 120.00m
-            })
-            .ToList();
-
-        return new FamilyYearlyStatisticsResponse
-        {
-            Year = 2025,
-            TotalIncome = monthlyStatistics.Sum(x => x.Income),
-            TotalExpense = monthlyStatistics.Sum(x => x.Expense),
-            MonthlyStatistics = monthlyStatistics,
-            CategoryStatistics = categoryStatistics
-        };
-    }
+  
 
 }

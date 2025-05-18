@@ -11,7 +11,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 @inject ICategoryService CategoryService
 
-@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)]
+@* @attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)] *@
 
 <PageTitle>Categories</PageTitle>
 
@@ -180,7 +180,7 @@ else
             _token = tokens[0];
             _refreshToken = tokens[1];
 
-            _categories = GetMockResponse();
+            _categories = MockUtil.GetMockCategoryResponse();
 
             // await GetCategories();
 
@@ -237,11 +237,6 @@ else
         StateHasChanged();
     }
 
-    private List<CategoryResponse> GetMockResponse()
-    {
-        List<CategoryResponse> response = new List<CategoryResponse>();
-        
-        return response;
-    }
+   
 
 }

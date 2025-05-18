@@ -72,9 +72,12 @@ public class FamilyService : IFamilyService
         return model;
     }
 
-    public async Task<bool> CreateFamily(string token, string refreshToken, string userId)
+    public async Task<bool> CreateFamily(string name, string token, string refreshToken, string userId)
     {
-        FamilyRequest requestContent = new FamilyRequest();
+        FamilyRequest requestContent = new FamilyRequest
+        {
+            Name = name
+        };
 
         string url = $"{_baseUrl}/";
 
@@ -96,6 +99,7 @@ public class FamilyService : IFamilyService
 
         if (responseMessage.IsSuccessStatusCode)
         {
+            
             return true;
         }
 

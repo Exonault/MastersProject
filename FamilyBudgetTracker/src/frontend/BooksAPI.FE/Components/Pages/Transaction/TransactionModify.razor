@@ -151,9 +151,13 @@ else if (!_isDataFetched)
                 StateHasChanged();
             }
 
-            _categories = await CategoryService.GetCategories(_token, _refreshToken, _userId);
+          
 
+            // _categories = await CategoryService.GetCategories(_token, _refreshToken, _userId);
+
+            _categories = MockUtil.GetMockCategoryResponse();
             _categories = _categories.OrderBy(x => x.Type).ToList();
+            
             _isDataFetched = true;
             _shouldRender = true;
             StateHasChanged();

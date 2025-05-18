@@ -92,7 +92,7 @@
 
         var loadTasks = _monthTabs.Select(async tab =>
         {
-            tab.Content = GetMockResponse();
+            tab.Content = MockUtil.GetMockTransactionsResponse();
             // tab.Content = await TransactionService.GetTransactionsForPeriod(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
@@ -130,59 +130,6 @@
         }
     }
 
-    private List<PersonalTransactionResponse> GetMockResponse()
-    {
-        List<PersonalTransactionResponse> response = new List<PersonalTransactionResponse>();
-
-        response.Add(new PersonalTransactionResponse
-        {
-            Id = 1,
-            Amount = 100,
-            Description = "test description",
-            TransactionDate = new DateOnly(2025, 01,01),
-            Category = new CategoryResponse
-            {
-                Id = 1,
-                Name = "test",
-                Icon = null,
-                Type = "Income",
-                Limit = null
-            }
-        });
-        
-        response.Add(new PersonalTransactionResponse
-        {
-            Id = 2,
-            Amount = 100,
-            Description = "test description 2",
-            TransactionDate = new DateOnly(2025, 02,01),
-            Category = new CategoryResponse
-            {
-                Id = 2,
-                Name = "test 2",
-                Icon = null,
-                Type = "Expense",
-                Limit = null
-            }
-        });
-
-        response.Add(new PersonalTransactionResponse
-        {
-            Id = 3,
-            Amount = 100,
-            Description = "test description 3 ",
-            TransactionDate = new DateOnly(2025, 03,01),
-            Category = new CategoryResponse
-            {
-                Id = 3,
-                Name = "test 3",
-                Icon = null,
-                Type = "Income",
-                Limit = null
-            }
-        });
-        
-    return response;
-    }
+   
 
 }

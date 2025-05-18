@@ -97,7 +97,7 @@
 
         var loadTasks = _monthTabs.Select(async tab =>
         {
-            tab.Content = GetMockTransactions();
+            tab.Content = FamilyMockUtil.GetFamilyTransactionsMockResponse();
             // tab.Content = await TransactionService.GetTransactionsForPeriod(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
@@ -133,83 +133,6 @@
             Label = date.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
             Content = new List<FamilyTransactionResponse>();
         }
-    }
-
-    private List<FamilyTransactionResponse> GetMockTransactions()
-    {
-        List<FamilyTransactionResponse> response = new List<FamilyTransactionResponse>();
-
-        response.Add(new FamilyTransactionResponse
-        {
-            Id = 1,
-            Amount = 100,
-            Description = "test description",
-            TransactionDate = new DateOnly(2025, 01, 01),
-            Category = new FamilyCategoryResponse
-            {
-                Id = 1,
-                Name = "test family category",
-                Icon = null,
-                Type = "Income",
-                Limit = null
-            },
-            FamilyMember = new FamilyMemberResponse
-            {
-                Id = "string",
-                UserName = "family1",
-                Email = "family1",
-                FamilyRole = "FamilyMember"
-            }
-        });
-        
-        response.Add(new FamilyTransactionResponse
-        {
-            Id = 2,
-            Amount = 100,
-            Description = "test description",
-            TransactionDate = new DateOnly(2025, 02, 01),
-            Category = new FamilyCategoryResponse
-            {
-                Id = 2,
-                Name = "test family category 2",
-                Icon = null,
-                Type = "Expense",
-                Limit = null
-            },
-            FamilyMember = new FamilyMemberResponse
-            {
-                Id = "string2",
-                UserName = "family2",
-                Email = "family2",
-                FamilyRole = "FamilyMember"
-            }
-        });
-        
-
-        response.Add(new FamilyTransactionResponse
-        {
-            Id = 3,
-            Amount = 100,
-            Description = "test description 3",
-            TransactionDate = new DateOnly(2025, 03, 01),
-            Category = new FamilyCategoryResponse
-            {
-                Id = 3,
-                Name = "test family category 3",
-                Icon = null,
-                Type = "Income",
-                Limit = null
-            },
-            FamilyMember = new FamilyMemberResponse
-            {
-                Id = "string3",
-                UserName = "family3",
-                Email = "family3",
-                FamilyRole = "FamilyMember"
-            }
-        });
-        
-        return response;
     }
 
 }

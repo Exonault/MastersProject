@@ -9,7 +9,8 @@ public class FamilyTransactionModel
     [GreaterThanZero(ErrorMessage = "Amount should be greater than zero")]
     public decimal Amount { get; set; }
 
-    public string? Description { get; set; }
+    [Required(ErrorMessage = "Description is required")]
+    public string Description { get; set; }
 
     [Required(ErrorMessage = "Transaction date is required")]
     [NotInFuture(ErrorMessage = "Transaction date cannot be in the future")]

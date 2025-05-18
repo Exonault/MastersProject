@@ -34,7 +34,7 @@
                        OnClick=@(() => NavigationManager.NavigateTo($"/createFamilyCategory"))>Create
             </MudButton>
         </div>
-        
+
         <MudTabs Elevation="2" ApplyEffectsToContainer="true" Centered="true">
             <MudTabPanel Text="All">
                 <MudGrid>
@@ -137,8 +137,6 @@
                 </MudGrid>
             </MudTabPanel>
         </MudTabs>
-
-        
     }
 }
 else
@@ -179,8 +177,8 @@ else
             _token = tokens[0];
             _refreshToken = tokens[1];
 
-            _categories = GetMockResponse();
-            
+            _categories = FamilyMockUtil.GetFamilyCategoriesMockResponse();
+
             // await GetCategories();
 
             _isDataFetched = true;
@@ -234,15 +232,6 @@ else
     {
         _error = false;
         StateHasChanged();
-    }
-
-    private List<FamilyCategoryResponse> GetMockResponse()
-    {
-        List<FamilyCategoryResponse> repsonse = new List<FamilyCategoryResponse>();
-        
-        
-        
-        return repsonse;
     }
 
 }

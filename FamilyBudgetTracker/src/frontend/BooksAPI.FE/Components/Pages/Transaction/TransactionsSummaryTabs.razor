@@ -78,14 +78,14 @@
         if (firstRender)
         {
             // var summary = await TransactionService.GetSummary(DateTime.Now, _token, _refreshToken, _userId);
-            var summary = GetMockResponse();
+            var summary = MockUtil.GetMockTransactionSummaryResponse();
 
             await GenerateSpendingChart(summary);
         }
         else
         {
             // var summary = await TransactionService.GetSummary(_centerMonth, _token, _refreshToken, _userId);
-            var summary = GetMockResponse();
+            var summary = MockUtil.GetMockTransactionSummaryResponse();
             await GenerateSpendingChart(summary);
         }
     }
@@ -131,7 +131,7 @@
 
         var loadTasks = _monthTabs.Select(async tab =>
         {
-            tab.Content = GetMockResponse();
+            tab.Content = MockUtil.GetMockTransactionSummaryResponse();
             // tab.Content = await TransactionService.GetSummary(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
@@ -166,24 +166,6 @@
             Date = date;
             Label = date.ToString("MMMM yyyy", CultureInfo.InvariantCulture);
         }
-    }
-
-
-    private PersonalTransactionPeriodSummaryResponse GetMockResponse()
-    {
-        var expenses = new Dictionary<string, decimal>();
-        expenses.Add("Bills", 400.00m);
-        expenses.Add("General", 290.00m);
-        expenses.Add("Lunch", 76.00m);
-        expenses.Add("Going out", 70.00m);
-        expenses.Add("Groceries", 65.00m);
-
-        return new PersonalTransactionPeriodSummaryResponse
-        {
-            IncomeAmount = 3300.00m,
-            ExpenseAmount = expenses.Sum(x => x.Value),
-            ExpenseCategoryAmounts = expenses
-        };
     }
 
 }

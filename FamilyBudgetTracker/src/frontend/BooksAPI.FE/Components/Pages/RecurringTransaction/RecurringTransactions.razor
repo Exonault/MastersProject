@@ -1,6 +1,7 @@
 ﻿@page "/recurringTransactions"
 @using BooksAPI.FE.Authentication
 @using BooksAPI.FE.Constants
+@using BooksAPI.FE.Contracts.Personal.Category
 @using BooksAPI.FE.Contracts.Personal.RecurringTransaction
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
@@ -10,7 +11,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 @inject IRecurringTransactionService RecurringTransactionService;
 
-@attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)]
+@* @attribute [Authorize(Policy = ApplicationConstants.PolicyNames.UserRolePolicyName)] *@
 
 <PageTitle>Recurring transactions</PageTitle>
 
@@ -57,7 +58,7 @@
                 <MudTd DataLabel="End date">
                     <MudText Typo="Typo.body1"> @context.EndDate.ToShortDateString()</MudText>
                 </MudTd>
-                <MudTd DataLabel="Description" Class="w-50">
+                <MudTd DataLabel="Description" Class="w-25">
                     <MudText Typo="Typo.body1">@context.Description</MudText>
                 </MudTd>
                 <MudTd DataLabel="Amount">
@@ -66,6 +67,9 @@
                 <MudTd DataLabel="Category">
                     <MudText Typo="Typo.body1">@context.Category.Name</MudText>
                 </MudTd>
+                <MudTd DataLabel="Recurring Type">
+                    <MudText Typo="Typo.body1">@context.Type</MudText>
+                </MudTd>
                 <MudTd DataLabel="Actions" Style="width: 10% !important;">
                     <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3"
                                OnClick="@(() => DeleteTransaction(context.Id))">
@@ -73,9 +77,9 @@
                     </MudButton>
                 </MudTd>
             </RowTemplate>
-            <PagerContent>
-                <MudTablePager PageSizeOptions="new int[] { 5, 10, 25,}"/>
-            </PagerContent>
+            @* <PagerContent> *@
+            @*     <MudTablePager PageSizeOptions="new int[] { 5, 10, 25,}"/> *@
+            @* </PagerContent> *@
         </MudTable>
     }
 }
@@ -116,7 +120,9 @@ else
             _token = tokens[0];
             _refreshToken = tokens[1];
 
-            await GetTransactions();
+            _recurringTransactions = MockUtil.GetRecurringTransactionsMockResponse();
+            
+            // await GetTransactions();
 
             _isDataFetched = true;
             _shouldRender = true;
@@ -171,5 +177,8 @@ else
         _error = false;
         StateHasChanged();
     }
+
+
+    
 
 }

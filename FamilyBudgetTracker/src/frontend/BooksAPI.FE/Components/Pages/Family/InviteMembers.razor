@@ -1,4 +1,4 @@
-﻿@page "/createFamily"
+﻿@page "/inviteMembers"
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
 
@@ -7,9 +7,10 @@
 @inject IFamilyService FamilyService;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
+
 <PageTitle>Create Family</PageTitle>
 
-<h3 class="text-center">CreateFamily</h3>
+<h3 class="text-center">Invite members</h3>
 @if (_error)
 {
     <MudGrid Justify="Justify.Center">
@@ -21,23 +22,40 @@
     </MudGrid>
 }
 
+@if (_createSuccess)
+{
+    <MudGrid Justify="Justify.Center">
+        <MudItem md="4" xs="4">
+            <MudAlert Severity="Severity.Info" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                Create successful
+            </MudAlert>
+        </MudItem>
+    </MudGrid>
+}
+
+
 <MudGrid Justify="Justify.Center">
     <MudItem xs="6" Class="d-flex justify-center">
-        <MudText Typo="Typo.h5">Enter the name you want your family to have</MudText>
+        <MudText Typo="Typo.h5">Enter email of the user you want to add to your family.</MudText>
     </MudItem>
 </MudGrid>
 <MudGrid Justify="Justify.Center">
-    <MudItem xs="3" Class="d-flex justify-center">
-        <MudTextField T="string" Label="Family Name" InputType="InputType.Text" Variant="Variant.Text"
-                      @bind-Value="_familyName"/>
+    <MudItem xs="6" Class="d-flex justify-center">
+        <MudTextField T="string" Class="mt-3" Label="Email" @bind-Value="_email"/>
     </MudItem>
 </MudGrid>
 <MudGrid Justify="Justify.Center" Class="mt-3">
-    <MudButton Variant="Variant.Filled" Color="Color.Primary"
-               OnClick="@(() => NexStep())">
-        Next step
-    </MudButton>
+    <MudItem xs="6" Class="d-flex justify-content-between">
+        <MudCheckBox Label="Another invite" Color="Color.Primary" Class="me-2"
+                     @bind-Value=_anotherInvite></MudCheckBox>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="@(() => SendInvites())">
+            Send invite
+        </MudButton>
+    </MudItem>
 </MudGrid>
+
+
 
 
 @code {
@@ -57,6 +75,10 @@
     protected override bool ShouldRender() => _shouldRender;
 
     private string _errorMessage = "Unable to create family. Try again later";
+
+    private string _email;
+    private bool _anotherInvite;
+    private bool _createSuccess;
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,19 +103,29 @@
         }
     }
 
-    private async Task NexStep()
+    private async Task SendInvites()
     {
-        // bool familyCreated = await FamilyService.CreateFamily(_familyName, _token, _refreshToken, _userId);
+        List<string> emails = new List<string>();
 
-        bool familyCreated = true;
-        if (familyCreated)
+        emails.Add(_email);
+
+        // bool _inviteSuccess = await FamilyService.InviteMembers(emails, _token, _refreshToken, _userId);
+
+        bool _inviteSuccess = true;
+
+        if (_inviteSuccess && _anotherInvite)
         {
-            NavigationManager.NavigateTo("inviteMembers");
+            _email = string.Empty;
+            StateHasChanged();
         }
-        else
+        else if (!_inviteSuccess && _anotherInvite)
         {
             _error = true;
             StateHasChanged();
+        }
+        else if (_inviteSuccess && !_anotherInvite)
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
         }
     }
 

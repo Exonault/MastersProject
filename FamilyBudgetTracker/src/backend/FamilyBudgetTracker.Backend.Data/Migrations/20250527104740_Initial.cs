@@ -41,7 +41,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FamilyInvitationTokens",
+                name: "FamilyInvitations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -53,7 +53,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FamilyInvitationTokens", x => x.Id);
+                    table.PrimaryKey("PK_FamilyInvitations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,7 +219,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "PersonalCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -232,9 +232,9 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_PersonalCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_AspNetUsers_UserId",
+                        name: "FK_PersonalCategories_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -277,6 +277,35 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PersonalTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    TransactionDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    PersonalCategoryId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonalTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PersonalTransactions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PersonalTransactions_PersonalCategories_PersonalCategoryId",
+                        column: x => x.PersonalCategoryId,
+                        principalTable: "PersonalCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RecurringTransactions",
                 columns: table => new
                 {
@@ -288,7 +317,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     NextExecutionDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    CategoryId = table.Column<int>(type: "integer", nullable: false),
+                    PersonalCategoryId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -301,38 +330,9 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RecurringTransactions_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Transactions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    TransactionDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    CategoryId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Transactions_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        name: "FK_RecurringTransactions_PersonalCategories_PersonalCategoryId",
+                        column: x => x.PersonalCategoryId,
+                        principalTable: "PersonalCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -391,11 +391,6 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_UserId",
-                table: "Categories",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FamilyCategories_FamilyId",
                 table: "FamilyCategories",
                 column: "FamilyId");
@@ -416,23 +411,28 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecurringTransactions_CategoryId",
+                name: "IX_PersonalCategories_UserId",
+                table: "PersonalCategories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonalTransactions_PersonalCategoryId",
+                table: "PersonalTransactions",
+                column: "PersonalCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonalTransactions_UserId",
+                table: "PersonalTransactions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecurringTransactions_PersonalCategoryId",
                 table: "RecurringTransactions",
-                column: "CategoryId");
+                column: "PersonalCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecurringTransactions_UserId",
                 table: "RecurringTransactions",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_CategoryId",
-                table: "Transactions",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_UserId",
-                table: "Transactions",
                 column: "UserId");
         }
 
@@ -455,16 +455,16 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "FamilyInvitationTokens");
+                name: "FamilyInvitations");
 
             migrationBuilder.DropTable(
                 name: "FamilyTransactions");
 
             migrationBuilder.DropTable(
-                name: "RecurringTransactions");
+                name: "PersonalTransactions");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "RecurringTransactions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -473,7 +473,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                 name: "FamilyCategories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "PersonalCategories");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

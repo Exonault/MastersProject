@@ -13,20 +13,20 @@ public class FamilyInvitationTokenRepository : IFamilyInvitationTokenRepository
         _dbContext = dbContext;
     }
 
-    public async Task CreateInvitationToken(FamilyInvitationToken token)
+    public async Task CreateInvitationToken(FamilyInvitations token)
     {
-        await _dbContext.FamilyInvitationTokens.AddAsync(token);
+        await _dbContext.FamilyInvitations.AddAsync(token);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteInvitationToken(FamilyInvitationToken token)
+    public async Task DeleteInvitationToken(FamilyInvitations token)
     {
-        _dbContext.FamilyInvitationTokens.Remove(token);
+        _dbContext.FamilyInvitations.Remove(token);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<FamilyInvitationToken?> GetInvitationToken(string id)
+    public async Task<FamilyInvitations?> GetInvitationToken(string id)
     {
-        return await _dbContext.FamilyInvitationTokens.FirstOrDefaultAsync(t => t.Id == Guid.Parse(id));
+        return await _dbContext.FamilyInvitations.FirstOrDefaultAsync(t => t.Id == Guid.Parse(id));
     }
 }

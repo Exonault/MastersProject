@@ -6,9 +6,9 @@ namespace FamilyBudgetTracker.Backend.Data.Mappers.Personal;
 
 public static class CategoryMapper
 {
-    public static Category ToCategory(this CategoryRequest request)
+    public static PersonalCategory ToCategory(this CategoryRequest request)
     {
-        return new Category
+        return new PersonalCategory
         {
             Name = request.Name,
             Icon = request.Icon,
@@ -17,7 +17,7 @@ public static class CategoryMapper
         };
     }
 
-    public static Category ToCategory(this CategoryRequest request, Category origin)
+    public static PersonalCategory ToCategory(this CategoryRequest request, PersonalCategory origin)
     {
         origin.Name = request.Name;
         origin.Icon = request.Icon;
@@ -27,15 +27,15 @@ public static class CategoryMapper
         return origin;
     }
 
-    public static CategoryResponse ToCategoryResponse(this Category category)
+    public static CategoryResponse ToCategoryResponse(this PersonalCategory personalCategory)
     {
         return new CategoryResponse
         {
-            Id = category.Id,
-            Name = category.Name,
-            Icon = category.Icon,
-            Limit = category.Limit,
-            Type = category.Type.ToString(),
+            Id = personalCategory.Id,
+            Name = personalCategory.Name,
+            Icon = personalCategory.Icon,
+            Limit = personalCategory.Limit,
+            Type = personalCategory.Type.ToString(),
             // UserId = category.FamilyMember.Id
         };
     }

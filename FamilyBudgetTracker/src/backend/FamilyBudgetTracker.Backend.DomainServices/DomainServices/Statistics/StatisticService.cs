@@ -38,10 +38,10 @@ public class StatisticService : IStatisticsService
             {
                 Month = month,
                 Income = transactions
-                    .Where(t => t.TransactionDate.Month == month && t.Category.Type == CategoryType.Income)
+                    .Where(t => t.TransactionDate.Month == month && t.PersonalCategory.Type == CategoryType.Income)
                     .Sum(t => t.Amount),
                 Expense = transactions
-                    .Where(t => t.TransactionDate.Month == month && t.Category.Type == CategoryType.Expense)
+                    .Where(t => t.TransactionDate.Month == month && t.PersonalCategory.Type == CategoryType.Expense)
                     .Sum(t => t.Amount)
             })
             .ToList();
@@ -52,7 +52,7 @@ public class StatisticService : IStatisticsService
                 CategoryId = category.Id,
                 CategoryName = category.Name,
                 TotalAmount = transactions
-                    .Where(t => t.Category.Id == category.Id)
+                    .Where(t => t.PersonalCategory.Id == category.Id)
                     .Sum(t => t.Amount)
             })
             .ToList();

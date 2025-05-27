@@ -4,9 +4,9 @@ namespace FamilyBudgetTracker.Backend.Domain.Repositories.Familial;
 
 public interface IFamilyInvitationTokenRepository
 {
-    Task CreateInvitationToken(FamilyInvitationToken token);
+    Task CreateInvitationToken(FamilyInvitations token);
     
-    Task DeleteInvitationToken(FamilyInvitationToken token);
+    Task DeleteInvitationToken(FamilyInvitations token);
 
-    Task<FamilyInvitationToken?> GetInvitationToken(string id);
+    Task<FamilyInvitations?> GetInvitationToken(string id);
 }

@@ -27,11 +27,11 @@ public class CategoryService : ICategoryService
 
         user = user.ValidateUser();
         
-        Category category = request.ToCategory();
+        PersonalCategory personalCategory = request.ToCategory();
 
-        category.User = user;
+        personalCategory.User = user;
 
-        await _categoryRepository.CreateCategory(category);
+        await _categoryRepository.CreateCategory(personalCategory);
     }
 
 
@@ -41,13 +41,13 @@ public class CategoryService : ICategoryService
 
         user = user.ValidateUser();
 
-        Category? category = await _categoryRepository.GetCategoryById(id);
+        PersonalCategory? category = await _categoryRepository.GetCategoryById(id);
         
         category = category.ValidateCategory(user.Id);
 
-        Category updatedCategory = request.ToCategory(category);
+        PersonalCategory updatedPersonalCategory = request.ToCategory(category);
 
-        await _categoryRepository.UpdateCategory(updatedCategory);
+        await _categoryRepository.UpdateCategory(updatedPersonalCategory);
     }
 
     public async Task DeleteCategory(int id, string userId)
@@ -56,7 +56,7 @@ public class CategoryService : ICategoryService
 
         user = user.ValidateUser();
 
-        Category? category = await _categoryRepository.GetCategoryById(id);
+        PersonalCategory? category = await _categoryRepository.GetCategoryById(id);
 
         category = category.ValidateCategory(user.Id);
 
@@ -69,7 +69,7 @@ public class CategoryService : ICategoryService
 
         user = user.ValidateUser();
 
-        Category? category = await _categoryRepository.GetCategoryById(id);
+        PersonalCategory? category = await _categoryRepository.GetCategoryById(id);
 
         category = category.ValidateCategory(user.Id);
 
@@ -84,7 +84,7 @@ public class CategoryService : ICategoryService
 
         user = user.ValidateUser();
 
-        List<Category> categories = await _categoryRepository.GetAllCategoriesForUser(user.Id);
+        List<PersonalCategory> categories = await _categoryRepository.GetAllCategoriesForUser(user.Id);
 
         List<CategoryResponse> response = categories.Select(x => x.ToCategoryResponse())
             .ToList();

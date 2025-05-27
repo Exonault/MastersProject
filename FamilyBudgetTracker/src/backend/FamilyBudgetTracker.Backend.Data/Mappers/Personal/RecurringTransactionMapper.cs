@@ -43,7 +43,7 @@ public static class RecurringTransactionMapper
             StartDate = transaction.StartDate,
             NextExecutionDate = transaction.NextExecutionDate,
             EndDate = transaction.EndDate,
-            Category = transaction.Category.ToCategoryResponse()
+            Category = transaction.PersonalCategory.ToCategoryResponse()
         };
     }
 }

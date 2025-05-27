@@ -4,14 +4,14 @@ namespace FamilyBudgetTracker.Backend.Domain.Repositories.Personal;
 
 public interface ICategoryRepository
 {
-    Task CreateCategory(Category category);
+    Task CreateCategory(PersonalCategory personalCategory);
 
-    Task UpdateCategory(Category category);
+    Task UpdateCategory(PersonalCategory personalCategory);
 
-    Task DeleteCategory(Category category);
+    Task DeleteCategory(PersonalCategory personalCategory);
 
-    Task<Category?> GetCategoryById(int id);
+    Task<PersonalCategory?> GetCategoryById(int id);
 
-    Task<List<Category>> GetAllCategoriesForUser(string userId);
+    Task<List<PersonalCategory>> GetAllCategoriesForUser(string userId);
     
 }

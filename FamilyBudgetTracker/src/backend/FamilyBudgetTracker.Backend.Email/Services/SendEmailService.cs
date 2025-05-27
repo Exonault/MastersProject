@@ -27,7 +27,7 @@ public class SendEmailService : ISendEmailService
             .SendAsync();
     }
 
-    public async Task SendFamilyInvitationEmail(FamilyInvitationToken token)
+    public async Task SendFamilyInvitationEmail(FamilyInvitations token)
     {
         string invitationLink = _invitationLinkFactory.Create(token);
 

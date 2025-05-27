@@ -16,7 +16,7 @@ public class PersonalTransactionRepository : IPersonalTransactionRepository
 
     public async Task CreateTransaction(PersonalTransaction transaction)
     {
-        await _dbContext.Transactions.AddAsync(transaction);
+        await _dbContext.PersonalTransactions.AddAsync(transaction);
         await _dbContext.SaveChangesAsync();
     }
 
@@ -28,29 +28,29 @@ public class PersonalTransactionRepository : IPersonalTransactionRepository
 
     public async Task DeleteTransaction(PersonalTransaction transaction)
     {
-        _dbContext.Transactions.Remove(transaction);
+        _dbContext.PersonalTransactions.Remove(transaction);
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task<PersonalTransaction?> GetTransactionById(int id)
     {
-        return await _dbContext.Transactions
+        return await _dbContext.PersonalTransactions
             .Include(pt => pt.User)
-            .Include(pt => pt.Category)
+            .Include(pt => pt.PersonalCategory)
             .FirstOrDefaultAsync(pt => pt.Id == id);
     }
 
     public async Task<List<PersonalTransaction>> GetTransactionsForPeriod(string userId, DateOnly startDate,
         DateOnly endDate)
     {
-        return await _dbContext.Transactions
+        return await _dbContext.PersonalTransactions
             .Include(pt => pt.User)
-            .Include(pt => pt.Category)
+            .Include(pt => pt.PersonalCategory)
             .Where(pt =>
                 pt.User.Id == userId &&
                 pt.TransactionDate >= startDate &&
                 pt.TransactionDate <= endDate)
-            .Include(pt => pt.Category)
+            .Include(pt => pt.PersonalCategory)
             .ToListAsync();
     }
 }

@@ -10,15 +10,15 @@ namespace FamilyBudgetTracker.Backend.Data;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<PersonalTransaction> Transactions { get; set; }
+    public DbSet<PersonalCategory> PersonalCategories { get; set; }
+    public DbSet<PersonalTransaction> PersonalTransactions { get; set; }
     public DbSet<RecurringTransaction> RecurringTransactions { get; set; }
 
 
     public DbSet<Family> Family { get; set; }
     public DbSet<FamilyCategory> FamilyCategories { get; set; }
     public DbSet<FamilyTransaction> FamilyTransactions { get; set; }
-    public DbSet<FamilyInvitationToken> FamilyInvitationTokens { get; set; }
+    public DbSet<FamilyInvitations> FamilyInvitations { get; set; }
 
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

@@ -30,10 +30,10 @@ public static class AdditionalPersonalValidation
     /// </summary>
     /// <param name="category">The category to validate.</param>
     /// <param name="userId">The ID of the user that the category should belong to.</param>
-    /// <returns>Returns the validated <see cref="Category"/> object if successful.</returns>
+    /// <returns>Returns the validated <see cref="PersonalCategory"/> object if successful.</returns>
     /// <exception cref="ResourceNotFoundException">Thrown when the category is null. </exception>
     /// <exception cref="InvalidOperationException">Thrown when the category does not belong to the specified user.</exception>
-    public static Category ValidateCategory(this Category? category, string userId)
+    public static PersonalCategory ValidateCategory(this PersonalCategory? category, string userId)
     {
         if (category is null)
         {
@@ -74,7 +74,7 @@ public static class AdditionalPersonalValidation
 
     public static PersonalTransaction ValidatePersonalTransactionCategory(this PersonalTransaction transaction, int categoryId)
     {
-        if (transaction.Category.Id != categoryId)
+        if (transaction.PersonalCategory.Id != categoryId)
         {
             throw new OperationNotAllowedException(PersonalTransactionValidationMessages.CategoryIsNotFromTransaction);
         }
@@ -108,7 +108,7 @@ public static class AdditionalPersonalValidation
 
     public static RecurringTransaction ValidateRecurringTransactionCategory(this RecurringTransaction transaction, int categoryId)
     {
-        if (transaction.Category.Id != categoryId)
+        if (transaction.PersonalCategory.Id != categoryId)
         {
             throw new OperationNotAllowedException(RecurringTransactionValidationMessages.CategoryIsNotForTransaction);
         }

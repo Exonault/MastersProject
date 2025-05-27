@@ -13,34 +13,34 @@ public class CategoryRepository : ICategoryRepository
         _dbContext = dbContext;
     }
 
-    public async Task CreateCategory(Category category)
+    public async Task CreateCategory(PersonalCategory personalCategory)
     {
-        await _dbContext.Categories.AddAsync(category);
+        await _dbContext.PersonalCategories.AddAsync(personalCategory);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateCategory(Category category)
+    public async Task UpdateCategory(PersonalCategory personalCategory)
     {
-        _dbContext.Entry(category).State = EntityState.Modified;
+        _dbContext.Entry(personalCategory).State = EntityState.Modified;
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteCategory(Category category)
+    public async Task DeleteCategory(PersonalCategory personalCategory)
     {
-        _dbContext.Categories.Remove(category);
+        _dbContext.PersonalCategories.Remove(personalCategory);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Category?> GetCategoryById(int id)
+    public async Task<PersonalCategory?> GetCategoryById(int id)
     {
-        return await _dbContext.Categories
+        return await _dbContext.PersonalCategories
             .Include(c => c.User)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task<List<Category>> GetAllCategoriesForUser(string userId)
+    public async Task<List<PersonalCategory>> GetAllCategoriesForUser(string userId)
     {
-        return await _dbContext.Categories
+        return await _dbContext.PersonalCategories
             .Include(c => c.User)
             .Where(c => c.User.Id == userId)
             .ToListAsync();

@@ -33,13 +33,13 @@ public class PersonalTransactionService : IPersonalTransactionService
 
         user = user.ValidateUser();
 
-        Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
+        PersonalCategory? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
         category = category.ValidateCategory(user.Id);
 
         PersonalTransaction transaction = request.ToPersonalTransaction();
         transaction.User = user;
-        transaction.Category = category;
+        transaction.PersonalCategory = category;
 
         await _transactionRepository.CreateTransaction(transaction);
     }
@@ -50,7 +50,7 @@ public class PersonalTransactionService : IPersonalTransactionService
 
         user = user.ValidateUser();
 
-        Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
+        PersonalCategory? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
         category = category.ValidateCategory(user.Id);
 
@@ -131,7 +131,7 @@ public class PersonalTransactionService : IPersonalTransactionService
         var expenseCategoryAmounts = new Dictionary<string, decimal>();
         foreach (var transaction in transactions)
         {
-            var transactionCategory = transaction.Category;
+            var transactionCategory = transaction.PersonalCategory;
             var transactionAmount = transaction.Amount;
 
             if (transactionCategory.Type == CategoryType.Income)

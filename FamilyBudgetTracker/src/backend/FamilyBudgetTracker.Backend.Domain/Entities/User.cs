@@ -10,7 +10,7 @@ public class User : IdentityUser
     
     public DateTime RefreshTokenExpiry { get; set; }
     
-    public List<Category> Categories { get; set; }
+    public List<PersonalCategory> Categories { get; set; }
 
     public List<PersonalTransaction> Transactions { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace FamilyBudgetTracker.Backend.Domain.Entities.Personal;
 
-public class Category
+public class PersonalCategory
 {
     public int Id { get; set; }
 

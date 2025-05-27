@@ -18,7 +18,7 @@ public class RecurringTransaction
 
     public DateOnly EndDate { get; set; }
 
-    public Category Category { get; set; }
+    public PersonalCategory PersonalCategory { get; set; }
 
     public User User { get; set; }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FamilyBudgetTracker.Backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250513073435_Initial")]
+    [Migration("20250527104740_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -72,7 +72,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     b.ToTable("FamilyCategories");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Familial.FamilyInvitationToken", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Familial.FamilyInvitations", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,7 +97,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FamilyInvitationTokens");
+                    b.ToTable("FamilyInvitations");
                 });
 
             modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Familial.FamilyTransaction", b =>
@@ -138,7 +138,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     b.ToTable("FamilyTransactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.Category", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.PersonalCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +168,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("PersonalCategories");
                 });
 
             modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.PersonalTransaction", b =>
@@ -182,11 +182,11 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<int>("PersonalCategoryId")
+                        .HasColumnType("integer");
 
                     b.Property<DateOnly>("TransactionDate")
                         .HasColumnType("date");
@@ -197,11 +197,11 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("PersonalCategoryId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("PersonalTransactions");
                 });
 
             modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.RecurringTransaction", b =>
@@ -215,9 +215,6 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -227,6 +224,9 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
 
                     b.Property<DateOnly>("NextExecutionDate")
                         .HasColumnType("date");
+
+                    b.Property<int>("PersonalCategoryId")
+                        .HasColumnType("integer");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -241,7 +241,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("PersonalCategoryId");
 
                     b.HasIndex("UserId");
 
@@ -517,7 +517,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.Category", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.PersonalCategory", b =>
                 {
                     b.HasOne("FamilyBudgetTracker.Backend.Domain.Entities.User", "User")
                         .WithMany("Categories")
@@ -530,9 +530,9 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
 
             modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.PersonalTransaction", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Backend.Domain.Entities.Personal.Category", "Category")
+                    b.HasOne("FamilyBudgetTracker.Backend.Domain.Entities.Personal.PersonalCategory", "PersonalCategory")
                         .WithMany("Transactions")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("PersonalCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -542,16 +542,16 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("PersonalCategory");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.RecurringTransaction", b =>
                 {
-                    b.HasOne("FamilyBudgetTracker.Backend.Domain.Entities.Personal.Category", "Category")
+                    b.HasOne("FamilyBudgetTracker.Backend.Domain.Entities.Personal.PersonalCategory", "PersonalCategory")
                         .WithMany("RecurringTransactions")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("PersonalCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -561,7 +561,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("PersonalCategory");
 
                     b.Navigation("User");
                 });
@@ -640,7 +640,7 @@ namespace FamilyBudgetTracker.Backend.Data.Migrations
                     b.Navigation("FamilyTransactions");
                 });
 
-            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.Category", b =>
+            modelBuilder.Entity("FamilyBudgetTracker.Backend.Domain.Entities.Personal.PersonalCategory", b =>
                 {
                     b.Navigation("RecurringTransactions");
 

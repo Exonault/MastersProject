@@ -35,7 +35,7 @@ public class RecurringTransactionRepository : IRecurringTransactionRepository
     {
         return await _dbContext.RecurringTransactions
             .Include(rt => rt.User)
-            .Include(rt => rt.Category)
+            .Include(rt => rt.PersonalCategory)
             .FirstOrDefaultAsync(rt => rt.Id == id);
     }
 
@@ -43,7 +43,7 @@ public class RecurringTransactionRepository : IRecurringTransactionRepository
     {
         return await _dbContext.RecurringTransactions
             .Include(rt => rt.User)
-            .Include(rt => rt.Category)
+            .Include(rt => rt.PersonalCategory)
             .Where(rt => rt.User.Id == userId)
             .ToListAsync();
     }

@@ -6,6 +6,6 @@ public interface ISendEmailService
 {
     Task SendTestEmail();
 
-    Task SendFamilyInvitationEmail(FamilyInvitationToken token);
+    Task SendFamilyInvitationEmail(FamilyInvitations token);
     // Task SendFamilyInvitationEmail();
 }

@@ -22,7 +22,7 @@ public class FamilyInvitationLinkFactory : IFamilyInvitationLinkFactory
     }
 
 
-    public string Create(FamilyInvitationToken token)
+    public string Create(FamilyInvitations token)
     {
         if (_frontendUrl is null)
         {
@@ -34,7 +34,7 @@ public class FamilyInvitationLinkFactory : IFamilyInvitationLinkFactory
         return invitationLink;
     }
 
-    private string CreateOld(FamilyInvitationToken token)
+    private string CreateOld(FamilyInvitations token)
     {
         string? invitationLink = _linkGenerator.GetUriByName(_contextAccessor.HttpContext!,
             FamilyInvitationConstants.JoinFamily,

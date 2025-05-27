@@ -31,14 +31,14 @@ public class RecurringTransactionService : IRecurringTransactionService
 
         user = user.ValidateUser();
 
-        Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
+        PersonalCategory? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
         category = category.ValidateCategory(user.Id);
 
         RecurringTransaction transaction = request.ToRecurringTransaction();
 
         transaction.User = user;
-        transaction.Category = category;
+        transaction.PersonalCategory = category;
 
         transaction.NextExecutionDate = GetNextExecutionDate(transaction);
 
@@ -51,7 +51,7 @@ public class RecurringTransactionService : IRecurringTransactionService
 
         user = user.ValidateUser();
 
-        Category? category = await _categoryRepository.GetCategoryById(request.CategoryId);
+        PersonalCategory? category = await _categoryRepository.GetCategoryById(request.CategoryId);
 
         category = category.ValidateCategory(user.Id);
 

@@ -1,6 +1,6 @@
 ﻿namespace FamilyBudgetTracker.Backend.Domain.Entities.Familial;
 
-public class FamilyInvitationToken
+public class FamilyInvitations
 {
     public Guid Id { get; set; }
 

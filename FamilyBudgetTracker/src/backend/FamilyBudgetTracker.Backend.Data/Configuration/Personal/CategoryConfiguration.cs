@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyBudgetTracker.Backend.Data.Configuration.Personal;
 
-public class CategoryConfiguration : IEntityTypeConfiguration<Category>
+public class CategoryConfiguration : IEntityTypeConfiguration<PersonalCategory>
 {
-    public void Configure(EntityTypeBuilder<Category> builder)
+    public void Configure(EntityTypeBuilder<PersonalCategory> builder)
     {
         builder.HasKey(x => x.Id);
 

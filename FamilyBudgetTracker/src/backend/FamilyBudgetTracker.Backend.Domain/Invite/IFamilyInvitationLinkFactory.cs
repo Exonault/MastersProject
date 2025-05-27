@@ -4,5 +4,5 @@ namespace FamilyBudgetTracker.Backend.Domain.Invite;
 
 public interface IFamilyInvitationLinkFactory
 {
-    public string Create(FamilyInvitationToken token);
+    public string Create(FamilyInvitations token);
 }

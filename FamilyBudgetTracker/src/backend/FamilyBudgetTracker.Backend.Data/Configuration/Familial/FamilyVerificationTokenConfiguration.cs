@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyBudgetTracker.Backend.Data.Configuration.Familial;
 
-public class FamilyVerificationTokenConfiguration : IEntityTypeConfiguration<FamilyInvitationToken>
+public class FamilyVerificationTokenConfiguration : IEntityTypeConfiguration<FamilyInvitations>
 {
-    public void Configure(EntityTypeBuilder<FamilyInvitationToken> builder)
+    public void Configure(EntityTypeBuilder<FamilyInvitations> builder)
     {
         builder.HasKey(x => x.Id);
     }

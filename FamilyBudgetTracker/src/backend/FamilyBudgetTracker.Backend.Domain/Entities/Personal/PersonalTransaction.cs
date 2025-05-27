@@ -10,7 +10,7 @@ public class PersonalTransaction
 
     public DateOnly TransactionDate { get; set; }
 
-    public Category Category { get; set; }
+    public PersonalCategory PersonalCategory { get; set; }
 
     public User User { get; set; }
 }

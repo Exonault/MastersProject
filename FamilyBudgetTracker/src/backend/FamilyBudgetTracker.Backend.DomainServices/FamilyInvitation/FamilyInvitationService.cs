@@ -49,7 +49,7 @@ public class FamilyInvitationService : IFamilyInvitationService
             bool userInApplicationFlag = user is not null;
 
             var dateUtc = DateTime.UtcNow;
-            var familyInvitationToken = new FamilyInvitationToken
+            var familyInvitationToken = new FamilyInvitations
             {
                 Id = Guid.NewGuid(),
                 Email = email,
@@ -67,7 +67,7 @@ public class FamilyInvitationService : IFamilyInvitationService
 
     public async Task AddUserToFamily(string tokenId)
     {
-        FamilyInvitationToken? token = await _familyInvitationTokenRepository.GetInvitationToken(tokenId);
+        FamilyInvitations? token = await _familyInvitationTokenRepository.GetInvitationToken(tokenId);
 
         if (token is null || token.ExpiresOnUtc < DateTime.UtcNow)
         {

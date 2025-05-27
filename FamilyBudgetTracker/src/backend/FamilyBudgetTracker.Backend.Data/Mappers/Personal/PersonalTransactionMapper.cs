@@ -35,7 +35,7 @@ public static class PersonalTransactionMapper
             Amount = transaction.Amount,
             Description = transaction.Description,
             TransactionDate = transaction.TransactionDate,
-            Category = transaction.Category.ToCategoryResponse(),
+            Category = transaction.PersonalCategory.ToCategoryResponse(),
             // UserId = transaction.FamilyMember.Id
         };
     }
@@ -47,7 +47,7 @@ public static class PersonalTransactionMapper
             Amount = recurringTransaction.Amount,
             Description = recurringTransaction.Description,
             TransactionDate = recurringTransaction.NextExecutionDate,
-            Category = recurringTransaction.Category,
+            PersonalCategory = recurringTransaction.PersonalCategory,
             User = recurringTransaction.User
         };
     }

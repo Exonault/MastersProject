@@ -1,0 +1,76 @@
+@startuml
+skinparam rectangle {
+  BackgroundColor #F0F8FF
+  BorderColor black
+  RoundCorner 10
+}
+skinparam defaultTextAlignment center
+
+rectangle "API Layer \n (Endpoints)" as API
+
+package "Service Layer" {
+  rectangle "UserService"
+
+  rectangle "PersonalCategoryService"
+  rectangle "PersonalTransactionService"
+  rectangle "RecurringTransactionService"
+
+  rectangle "FamilyService"
+  rectangle "FamilyCategoryService"
+  rectangle "FamilyTransactionService"
+  rectangle "FamilyInvitationService"
+  rectangle "StatisticsService"
+}
+
+package "Repository Layer" {
+  rectangle "UserRepository"
+  rectangle "PersonalCategoryRepository" 
+  rectangle "PersonalTransactionRepository" 
+  rectangle "RecurringTransactionRepository" 
+
+  rectangle "FamilyRepository" 
+  rectangle "FamilyCategoryRepository" 
+  rectangle "FamilyTransactionRepository" 
+  rectangle "FamilyInvitationRepository" 
+}
+
+package "Data Access Layer" {
+  rectangle "ApplicationDbContext" 
+}
+
+database "Database"
+
+[ApplicationDbContext] --> [Database]
+
+UserService --> UserRepository
+PersonalCategoryService --> PersonalCategoryRepository
+PersonalTransactionService --> PersonalTransactionRepository
+RecurringTransactionService --> RecurringTransactionRepository
+FamilyService --> FamilyRepository
+FamilyCategoryService --> FamilyCategoryRepository
+FamilyTransactionService --> FamilyTransactionRepository
+FamilyInvitationService --> FamilyInvitationRepository
+
+StatisticsService --> PersonalTransactionRepository
+StatisticsService --> FamilyTransactionRepository
+
+UserRepository --> ApplicationDbContext
+PersonalCategoryRepository --> ApplicationDbContext
+PersonalTransactionRepository --> ApplicationDbContext
+RecurringTransactionRepository --> ApplicationDbContext
+FamilyRepository --> ApplicationDbContext
+FamilyCategoryRepository --> ApplicationDbContext
+FamilyTransactionRepository --> ApplicationDbContext
+FamilyInvitationRepository --> ApplicationDbContext
+
+API --> UserService
+API --> PersonalCategoryService
+API --> PersonalTransactionService
+API --> RecurringTransactionService
+API --> FamilyService
+API --> FamilyCategoryService
+API --> FamilyTransactionService
+API --> FamilyInvitationService
+API --> StatisticsService
+
+@enduml

@@ -1,0 +1,64 @@
+@startuml
+' Component diagram
+!theme vibrant
+' Components
+
+package "Application Layer" {
+  [UserEndpoints] <<component>>
+
+  [PersonalCategoryEndpoints] <<component>>
+  [PersonalTransactionEndpoints] <<component>>
+  [RecurringTransactionEndpoints] <<component>>
+
+  [FamilyEndpoitns] <<component>>
+  [FamilyCategoryEndpoints] <<component>>
+  [FamilyTransactionEndpoints] <<component>>
+  
+  [StatisticsEndpoints] <<component>>
+}
+
+package "Services layer" {
+  [UserService] <<component>>
+  [TokenGenerationService] <<component>>
+  
+  [PersonalCategoryService] <<component>>
+  [PersonalTransactionService] <<component>>
+  [RecurringTransactionService] <<component>>
+
+  [FamilyService] <<component>>
+  [FamilyCategoryService] <<component>>
+  [FamilyTransactionService] <<component>>
+  [FamilyInvitationService] <<component>>
+
+  [StatisticsService] <<component>>
+  
+}
+
+package "Repository layer" {
+  [UserRepository] <<component>>
+  
+  [PersonalCategoryRepository] <<component>>
+  [PersonalTransactionRepository] <<component>>
+  [RecurringTransactionRepository] <<component>>
+
+  [FamilyRepository] <<component>>
+  [FamilyCategoryRepository] <<component>>
+  [FamilyTransactionRepository] <<component>>
+  [FamilyInvitationRepository] <<component>>
+
+}
+
+package "Database layer" {
+  [ApplicationDbContext] <<component>>
+  database "PostgreSQL" <<component>>
+}
+
+'relationship
+
+[ApplicationDbContext] --> [PostgreSQL]
+
+"Application Layer" --> "Services layer"
+"Services layer" --> "Repository layer"
+"Repository layer" -->"Database layer"
+
+@enduml

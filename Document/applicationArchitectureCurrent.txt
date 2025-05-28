@@ -1,0 +1,22 @@
+@startuml
+skinparam rectangle {
+  BackgroundColor #F0F8FF
+  BorderColor black
+  RoundCorner 15
+}
+skinparam defaultTextAlignment center
+
+rectangle "Client" {
+  rectangle "User Interface"
+}
+
+rectangle "Server" {
+  rectangle "Application Logic"
+}
+
+database "Database"
+
+"User Interface" <-> "Application Logic"
+"Application Logic" <-> "Database"
+
+@enduml

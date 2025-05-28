@@ -1,0 +1,51 @@
+@startuml
+skinparam rectangle {
+  BackgroundColor #F0F8FF
+  BorderColor black
+  RoundCorner 10
+}
+skinparam defaultTextAlignment center
+
+rectangle "API Layer \n (Endpoints)" as API
+
+package "Service Layer" {
+  rectangle "UserService"
+
+  rectangle "PersonalFinanceServices"
+
+  rectangle "FamilyFinanceServices"
+
+  rectangle "StatisticsService"
+}
+
+package "Repository Layer" {
+  rectangle "UserRepository"
+
+  rectangle "PersonalFinanceRepositories"
+ 
+  rectangle "FamilyFinanceRepositories"
+}
+
+'package "Data Access Layer" {
+' rectangle "ApplicationDbContext" 
+'}
+'database "Database"
+'[ApplicationDbContext] --> [Database]
+
+API --> UserService
+API --> FamilyFinanceServices
+API --> PersonalFinanceServices
+API --> StatisticsService
+
+UserService --> UserRepository
+FamilyFinanceServices --> FamilyFinanceRepositories
+PersonalFinanceServices --> PersonalFinanceRepositories
+StatisticsService --> FamilyFinanceRepositories
+StatisticsService --> PersonalFinanceRepositories
+
+'UserRepository --> ApplicationDbContext
+'FamilyFinanceRepositories --> ApplicationDbContext
+'PersonalFinanceRepositories --> ApplicationDbContext
+
+
+@enduml

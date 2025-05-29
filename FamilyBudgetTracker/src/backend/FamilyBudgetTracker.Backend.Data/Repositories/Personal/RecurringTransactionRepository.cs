@@ -47,4 +47,13 @@ public class RecurringTransactionRepository : IRecurringTransactionRepository
             .Where(rt => rt.User.Id == userId)
             .ToListAsync();
     }
+
+    public async Task<List<RecurringTransaction>> GetRecurringTransactionsByExecutionDate(DateOnly date)
+    {
+        return await _dbContext.RecurringTransactions
+            .Include(rt => rt.User)
+            .Include(rt => rt.PersonalCategory)
+            .Where(rt => rt.NextExecutionDate == date)
+            .ToListAsync();
+    }
 }

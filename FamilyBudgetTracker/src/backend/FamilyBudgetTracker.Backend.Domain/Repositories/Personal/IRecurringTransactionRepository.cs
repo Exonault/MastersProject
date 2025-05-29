@@ -13,4 +13,6 @@ public interface IRecurringTransactionRepository
     Task<RecurringTransaction?> GetRecurringTransactionById(int id);
 
     Task<List<RecurringTransaction>> GetRecurringTransactionsByUserid(string userId);
+
+    Task<List<RecurringTransaction>> GetRecurringTransactionsByExecutionDate(DateOnly date);
 }

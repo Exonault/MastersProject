@@ -1,6 +1,7 @@
 ﻿using FamilyBudgetTracker.Backend.Authentication.Interfaces;
 using FamilyBudgetTracker.Backend.Authentication.Services;
 using FamilyBudgetTracker.Backend.Authentication.Token;
+using FamilyBudgetTracker.Backend.BackgroundServices.Service;
 using FamilyBudgetTracker.Backend.Data.Repositories;
 using FamilyBudgetTracker.Backend.Data.Repositories.Familial;
 using FamilyBudgetTracker.Backend.Data.Repositories.Personal;
@@ -16,6 +17,7 @@ using FamilyBudgetTracker.Backend.DomainServices.DomainServices.Familial;
 using FamilyBudgetTracker.Backend.DomainServices.DomainServices.Personal;
 using FamilyBudgetTracker.Backend.DomainServices.DomainServices.Statistics;
 using FamilyBudgetTracker.Backend.DomainServices.FamilyInvitation;
+using Hangfire;
 
 namespace FamilyBudgetTracker.Backend.API.Extensions;
 
@@ -65,6 +67,15 @@ public static class EntityServicesExtensions
     {
         services.AddScoped<IRecurringTransactionRepository, RecurringTransactionRepository>();
         services.AddScoped<IRecurringTransactionService, RecurringTransactionService>();
+
+        // services.AddScoped<IRecurringTransactionBackgroundService, RecurringTransactionBackgroundService>();
+        //
+
+        RecurringJob.AddOrUpdate<IRecurringTransactionBackgroundService>(
+            "recurringTransaction-to-transaction",
+            x => x.ProduceTransaction(),
+            Cron.Daily
+        );
     }
 
     private static void AddFamilyServices(this IServiceCollection services)

@@ -1,4 +1,5 @@
 ﻿@page "/statistics"
+@using BooksAPI.FE.Constants
 @using BooksAPI.FE.Contracts.Statistics
 @using BooksAPI.FE.Util
 @inject IJSRuntime JsRuntime;
@@ -28,10 +29,12 @@
                 <PersonalStatisticsTab/>
             </MudTabPanel>
 
-            <MudTabPanel Text="Family">
-                <FamilyStatisticsTab/>
-            </MudTabPanel>
-            
+            <AuthorizeView Policy="@ApplicationConstants.PolicyNames.FamilyMemberPolicyName">
+                <MudTabPanel Text="Family">
+                    <FamilyStatisticsTab/>
+                </MudTabPanel>
+            </AuthorizeView>
+
         </MudTabs>
     }
 }
@@ -94,7 +97,6 @@ else
         };
     }
 
-  
 
     private void CloseAlert()
     {

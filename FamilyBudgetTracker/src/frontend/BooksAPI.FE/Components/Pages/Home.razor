@@ -1,5 +1,7 @@
 ﻿@page "/"
+@using BooksAPI.FE.Constants
 @using BooksAPI.FE.Util
+@using BooksAPI.FE.Components.Pages.Transaction
 
 @attribute [AllowAnonymous]
 
@@ -8,49 +10,53 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <PageTitle>Home</PageTitle>
-<h1>Welcome!</h1>
+<h1 class="text-center">Welcome!</h1>
 
-@* <AuthorizeView Policy="@ApplicationConstants.PolicyNames.UserRolePolicyName"> *@
-@*     <Authorized> *@
-@* *@
-@* *@
-@*         @if (_error && _isDataFetched) *@
-@*         { *@
-@*             <MudGrid Justify="Justify.Center"> *@
-@*                 <MudItem md="4" xs="4"> *@
-@*                     <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())"> *@
-@*                         Error *@
-@*                     </MudAlert> *@
-@*                 </MudItem> *@
-@*             </MudGrid> *@
-@*         } *@
-@* *@
-@*         @if (_isDataFetched) *@
-@*         { *@
-@*                 <MudItem xs="3"> *@
-@*                     <MudCard Outlined="true"> *@
-@*                         <MudCardHeader> *@
-@*                             <CardHeaderContent> *@
-@*                                 <MudText Typo="Typo.h5">Information about collection</MudText> *@
-@*                             </CardHeaderContent> *@
-@*                         </MudCardHeader> *@
-@*                         <MudCardContent> *@
-@*                             <MudText Typo="Typo.h6">Total collected volumes: @_stats.TotalCollectedVolumes</MudText> *@
-@*                             <MudText Typo="Typo.h6">Total read volumes: @_stats.TotalReadVolumes</MudText> *@
-@*                             <MudText Typo="Typo.h6">Total spending: @_stats.TotalSpending</MudText> *@
-@*                         </MudCardContent> *@
-@*                     </MudCard> *@
-@*                 </MudItem> *@
-@*         } *@
-@*         else *@
-@*         { *@
-@*             <div class="mt-4"> *@
-@*                 <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/> *@
-@*             </div> *@
-@*         } *@
-@* *@
-@*     </Authorized> *@
-@* </AuthorizeView> *@
+<AuthorizeView Policy="@ApplicationConstants.PolicyNames.UserRolePolicyName">
+    <Authorized>
+
+
+        @if (_error && _isDataFetched)
+        {
+            <MudGrid Justify="Justify.Center">
+                <MudItem md="4" xs="4">
+                    <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="(() => CloseAlert())">
+                        Error
+                    </MudAlert>
+                </MudItem>
+            </MudGrid>
+        }
+
+        @if (_isDataFetched)
+        {
+            <SummaryCard Response="@MockUtil.GetMockTransactionSummaryResponse()"/>
+                
+            
+            
+                @* <MudItem xs="3"> *@
+                @*     <MudCard Outlined="true"> *@
+                @*         <MudCardHeader> *@
+                @*             <CardHeaderContent> *@
+                @*                 <MudText Typo="Typo.h5">Information about collection</MudText> *@
+                @*             </CardHeaderContent> *@
+                @*         </MudCardHeader> *@
+                @*         <MudCardContent> *@
+                @*             <MudText Typo="Typo.h6">Total collected volumes: @_stats.TotalCollectedVolumes</MudText> *@
+                @*             <MudText Typo="Typo.h6">Total read volumes: @_stats.TotalReadVolumes</MudText> *@
+                @*             <MudText Typo="Typo.h6">Total spending: @_stats.TotalSpending</MudText> *@
+                @*         </MudCardContent> *@
+                @*     </MudCard> *@
+                @* </MudItem> *@
+        }
+        else
+        {
+            <div class="mt-4">
+                <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" Class="my-7"/>
+            </div>
+        }
+
+    </Authorized>
+</AuthorizeView>
 
 
 @code{

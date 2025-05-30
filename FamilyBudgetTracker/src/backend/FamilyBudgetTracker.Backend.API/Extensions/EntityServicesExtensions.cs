@@ -70,12 +70,11 @@ public static class EntityServicesExtensions
 
         // services.AddScoped<IRecurringTransactionBackgroundService, RecurringTransactionBackgroundService>();
         //
-
-        RecurringJob.AddOrUpdate<IRecurringTransactionBackgroundService>(
-            "recurringTransaction-to-transaction",
-            x => x.ProduceTransaction(),
-            Cron.Daily
-        );
+        // RecurringJob.AddOrUpdate<IRecurringTransactionBackgroundService>(
+        //     "recurringTransaction-to-transaction",
+        //     x => x.ProduceTransaction(),
+        //     Cron.Daily
+        // );
     }
 
     private static void AddFamilyServices(this IServiceCollection services)

@@ -16,7 +16,10 @@
 </MudPopover>
 
 <!-- Trigger button only shows icon, no text -->
-<MudIconButton Icon="@SelectedIcon" OnClick="TogglePopover" Color="Color.Default" Edge="Edge.End"/>
+<MudIconButton Icon="@SelectedIcon" OnClick="TogglePopover" 
+               Color="Color.Default" Edge="Edge.End" Variant="Variant.Outlined" 
+               Class="mt-2"
+               Style=" border-radius: 50% !important;width: 40px; height: 40px; min-width: 40px; padding: 0;"/>
 
 @code {
     private bool _open;
@@ -35,7 +38,7 @@
     };
 
     [Parameter]
-    public string SelectedIcon { get; set; } = MudBlazor.Icons.Material.Filled.Home;
+    public string SelectedIcon { get; set; } = "";
 
     [Parameter]
     public EventCallback<string> SelectedIconChanged { get; set; }

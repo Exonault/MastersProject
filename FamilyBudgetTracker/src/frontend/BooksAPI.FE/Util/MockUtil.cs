@@ -42,10 +42,10 @@ public static class MockUtil
         response.Add(new CategoryResponse
         {
             Id = 4,
-            Name = "Lunch",
+            Name = "Dine out",
             Icon = "bi bi bi-cup-straw",
             Type = "Expense",
-            Limit = null
+            Limit = 300.0m
         });
 
         response.Add(new CategoryResponse
@@ -121,7 +121,7 @@ public static class MockUtil
             Category = new CategoryResponse
             {
                 Id = 4,
-                Name = "Lunch",
+                Name = "Dine out",
                 Icon = "bi bi bi-cup-straw",
                 Type = "Income",
                 Limit = null
@@ -153,7 +153,7 @@ public static class MockUtil
         var expenses = new Dictionary<string, decimal>();
         expenses.Add("Bills", 200.00m);
         expenses.Add("General", 90.00m);
-        expenses.Add("Lunch", 26.00m);
+        expenses.Add("Dine out", 26.00m);
         expenses.Add("Groceries", 45.00m);
 
         return new PersonalTransactionPeriodSummaryResponse

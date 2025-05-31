@@ -1,6 +1,7 @@
 ﻿@page "/createCategory"
 @page "/updateCategory"
 @using BooksAPI.FE.Authentication
+@using BooksAPI.FE.Contracts.Personal.Category
 @using BooksAPI.FE.Extensions
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Model
@@ -14,7 +15,7 @@
 <PageTitle>@(_isCreate ? "Create" : "Update")</PageTitle>
 
 <h3 class="text-center">
-    @(_isCreate ? "Create a new entry" : "Update current entry")
+    @(_isCreate ? "Create a new category" : "Update current category")
 </h3>
 
 @if (_error)
@@ -137,7 +138,17 @@ else if (!_isDataFetched)
 
             if (!_isCreate)
             {
-                _model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
+                CategoryResponse category = MockUtil.GetMockCategoryResponse().First(x => x.Id == _categoryId);
+
+                _model = new CategoryModel
+                {
+                    Name = category.Name,
+                    Icon = category.Icon,
+                    Type = category.Type,
+                    Limit = category.Limit
+                };
+
+                //_model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
                 _isDataFetched = true;
                 StateHasChanged();
             }
@@ -209,7 +220,7 @@ else if (!_isDataFetched)
     }
 
 
-    private string CurrentIcon = Icons.Filled.Home;
+    private string CurrentIcon = "";
 
     private void OnIconChanged(string newIcon)
     {

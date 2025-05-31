@@ -12,12 +12,14 @@
 <MudPaper Class="pa-4">
 
     <div class="d-flex justify-space-between mb-2">
-        <MudButton Variant="Variant.Outlined" OnClick="GoToPrevious">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="GoToPrevious">
             <MudIcon Icon="@Icons.Material.Filled.ChevronLeft"/>
             Previous
         </MudButton>
 
-        <MudButton Variant="Variant.Outlined" OnClick="GoToNext">
+     <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="GoToNext">
             Next
             <MudIcon Icon="@Icons.Material.Filled.ChevronRight"/>
         </MudButton>
@@ -43,7 +45,7 @@
     private int _selectedTabIndex;
     private DateTime _centerMonth;
 
-    private const int TabCount = 5; // Change this to 3, 5, 7, etc. (should be odd)
+    private const int TabCount = 1; // Change this to 3, 5, 7, etc. (should be odd)
     private int CenterIndex => TabCount / 2;
 
     [CascadingParameter]
@@ -77,7 +79,12 @@
     {
         if (newIndex != CenterIndex)
         {
-            _centerMonth = _monthTabs[newIndex].Date;
+            var selectedDate = _monthTabs[newIndex].Date;
+
+            if (selectedDate > DateTime.Now)
+                return;
+
+            _centerMonth = selectedDate;
             await BuildMonthTabsAsync(_centerMonth);
         }
     }
@@ -111,7 +118,12 @@
 
     private async Task GoToNext()
     {
-        _centerMonth = _centerMonth.AddMonths(1);
+        var nextMonth = _centerMonth.AddMonths(1);
+
+        if (nextMonth > DateTime.Now)
+            return;
+
+        _centerMonth = nextMonth;
         await BuildMonthTabsAsync(_centerMonth);
     }
 

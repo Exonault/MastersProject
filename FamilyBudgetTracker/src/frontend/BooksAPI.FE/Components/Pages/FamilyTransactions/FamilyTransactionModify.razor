@@ -2,6 +2,8 @@
 @page "/updateFamilyTransaction"
 @using BooksAPI.FE.Authentication
 @using BooksAPI.FE.Contracts.Familial.FamilyCategory
+@using BooksAPI.FE.Contracts.Familial.FamilyTransaction
+@using BooksAPI.FE.Contracts.Personal.Transaction
 @using BooksAPI.FE.Extensions
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Model
@@ -16,7 +18,7 @@
 <PageTitle>@(_isCreate ? "Create" : "Update")</PageTitle>
 
 <h3 class="text-center">
-    @(_isCreate ? "Create a new family transaction entry" : "Update current entry")
+    @(_isCreate ? "Create a new family transaction entry" : "Update current transaction")
 </h3>
 
 @if (_error)
@@ -71,12 +73,14 @@
                               AutoGrow
                               @bind-Value="_model.Description"/>
 
-                <MudText Typo="Typo.body1" Class="mt-3">Category type</MudText>
-                <MudToggleGroup T="string" SelectionMode="SelectionMode.SingleSelection"
-                                @bind-Value="_categoryType">
-                    <MudToggleItem Value="@("Expense")" Text="Expense"/>
-                    <MudToggleItem Value="@("Income")" Text="Income"/>
-                </MudToggleGroup>
+                <MudStack Class="mt-3">
+                    <MudText>Category type</MudText>
+                    <MudToggleGroup T="string" SelectionMode="SelectionMode.SingleSelection"
+                                    @bind-Value="_categoryType" Color="Color.Primary">
+                        <MudToggleItem Value="@("Expense")" Text="Expense"/>
+                        <MudToggleItem Value="@("Income")" Text="Income"/>
+                    </MudToggleGroup>
+                </MudStack>
 
                 <MudSelect T="string" Label="Category" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter"
                            @bind-Value="_model.Category">
@@ -149,7 +153,18 @@ else if (!_isDataFetched)
 
             if (!_isCreate)
             {
-                _model = await FamilyTransactionService.GetTransactionModel(_transactionId, _token, _refreshToken, _userId, _familyId);
+                FamilyTransactionResponse familyTransaction = FamilyMockUtil.GetFamilyTransactionsMockResponse()
+                    .First(x => x.Id == _transactionId);
+                _model = new FamilyTransactionModel
+                {
+                    Amount = familyTransaction.Amount,
+                    Description = familyTransaction.Description,
+                    // TransactionDate = familyTransaction.TransactionDate,
+                    TransactionDate = familyTransaction.TransactionDate.ToDateTime(new TimeOnly(0,0,0)),
+                    Category = familyTransaction.Category.Name
+                };
+
+                //_model = await FamilyTransactionService.GetTransactionModel(_transactionId, _token, _refreshToken, _userId, _familyId);
                 _isDataFetched = true;
                 StateHasChanged();
             }
@@ -158,7 +173,7 @@ else if (!_isDataFetched)
 
             _categories = FamilyMockUtil.GetFamilyCategoriesMockResponse();
             _categories = _categories.OrderBy(x => x.Type).ToList();
-            
+
             _isDataFetched = true;
             _shouldRender = true;
             StateHasChanged();
@@ -208,7 +223,7 @@ else if (!_isDataFetched)
                 }
                 else
                 {
-                    NavigationManager.NavigateTo("/familyTransactionsSummary");
+                    NavigationManager.NavigateTo("/familyTransactionsMoreInfo");
                 }
             }
         }

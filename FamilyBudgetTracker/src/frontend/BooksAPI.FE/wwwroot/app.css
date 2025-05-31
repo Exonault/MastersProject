@@ -50,3 +50,10 @@ h1:focus {
     border-color: #929292;
 }
 
+.circular-button {
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0;
+}

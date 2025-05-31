@@ -1,20 +1,21 @@
 ﻿@page "/createFamilyCategory"
 @page "/updateFamilyCategory"
 @using BooksAPI.FE.Authentication
+@using BooksAPI.FE.Contracts.Familial.FamilyCategory
 @using BooksAPI.FE.Extensions
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Model
 @using BooksAPI.FE.Util
 
 @inject NavigationManager NavigationManager;
-@inject ICategoryService CategoryService;
+@inject IFamilyCategoryService CategoryService;
 @inject IJSRuntime JsRuntime;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <PageTitle>@(_isCreate ? "Create" : "Update")</PageTitle>
 
 <h3 class="text-center">
-    @(_isCreate ? "Create a new entry" : "Update current entry")
+    @(_isCreate ? "Create a new family category" : "Update current family category")
 </h3>
 
 @if (_error)
@@ -109,11 +110,12 @@ else if (!_isDataFetched)
     private bool _shouldRender = false;
     protected override bool ShouldRender() => _shouldRender;
 
-    private CategoryModel _model = new();
+    private FamilyCategoryModel _model = new();
 
     private string _userId;
     private string _token;
     private string _refreshToken;
+    private string _familyId;
 
     private string myIcon = "";
 
@@ -126,6 +128,7 @@ else if (!_isDataFetched)
             AuthenticationState state = await AuthenticationState;
 
             _userId = UserUtil.GetUserId(state.User);
+            _familyId = UserUtil.GetFamilyId(state.User);
 
             string[] tokens = await JsRuntime.InvokeAsync<string[]>("getTokens");
             _token = tokens[0];
@@ -137,7 +140,17 @@ else if (!_isDataFetched)
 
             if (!_isCreate)
             {
-                _model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
+                FamilyCategoryResponse category = FamilyMockUtil.GetFamilyCategoriesMockResponse().First(x => x.Id == _categoryId);
+
+                _model = new FamilyCategoryModel()
+                {
+                    Name = category.Name,
+                    Icon = category.Icon,
+                    Type = category.Type,
+                    Limit = category.Limit
+                };
+
+                // _model = await CategoryService.GetCategoryModel(_categoryId, _token, _refreshToken, _userId);
                 _isDataFetched = true;
                 StateHasChanged();
             }
@@ -164,7 +177,7 @@ else if (!_isDataFetched)
             if (_isCreate)
             {
                 //Create
-                _createSuccess = await CategoryService.CreateCategory(_model, _token, _refreshToken, _userId);
+                _createSuccess = await CategoryService.CreateCategory(_model, _token, _refreshToken, _userId, _familyId);
 
                 if (_createSuccess)
                 {
@@ -172,11 +185,10 @@ else if (!_isDataFetched)
                 }
 
                 StateHasChanged();
-
             }
             else
             {
-                var updateSuccess = await CategoryService.UpdateCategory(_categoryId, _model, _token, _refreshToken, _userId);
+                bool updateSuccess = await CategoryService.UpdateCategory(_categoryId, _model, _token, _refreshToken, _userId, _familyId);
 
                 if (!updateSuccess)
                 {

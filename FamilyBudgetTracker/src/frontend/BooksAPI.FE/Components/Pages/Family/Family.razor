@@ -1,4 +1,5 @@
 ﻿@page "/family"
+@using BooksAPI.FE.Constants
 @using BooksAPI.FE.Contracts.Familial.Family
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
@@ -36,6 +37,7 @@
                         <MudTh>Name</MudTh>
                         <MudTh>Email</MudTh>
                         <MudTh>Role</MudTh>
+                        <MudTh>Action</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd DataLabel="Name">
@@ -45,11 +47,39 @@
                             <MudText Typo="Typo.body1">@context.Email</MudText>
                         </MudTd>
                         <MudTd DataLabel="Role">
-                            <MudText Typo="Typo.body1">@context.FamilyRole</MudText>
+                            @if (context.FamilyRole == "FamilyAdmin")
+                            {
+                                <MudText Typo="Typo.body1">Family Admin</MudText>
+                            }
+                            else if (context.FamilyRole == "FamilyMember")
+                            {
+                                <MudText Typo="Typo.body1">Family Member</MudText>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body1">User</MudText>
+                            }
+
+                        </MudTd>
+                        <MudTd DataLabel="Action">
+                            @if (IsCurrentUserFamilyAdmin && context.FamilyRole != "FamilyAdmin")
+                            {
+                                <div class="justify-content-center">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Error">
+                                        Remove
+                                    </MudButton>
+                                </div>
+                            }
                         </MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudItem>
+        </MudGrid>
+        <MudGrid Justify="Justify.Center" Class="mt-3">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick="@(() => NavigationManager.NavigateTo("/inviteMembers"))">
+                Add Members
+            </MudButton>
         </MudGrid>
     }
 }
@@ -76,14 +106,21 @@ else
     private string _refreshToken;
     private string _familyId;
 
+    private bool IsCurrentUserFamilyAdmin { get; set; }
+
     private FamilyDetailedResponse _family;
 
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState state = await AuthenticationState;
 
-        _userId = UserUtil.GetUserId(state.User);
-        _familyId = UserUtil.GetFamilyId(state.User);
+        var user = state.User;
+
+        _userId = UserUtil.GetUserId(user);
+        _familyId = UserUtil.GetFamilyId(user);
+
+
+        IsCurrentUserFamilyAdmin = UserUtil.IsUserFamilyAdmin(user);
 
         try
         {
@@ -98,14 +135,11 @@ else
             else
             {
                 _family = await FamilyService.GetFamily(_familyId, _token, _refreshToken, _userId);
-                
+
                 _isDataFetched = true;
                 _shouldRender = true;
                 StateHasChanged();
-                
             }
-
-            
         }
         catch (Exception e)
         {

@@ -13,7 +13,7 @@ namespace FamilyBudgetTracker.Backend.API.Endpoints.Familial;
 
 public static class FamilyEndpoints
 {
-    public static void MapFamilyEndpoints(this RouteGroupBuilder group)
+    public static void MapFamilyEndpoints(this WebApplication group)
     {
         var familyGroup = group.MapGroup("family");
 
@@ -72,6 +72,18 @@ public static class FamilyEndpoints
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Invites a list of users to a family")
             .WithOpenApi();
+        
+        
+        familyGroup.MapDelete("/removeMember/{memberId:guid}", RemoveMember)
+            .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Removes a member for the family")
+            .WithOpenApi();
     }
 
     private static async Task<IResult> CreateFamily([FromBody] FamilyRequest request,
@@ -125,6 +137,16 @@ public static class FamilyEndpoints
         List<FamilyDetailedResponse> response = await service.GetAllFamilies();
 
         return Results.Ok(response);
+    }
+
+    private static async Task<IResult> RemoveMember([FromRoute] Guid memberId,IFamilyService service, HttpContext httpContext)
+    {
+        var userId = httpContext.GetUserIdFromAuth();
+        string familyId = httpContext.GetFamilyIdFromAuth();
+
+        await service.RemoveFamilyMember(memberId.ToString(), familyId, userId);
+        
+        return Results.Ok();
     }
 
     private static async Task<IResult> InviteToFamily([FromBody] InviteFamilyMembersRequest request,

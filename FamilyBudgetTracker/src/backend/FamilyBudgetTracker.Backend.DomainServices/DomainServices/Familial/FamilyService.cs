@@ -4,6 +4,7 @@ using FamilyBudgetTracker.Backend.Data.Validation;
 using FamilyBudgetTracker.Backend.Domain.Constants.User;
 using FamilyBudgetTracker.Backend.Domain.Entities;
 using FamilyBudgetTracker.Backend.Domain.Entities.Familial;
+using FamilyBudgetTracker.Backend.Domain.Exceptions;
 using FamilyBudgetTracker.Backend.Domain.Repositories;
 using FamilyBudgetTracker.Backend.Domain.Repositories.Familial;
 using FamilyBudgetTracker.Backend.Domain.Services.Familial;
@@ -92,11 +93,41 @@ public class FamilyService : IFamilyService
             List<FamilyMemberResponse> familyMembersResponse = await GetFamilyMembersResponse(family.FamilyMembers);
 
             FamilyDetailedResponse familyDetailedResponse = family.ToFamilyDetailedResponse(familyMembersResponse);
-            
+
             familyResponses.Add(familyDetailedResponse);
         }
 
         return familyResponses;
+    }
+
+    public async Task RemoveFamilyMember(string memberId, string familyId, string userId)
+    {
+        User? user = await _userRepository.GetById(userId);
+
+        user = user.ValidateUser();
+
+        Family? family = await _familyRepository.GetFamilyById(familyId);
+
+        family = family.ValidateFamily();
+
+        user.ValidateUserFamily(family.Id);
+
+        User? member = await _userRepository.GetById(memberId);
+
+        member = member.ValidateUser();
+
+        member.ValidateUserFamily(family.Id);
+
+        string mainFamilyRole = await _userRepository.GetMainFamilyRole(member);
+
+        if (mainFamilyRole == "FamilyAdmin")
+        {
+            throw new OperationNotAllowedException("Can not remove admin");
+        }
+
+        member.Family = null;
+
+        await _userRepository.UpdateUser(member);
     }
 
 

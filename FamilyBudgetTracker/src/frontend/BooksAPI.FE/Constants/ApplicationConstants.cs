@@ -19,7 +19,7 @@ public static class ApplicationConstants
        
         public const string UserRoleClaimName = "User";
 
-        public const string FamilyAdminClaimName = "FamlyAdmin";
+        public const string FamilyAdminClaimName = "FamilyAdmin";
 
         public const string FamilyMemberClaimName = "FamilyMember";
     }

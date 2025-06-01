@@ -28,4 +28,15 @@ public static class UserUtil
         }
         else return "";
     }
+
+    public static bool IsUserFamilyAdmin(ClaimsPrincipal claimsPrincipal)
+    {
+        List<Claim> userRoles =
+            claimsPrincipal.Claims.Where(c => c.Type == ApplicationConstants.ClaimTypes.ClaimRoleType).ToList();
+
+
+        Claim? familyAdmin = userRoles.FirstOrDefault(x => x.Value == ApplicationConstants.ClaimNames.FamilyAdminClaimName);
+
+        return familyAdmin is not null;
+    }
 }

@@ -11,4 +11,6 @@ public interface IFamilyService
     Task<FamilyDetailedResponse> GetFamilyById(string id, string userId);
 
     Task<List<FamilyDetailedResponse>> GetAllFamilies();
+
+    Task RemoveFamilyMember(string memberId, string familyId, string userId);
 }

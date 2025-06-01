@@ -64,18 +64,15 @@ public class UserRepository : IUserRepository
     {
         IList<string> roles = await _userManager.GetRolesAsync(user);
 
-        return roles[0];
-
-        // if (roles.Contains(ApplicationConstants.RoleTypes.FamilyAdminRoleType))
-        // {
-        //     return ApplicationConstants.RoleTypes.FamilyAdminRoleType;
-        // }
-        // else if (roles.Contains(ApplicationConstants.RoleTypes.FamilyMemberRoleType))
-        // {
-        //     return ApplicationConstants.RoleTypes.FamilyMemberRoleType;
-        // }
-        //
-        // throw new InvalidOperationException(UserMessages.ValidationMessages.UserIsNotFromFamily);
+        if (roles.Contains("FamilyAdmin"))
+        {
+            return "FamilyAdmin";
+        }
+        else if (roles.Contains("FamilyMember"))
+        {
+            return "FamilyMember";
+        }
+        else return "User";
     }
 
     public async Task UpdateUser(User user)

@@ -1,8 +1,7 @@
-﻿@using BooksAPI.FE.Contracts.Familial.FamilyTransaction
-@using BooksAPI.FE.Contracts.Personal.Transaction
+﻿@using System.Security.Claims
+@using BooksAPI.FE.Contracts.Familial.FamilyTransaction
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
-
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
 @inject IFamilyTransactionService TransactionService;
@@ -10,7 +9,7 @@
 <MudTable Items="Transactions">
     <HeaderContent>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<PersonalTransactionResponse, object>(x => x.TransactionDate)"
+            <MudTableSortLabel SortBy="new Func<FamilyTransactionResponse, object>(x => x.TransactionDate)"
                                InitialDirection="SortDirection.Descending">
                 Date
             </MudTableSortLabel>
@@ -38,16 +37,33 @@
             <MudText Typo="Typo.body1">@context.Category.Name</MudText>
         </MudTd>
         <MudTd DataLabel="Actions" Style="width: 10% !important;">
-            <div class="justify-content-center">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                           OnClick="@(() => NavigationManager.NavigateTo($"updateTransaction?transactionId={context.Id}"))">
-                    Update
-                </MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3"
-                           OnClick="@(() => DeleteTransaction(context.Id))">
-                    Delete
-                </MudButton>
-            </div>
+            @* <div class="justify-content-center"> *@
+            @*     <MudButton Variant="Variant.Filled" Color="Color.Primary" *@
+            @*                OnClick="@(() => NavigationManager.NavigateTo($"updateTransaction?transactionId={context.Id}"))"> *@
+            @*         Update *@
+            @*     </MudButton> *@
+            @*     <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3" *@
+            @*                OnClick="@(() => DeleteTransaction(context.Id))"> *@
+            @*         Delete *@
+            @*     </MudButton> *@
+            @* </div> *@
+            @if (CanCurrentUserEditRow(context))
+            {
+                <div class="d-flex justify-content-center">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               OnClick="@(() => NavigationManager.NavigateTo($"updateTransaction?transactionId={context.Id}"))">
+                        Update
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Error"
+                               Class="ml-2"
+                               OnClick="@(() => DeleteTransaction(context.Id))">
+                        Delete
+                    </MudButton>
+                </div>
+            }
         </MudTd>
     </RowTemplate>
     <PagerContent>
@@ -68,12 +84,20 @@
     private string _userId;
     private string _familyId;
 
+    private ClaimsPrincipal _currentUser;
+    private string _currentUserName;
+    private bool _isFamilyAdmin;
+
     protected override async Task OnInitializedAsync()
     {
         AuthenticationState state = await AuthenticationState;
 
-        _userId = UserUtil.GetUserId(state.User);
-        _familyId = UserUtil.GetFamilyId(state.User);
+        _currentUser = state.User;
+
+        _userId = UserUtil.GetUserId(_currentUser);
+        _familyId = UserUtil.GetFamilyId(_currentUser);
+        _currentUserName = UserUtil.GetUserName(_currentUser);
+        _isFamilyAdmin = UserUtil.IsUserFamilyAdmin(_currentUser);
 
         try
         {
@@ -105,6 +129,14 @@
         {
             StateHasChanged();
         }
+    }
+
+    private bool CanCurrentUserEditRow(FamilyTransactionResponse row)
+    {
+        if (_isFamilyAdmin)
+            return true;
+
+        return String.Equals(row.FamilyMember.UserName, _currentUserName, StringComparison.OrdinalIgnoreCase);
     }
 
 }

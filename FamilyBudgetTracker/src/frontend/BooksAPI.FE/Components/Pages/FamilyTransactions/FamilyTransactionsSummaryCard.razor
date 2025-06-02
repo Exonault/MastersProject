@@ -22,7 +22,8 @@
                 }
 
                 <MudStack Spacing="1">
-                    @foreach (var item in Response.ExpenseCategoryAmounts)
+                    @foreach (var item in Response.ExpenseCategoryAmounts
+                                  .OrderByDescending(x => x.Value))
                     {
                         <div class="d-flex justify-content-between ms-3">
                             <MudText Typo="Typo.body1">@item.Key</MudText>

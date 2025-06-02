@@ -29,6 +29,18 @@ public static class UserUtil
         else return "";
     }
 
+    public static string GetUserName(ClaimsPrincipal claimsPrincipal)
+    {
+        Claim? claim =
+            claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "unique_name");
+
+        if (claim is not null)
+        {
+            return claim.Value;
+        }
+        else return "";
+    }    
+
     public static bool IsUserFamilyAdmin(ClaimsPrincipal claimsPrincipal)
     {
         List<Claim> userRoles =

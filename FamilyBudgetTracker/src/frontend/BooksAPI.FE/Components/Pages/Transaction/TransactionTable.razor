@@ -32,12 +32,12 @@
             <MudText Typo="Typo.body1">@context.Category.Name</MudText>
         </MudTd>
         <MudTd DataLabel="Actions" Style="width: 10% !important;">
-            <div class="justify-content-center">
+            <div class="d-flex justify-content-center">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary"
                            OnClick="@(() => NavigationManager.NavigateTo($"updateTransaction?transactionId={context.Id}"))">
                     Update
                 </MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mt-3"
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Class="ml-2"
                            OnClick="@(() => DeleteTransaction(context.Id))">
                     Delete
                 </MudButton>

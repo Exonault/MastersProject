@@ -88,8 +88,8 @@ public static class FamilyMockUtil
             FamilyMember = new FamilyMemberResponse
             {
                 Id = "string",
-                UserName = "family1",
-                Email = "family1",
+                UserName = "family",
+                Email = "family@family.family",
                 FamilyRole = "FamilyMember"
             }
         });
@@ -111,8 +111,8 @@ public static class FamilyMockUtil
             FamilyMember = new FamilyMemberResponse
             {
                 Id = "string2",
-                UserName = "family2",
-                Email = "family2@family2.family2",
+                UserName = "familyMember2",
+                Email = "familyMember2@family.family",
                 FamilyRole = "FamilyMember"
             }
         });
@@ -134,8 +134,8 @@ public static class FamilyMockUtil
             FamilyMember = new FamilyMemberResponse
             {
                 Id = "string",
-                UserName = "family1",
-                Email = "family1",
+                UserName = "family",
+                Email = "family@family.family",
                 FamilyRole = "FamilyMember"
             }
         });
@@ -158,8 +158,8 @@ public static class FamilyMockUtil
             FamilyMember = new FamilyMemberResponse
             {
                 Id = "string",
-                UserName = "family1",
-                Email = "family1",
+                UserName = "familyMember",
+                Email = "familyMember@family.family",
                 FamilyRole = "FamilyMember"
             }
         });
@@ -182,8 +182,8 @@ public static class FamilyMockUtil
             FamilyMember = new FamilyMemberResponse
             {
                 Id = "string2",
-                UserName = "family2",
-                Email = "family2@family2.family2",
+                UserName = "familyMember2",
+                Email = "family2@family.family",
                 FamilyRole = "FamilyMember"
             }
         });

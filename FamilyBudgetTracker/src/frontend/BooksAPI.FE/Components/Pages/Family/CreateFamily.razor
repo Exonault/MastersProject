@@ -1,6 +1,7 @@
 ﻿@page "/createFamily"
 @using BooksAPI.FE.Interfaces
 @using BooksAPI.FE.Util
+@using Microsoft.IdentityModel.Tokens
 
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
@@ -9,7 +10,7 @@
 
 <PageTitle>Create Family</PageTitle>
 
-<h3 class="text-center">CreateFamily</h3>
+<h3 class="text-center">Create Family</h3>
 @if (_error)
 {
     <MudGrid Justify="Justify.Center">
@@ -85,16 +86,27 @@
     {
         // bool familyCreated = await FamilyService.CreateFamily(_familyName, _token, _refreshToken, _userId);
 
-        bool familyCreated = true;
-        if (familyCreated)
+        if (_familyName.IsNullOrEmpty())
         {
-            NavigationManager.NavigateTo("inviteMembers");
+            _error = true;
+            _errorMessage = "Enter family name before processing";
+            StateHasChanged();
         }
         else
         {
-            _error = true;
-            StateHasChanged();
+            bool familyCreated = true;
+            if (familyCreated)
+            {
+                NavigationManager.NavigateTo("inviteMembers");
+            }
+            else
+            {
+                _error = true;
+                StateHasChanged();
+            } 
         }
+
+       
     }
 
     private void CloseAlert()

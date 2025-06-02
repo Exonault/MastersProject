@@ -29,7 +29,10 @@ public static class ServiceCollectionExtensions
 
     public static void AddDatabase(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(configuration.GetConnectionString("ApplicationDb")); });
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseNpgsql(configuration.GetConnectionString("ApplicationDb"));
+        });
     }
 
     public static void AddCorsServices(this IServiceCollection services, ConfigurationManager configuration)
@@ -47,7 +50,8 @@ public static class ServiceCollectionExtensions
         {
             options.CustomizeProblemDetails = context =>
             {
-                context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+                context.ProblemDetails.Instance =
+                    $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
 
                 context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
 
@@ -71,7 +75,8 @@ public static class ServiceCollectionExtensions
 
     public static void AddFluentValidationServices(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>(); // Any validator works just to get assembly
+        services
+            .AddValidatorsFromAssemblyContaining<LoginRequestValidator>(); // Any validator works just to get assembly
 
         services.AddFluentValidationAutoValidation();
     }
@@ -103,7 +108,8 @@ public static class ServiceCollectionExtensions
     }
 
 
-    public static void AddApplicationCachingServices(this IServiceCollection service, ConfigurationManager configuration)
+    public static void AddApplicationCachingServices(this IServiceCollection service,
+        ConfigurationManager configuration)
     {
         service.AddOutputCache(options =>
             {
@@ -116,7 +122,8 @@ public static class ServiceCollectionExtensions
             });
     }
 
-    public static void AddApplicationAuthenticationServices(this IServiceCollection service, ConfigurationManager configuration)
+    public static void AddApplicationAuthenticationServices(this IServiceCollection service,
+        ConfigurationManager configuration)
     {
         service.AddIdentity<User, IdentityRole>(options =>
             {
@@ -190,6 +197,8 @@ public static class ServiceCollectionExtensions
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
                     ApplicationConstants.ClaimValues.UserRoleClaimName);
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimValues.FamilyMemberClaimName);
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
                     ApplicationConstants.ClaimValues.FamilyAdminClaimName);
 

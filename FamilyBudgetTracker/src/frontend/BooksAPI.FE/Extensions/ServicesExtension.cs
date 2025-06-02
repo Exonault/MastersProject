@@ -37,29 +37,29 @@ public static class ServicesExtension
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
                     ApplicationConstants.ClaimNames.UserRoleClaimName);
-                
-                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
 
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
             })
             .AddPolicy(ApplicationConstants.PolicyNames.FamilyAdminPolicyName, p =>
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.UserRoleClaimName, 
+                    ApplicationConstants.ClaimNames.UserRoleClaimName);
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
+                    ApplicationConstants.ClaimNames.FamilyMemberClaimName);
+                p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
                     ApplicationConstants.ClaimNames.FamilyAdminClaimName);
-                
+
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimFamilyIdType);
-
             })
             .AddPolicy(ApplicationConstants.PolicyNames.FamilyMemberPolicyName, p =>
             {
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimRoleType,
-                    ApplicationConstants.ClaimNames.UserRoleClaimName, 
+                    ApplicationConstants.ClaimNames.UserRoleClaimName,
                     ApplicationConstants.ClaimNames.FamilyMemberClaimName);
-                
+
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimUserIdType);
                 p.RequireClaim(ApplicationConstants.ClaimTypes.ClaimFamilyIdType);
-
             });
     }
 }

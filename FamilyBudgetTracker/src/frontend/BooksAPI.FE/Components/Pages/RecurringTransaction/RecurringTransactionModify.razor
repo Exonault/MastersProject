@@ -16,7 +16,7 @@
 <PageTitle>@(_isCreate ? "Create" : "Update")</PageTitle>
 
 <h3 class="text-center">
-    @(_isCreate ? "Create a new template" : "Update current entry")
+    @(_isCreate ? "Create a new recurring transaction" : "Update current entry")
 </h3>
 
 @if (_error)
@@ -75,19 +75,29 @@
                               AutoGrow
                               @bind-Value="_model.Description"/>
 
-                <MudText Typo="Typo.body1" Class="mt-3">Category type</MudText>
-                <MudToggleGroup T="string" SelectionMode="SelectionMode.SingleSelection"
-                                @bind-Value="_categoryType">
-                    <MudToggleItem Value="@("Expense")" Text="Expense"/>
-                    <MudToggleItem Value="@("Income")" Text="Income"/>
-                </MudToggleGroup>
-
+                <MudStack Class="mt-3">
+                    <MudText>Category type</MudText>
+                    <MudToggleGroup T="string" SelectionMode="SelectionMode.SingleSelection"
+                                    @bind-Value="_categoryType" Color="Color.Primary">
+                        <MudToggleItem Value="@("Expense")" Text="Expense"/>
+                        <MudToggleItem Value="@("Income")" Text="Income"/>
+                    </MudToggleGroup>
+                </MudStack>
+                
                 <MudSelect T="string" Label="Category" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter"
                            @bind-Value="_model.Category">
                     @foreach (var category in _categories.Where(x => x.Type == _categoryType))
                     {
                         <MudSelectItem Value="category.Name">@category.Name</MudSelectItem>
                     }
+                </MudSelect>
+                
+                <MudSelect T="string" Label="Recurring Type" Variant="Variant.Text" AnchorOrigin="Origin.BottomCenter"
+                           @bind-Value="_model.Type">
+                    <MudSelectItem Value=@("Weekly")>Weekly</MudSelectItem>
+                    <MudSelectItem Value=@("BiWeekly")>Bi Weekly</MudSelectItem>
+                    <MudSelectItem Value=@("Monthly")>Monthly</MudSelectItem>
+
                 </MudSelect>
 
                 <div class="d-flex justify-content-center mt-3">
@@ -157,7 +167,9 @@ else if (!_isDataFetched)
                 StateHasChanged();
             }
 
-            _categories = await CategoryService.GetCategories(_token, _refreshToken, _userId);
+            // _categories = await CategoryService.GetCategories(_token, _refreshToken, _userId);
+
+            _categories = MockUtil.GetMockCategoryResponse();
 
             _isDataFetched = true;
             _shouldRender = true;

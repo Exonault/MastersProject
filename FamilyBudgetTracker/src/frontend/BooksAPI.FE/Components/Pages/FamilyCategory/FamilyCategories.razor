@@ -29,11 +29,15 @@
     }
     else
     {
-        <div class="d-flex justify-content-end mb-3">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                       OnClick=@(() => NavigationManager.NavigateTo($"/createFamilyCategory"))>Create
-            </MudButton>
-        </div>
+        <AuthorizeView Policy="@ApplicationConstants.PolicyNames.FamilyAdminPolicyName">
+            <Authorized>
+                <div class="d-flex justify-content-end mb-3">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                               OnClick=@(() => NavigationManager.NavigateTo($"/createFamilyCategory"))>Create
+                    </MudButton>
+                </div>
+            </Authorized>
+        </AuthorizeView>
 
         <MudTabs Elevation="2" ApplyEffectsToContainer="true" Centered="true">
             <MudTabPanel Text="All">
@@ -55,16 +59,18 @@
                                     <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
                                 </MudCardContent>
                                 <AuthorizeView Policy="@ApplicationConstants.PolicyNames.FamilyAdminPolicyName">
-                                    <MudCardActions Class="d-flex justify-content-between">
-                                        <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                                   OnClick="@(() => NavigationManager.NavigateTo($"/updateCategoryFamily?categoryId={category.Id}"))">
-                                            Update
-                                        </MudButton>
-                                        <MudButton Variant="Variant.Text" Color="Color.Error"
-                                                   OnClick="@(() => DeleteCategory(category.Id))">
-                                            Delete
-                                        </MudButton>
-                                    </MudCardActions>
+                                    <Authorized>
+                                        <MudCardActions Class="d-flex justify-content-between">
+                                            <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                                       OnClick="@(() => NavigationManager.NavigateTo($"/updateFamilyCategory?categoryId={category.Id}"))">
+                                                Update
+                                            </MudButton>
+                                            <MudButton Variant="Variant.Text" Color="Color.Error"
+                                                       OnClick="@(() => DeleteCategory(category.Id))">
+                                                Delete
+                                            </MudButton>
+                                        </MudCardActions>
+                                    </Authorized>
                                 </AuthorizeView>
                             </MudCard>
                         </MudItem>
@@ -90,16 +96,19 @@
                                     <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
                                 </MudCardContent>
                                 <AuthorizeView Policy="@ApplicationConstants.PolicyNames.FamilyAdminPolicyName">
-                                    <MudCardActions Class="d-flex justify-content-between">
-                                        <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                                   OnClick="@(() => NavigationManager.NavigateTo($"/updateCategoryFamily?categoryId={category.Id}"))">
-                                            Update
-                                        </MudButton>
-                                        <MudButton Variant="Variant.Text" Color="Color.Error"
-                                                   OnClick="@(() => DeleteCategory(category.Id))">
-                                            Delete
-                                        </MudButton>
-                                    </MudCardActions>
+                                    <Authorized>
+                                        <MudCardActions Class="d-flex justify-content-between">
+                                            <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                                       OnClick="@(() => NavigationManager.NavigateTo($"/updateFamilyCategory?categoryId={category.Id}"))">
+                                                Update
+                                            </MudButton>
+                                            <MudButton Variant="Variant.Text" Color="Color.Error"
+                                                       OnClick="@(() => DeleteCategory(category.Id))">
+                                                Delete
+                                            </MudButton>
+                                        </MudCardActions>
+                                    </Authorized>
+                                    
                                 </AuthorizeView>
                             </MudCard>
                         </MudItem>
@@ -126,16 +135,18 @@
                                     <MudText Typo="Typo.h5">@($"Limit: {category.Limit}")</MudText>
                                 </MudCardContent>
                                 <AuthorizeView Policy="@ApplicationConstants.PolicyNames.FamilyAdminPolicyName">
-                                    <MudCardActions Class="d-flex justify-content-between">
-                                        <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                                   OnClick="@(() => NavigationManager.NavigateTo($"/updateCategoryFamily?categoryId={category.Id}"))">
-                                            Update
-                                        </MudButton>
-                                        <MudButton Variant="Variant.Text" Color="Color.Error"
-                                                   OnClick="@(() => DeleteCategory(category.Id))">
-                                            Delete
-                                        </MudButton>
-                                    </MudCardActions>
+                                    <Authorized>
+                                        <MudCardActions Class="d-flex justify-content-between">
+                                            <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                                       OnClick="@(() => NavigationManager.NavigateTo($"/updateFamilyCategory?categoryId={category.Id}"))">
+                                                Update
+                                            </MudButton>
+                                            <MudButton Variant="Variant.Text" Color="Color.Error"
+                                                       OnClick="@(() => DeleteCategory(category.Id))">
+                                                Delete
+                                            </MudButton>
+                                        </MudCardActions>
+                                    </Authorized>
                                 </AuthorizeView>
                                 
                             </MudCard>

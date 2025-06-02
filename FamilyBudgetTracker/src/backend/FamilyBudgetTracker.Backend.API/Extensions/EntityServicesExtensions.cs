@@ -68,12 +68,12 @@ public static class EntityServicesExtensions
         services.AddScoped<IRecurringTransactionRepository, RecurringTransactionRepository>();
         services.AddScoped<IRecurringTransactionService, RecurringTransactionService>();
 
-        // services.AddScoped<IRecurringTransactionBackgroundService, RecurringTransactionBackgroundService>();
-        //
+        services.AddScoped<IRecurringTransactionBackgroundService, RecurringTransactionBackgroundService>();
+
         // RecurringJob.AddOrUpdate<IRecurringTransactionBackgroundService>(
-        //     "recurringTransaction-to-transaction",
-        //     x => x.ProduceTransaction(),
-        //     Cron.Daily
+        // "recurringTransaction-to-transaction",
+        // x => x.ProduceTransaction(),
+        // Cron.Daily
         // );
     }
 

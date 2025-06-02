@@ -2,9 +2,9 @@ INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('d64820e6-519e
 INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('d64820e6-519e-4dab-bd11-681f0736007f', 'user');
 INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('03202ff6-eeb5-4d6d-9215-bb2f122b7a27', 'user');
 INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('3399e05b-12e5-44c4-9457-5d18cf4872b0', 'user');
-INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('23507e81-53eb-4769-8df2-92da8d4ab20e', 'user');
+INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('dcaa2838-dffd-47dc-9959-eb38a0bc901e', 'user');
 INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('3399e05b-12e5-44c4-9457-5d18cf4872b0', 'familyAdmin');
 INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('3399e05b-12e5-44c4-9457-5d18cf4872b0', 'familyMember');
-INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('20fd6560-e70e-48b0-8096-13093d46fbcc', 'user');
-INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('23507e81-53eb-4769-8df2-92da8d4ab20e', 'familyMember');
-INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('20fd6560-e70e-48b0-8096-13093d46fbcc', 'familyMember');
+INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('3928968b-85a4-4b37-88c2-b617f5dace86', 'user');
+INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('dcaa2838-dffd-47dc-9959-eb38a0bc901e', 'familyMember');
+INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId") VALUES ('3928968b-85a4-4b37-88c2-b617f5dace86', 'familyMember');

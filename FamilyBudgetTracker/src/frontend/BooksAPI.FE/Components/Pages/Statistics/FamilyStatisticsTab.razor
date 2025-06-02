@@ -48,7 +48,7 @@
     private int _selectedTabIndex;
     private DateTime _centerYear;
 
-    private const int TabCount = 5; // Change this to 3, 5, 7, etc. (should be odd)
+    private const int TabCount = 1; // Change this to 3, 5, 7, etc. (should be odd)
     private int CenterIndex => TabCount / 2;
 
     [CascadingParameter]
@@ -133,7 +133,12 @@
     {
         if (newIndex != CenterIndex)
         {
-            _centerYear = _yearTabs[newIndex].Date;
+            DateTime selectedYear = _yearTabs[newIndex].Date;
+
+            if (selectedYear <= DateTime.Now)
+                return;
+            
+            _centerYear = selectedYear;
             await BuildYearTabsAsync(_centerYear);
         }
     }
@@ -172,7 +177,13 @@
 
     private async Task GoToNext()
     {
-        _centerYear = _centerYear.AddYears(1);
+        var nextYear = _centerYear.AddYears(1);
+        
+        if (nextYear > DateTime.Now)
+            return;
+
+        _centerYear = nextYear;
+        
         await BuildYearTabsAsync(_centerYear);
         
         await GeneratePersonalMonthChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());

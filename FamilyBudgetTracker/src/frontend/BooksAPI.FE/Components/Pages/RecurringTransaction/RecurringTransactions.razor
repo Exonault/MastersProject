@@ -31,10 +31,13 @@
     }
     else
     {
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="d-flex justify-content-end mb-3"
-                   OnClick="@(() => NavigationManager.NavigateTo("createRecurringTransaction"))">
-            Create
-        </MudButton>
+        <div class="d-flex justify-content-end mb-3">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       OnClick="@(() => NavigationManager.NavigateTo("createRecurringTransaction"))">
+                Create
+            </MudButton>
+        </div>
+
 
         <MudTable Items="_recurringTransactions">
             <HeaderContent>
@@ -121,7 +124,7 @@ else
             _refreshToken = tokens[1];
 
             _recurringTransactions = MockUtil.GetRecurringTransactionsMockResponse();
-            
+
             // await GetTransactions();
 
             _isDataFetched = true;
@@ -178,7 +181,5 @@ else
         StateHasChanged();
     }
 
-
-    
 
 }

@@ -212,22 +212,41 @@ public static class MockUtil
     }
 
 
-    public static YearlyStatisticsResponse GetPersonalStatisticsResponseMock()
+    public static YearlyStatisticsResponse GetPersonalStatisticsResponseMock(int year)
     {
-        List<MonthlyStatistics> monthlyStatistics = Enumerable.Range(1, 12).Select(x => new MonthlyStatistics
-            {
-                Month = x,
-                Income = 1000.00m,
-                Expense = Random.Shared.Next(1, 10) * 0.5m * 100m
-            })
-            .ToList();
+        List<MonthlyStatistics> monthlyStatistics = new();
+
+        if (year == 2025)
+        {
+            monthlyStatistics = Enumerable.Range(1, 7)
+                .Select(x => new MonthlyStatistics
+                {
+                    Month = x,
+                    Income = 1000.00m,
+                    Expense = 200 + Random.Shared.Next(100, 500)
+                })
+                .ToList();
+        }
+
+        else
+        {
+            monthlyStatistics = Enumerable.Range(1, 12)
+                .Select(x => new MonthlyStatistics
+                {
+                    Month = x,
+                    Income = 1000.00m,
+                    Expense = 200 + Random.Shared.Next(100, 500)
+                })
+                .ToList();
+        }
+
         List<PersonalTransactionResponse> mockTransactions = GetMockTransactionsResponse();
 
         List<CategoryStatistics> categoryStatistics = GetMockCategoryResponse().Select(x => new CategoryStatistics
         {
             CategoryId = x.Id,
             CategoryName = x.Name,
-            TotalAmount = Random.Shared.Next(100, 500)
+            TotalAmount = Random.Shared.Next(500, 1500)
         }).ToList();
 
 

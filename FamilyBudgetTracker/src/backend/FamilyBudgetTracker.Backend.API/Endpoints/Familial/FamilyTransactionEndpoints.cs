@@ -11,7 +11,7 @@ public static class FamilyTransactionEndpoints
 {
     public static void MapFamilyTransactionEndpoints(this RouteGroupBuilder group)
     {
-        var familyTransactionGroup = group.MapGroup("familyTransaction");
+        var familyTransactionGroup = group.MapGroup("transaction");
 
         familyTransactionGroup.MapPost("/", CreateFamilyTransaction)
             .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyMemberPolicyName)

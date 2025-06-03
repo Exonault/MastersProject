@@ -11,7 +11,7 @@ public static class FamilyCategoryEndpoints
 {
     public static void MapFamilyCategoryEndpoints(this RouteGroupBuilder group)
     {
-        var familyCategoryGroup = group.MapGroup("familyCategory");
+        var familyCategoryGroup = group.MapGroup("category");
 
         familyCategoryGroup.MapPost("/", CreateFamilyCategory)
             .RequireAuthorization(ApplicationConstants.PolicyNames.FamilyAdminPolicyName)

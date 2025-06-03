@@ -91,7 +91,7 @@ public static class MockUtil
                 Id = 2,
                 Name = "Bills",
                 Icon = "bi bi-credit-card",
-                Type = "Income",
+                Type = "Expense",
                 Limit = 1000.00m
             }
         });
@@ -107,7 +107,7 @@ public static class MockUtil
                 Id = 3,
                 Name = "General",
                 Icon = "bi bi bi-tag",
-                Type = "Income",
+                Type = "Expense",
                 Limit = null
             }
         });
@@ -123,7 +123,7 @@ public static class MockUtil
                 Id = 4,
                 Name = "Dine out",
                 Icon = "bi bi bi-cup-straw",
-                Type = "Income",
+                Type = "Expense",
                 Limit = null
             }
         });
@@ -139,7 +139,7 @@ public static class MockUtil
                 Id = 5,
                 Name = "Groceries",
                 Icon = "bi bi bi-bag-fill",
-                Type = "Income",
+                Type = "Expense",
                 Limit = null
             }
         });
@@ -214,7 +214,12 @@ public static class MockUtil
 
     public static YearlyStatisticsResponse GetPersonalStatisticsResponseMock(int year)
     {
-        List<MonthlyStatistics> monthlyStatistics = new();
+        List<PersonalTransactionResponse> mockTransactions = GetMockTransactionsResponse();
+        List<CategoryResponse> mockCategoryResponse = GetMockCategoryResponse();
+
+        var expenseTransactions = mockTransactions.Where(x => x.Category.Type == "Expense").ToList();
+
+        List<MonthlyStatistics> monthlyStatistics;
 
         if (year == 2025)
         {
@@ -223,11 +228,11 @@ public static class MockUtil
                 {
                     Month = x,
                     Income = 1000.00m,
-                    Expense = 200 + Random.Shared.Next(100, 500)
+                    // Expense = 200 + Random.Shared.Next(100, 500)
+                    Expense = expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(100, 300)
                 })
                 .ToList();
         }
-
         else
         {
             monthlyStatistics = Enumerable.Range(1, 12)
@@ -235,18 +240,20 @@ public static class MockUtil
                 {
                     Month = x,
                     Income = 1000.00m,
-                    Expense = 200 + Random.Shared.Next(100, 500)
+                    Expense = expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(100, 300)
                 })
                 .ToList();
         }
 
-        List<PersonalTransactionResponse> mockTransactions = GetMockTransactionsResponse();
 
-        List<CategoryStatistics> categoryStatistics = GetMockCategoryResponse().Select(x => new CategoryStatistics
+        
+        List<CategoryStatistics> categoryStatistics = mockCategoryResponse.Select(x => new CategoryStatistics
         {
             CategoryId = x.Id,
             CategoryName = x.Name,
-            TotalAmount = Random.Shared.Next(500, 1500)
+            TotalAmount = mockTransactions
+                .Where(t => t.Category.Name == x.Name)
+                .Sum(t => t.Amount) * (year == 2025 ? 6 : 12) + Random.Shared.Next(100, 200)
         }).ToList();
 
 

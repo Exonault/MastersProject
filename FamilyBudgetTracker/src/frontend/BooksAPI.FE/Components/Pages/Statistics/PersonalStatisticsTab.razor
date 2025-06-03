@@ -100,7 +100,7 @@
     {
         if (firstRender)
         {
-            var response = MockUtil.GetPersonalStatisticsResponseMock();
+            var response = MockUtil.GetPersonalStatisticsResponseMock(_centerYear.Year);
 
             await GeneratePersonalMonthChart(response);
             await GeneratePersonalCategoryChart(response);
@@ -151,7 +151,7 @@
 
         var loadTasks = _yearTabs.Select(async tab =>
         {
-            tab.Content = MockUtil.GetPersonalStatisticsResponseMock();
+            tab.Content = MockUtil.GetPersonalStatisticsResponseMock(_centerYear.Year);
             // tab.Content = await TransactionService.GetTransactionsForPeriod(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
@@ -167,8 +167,8 @@
         _centerYear = _centerYear.AddYears(-1);
         await BuildYearTabsAsync(_centerYear);
 
-        await GeneratePersonalMonthChart(MockUtil.GetPersonalStatisticsResponseMock());
-        await GeneratePersonalCategoryChart(MockUtil.GetPersonalStatisticsResponseMock());
+        await GeneratePersonalMonthChart(MockUtil.GetPersonalStatisticsResponseMock(_centerYear.Year));
+        await GeneratePersonalCategoryChart(MockUtil.GetPersonalStatisticsResponseMock(_centerYear.Year));
     }
 
     private async Task GoToNext()
@@ -182,8 +182,8 @@
         
         await BuildYearTabsAsync(_centerYear);
 
-        await GeneratePersonalMonthChart(MockUtil.GetPersonalStatisticsResponseMock());
-        await GeneratePersonalCategoryChart(MockUtil.GetPersonalStatisticsResponseMock());
+        await GeneratePersonalMonthChart(MockUtil.GetPersonalStatisticsResponseMock(_centerYear.Year));
+        await GeneratePersonalCategoryChart(MockUtil.GetPersonalStatisticsResponseMock(_centerYear.Year));
     }
 
     public class YearTab

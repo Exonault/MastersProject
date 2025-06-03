@@ -100,7 +100,7 @@
     {
         if (firstRender)
         {
-            var response = FamilyMockUtil.GetFamilyStatisticsResponseMock();
+            var response = FamilyMockUtil.GetFamilyStatisticsResponseMock(_centerYear.Year);
 
             await GeneratePersonalMonthChart(response);
             await GeneratePersonalCategoryChart(response);
@@ -153,7 +153,7 @@
 
         var loadTasks = _yearTabs.Select(async tab =>
         {
-            tab.Content = FamilyMockUtil.GetFamilyStatisticsResponseMock();
+            tab.Content = FamilyMockUtil.GetFamilyStatisticsResponseMock(_centerYear.Year);
             // tab.Content = await TransactionService.GetTransactionsForPeriod(tab.Date, _token, _refreshToken, _userId);
             tab.IsLoading = false;
         });
@@ -170,8 +170,8 @@
         await BuildYearTabsAsync(_centerYear);
         
       
-        await GeneratePersonalMonthChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
-        await GeneratePersonalCategoryChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
+        await GeneratePersonalMonthChart(FamilyMockUtil.GetFamilyStatisticsResponseMock(_centerYear.Year));
+        await GeneratePersonalCategoryChart(FamilyMockUtil.GetFamilyStatisticsResponseMock(_centerYear.Year));
         
     }
 
@@ -186,8 +186,8 @@
         
         await BuildYearTabsAsync(_centerYear);
         
-        await GeneratePersonalMonthChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
-        await GeneratePersonalCategoryChart(FamilyMockUtil.GetFamilyStatisticsResponseMock());
+        await GeneratePersonalMonthChart(FamilyMockUtil.GetFamilyStatisticsResponseMock(_centerYear.Year));
+        await GeneratePersonalCategoryChart(FamilyMockUtil.GetFamilyStatisticsResponseMock(_centerYear.Year));
         
     }
 

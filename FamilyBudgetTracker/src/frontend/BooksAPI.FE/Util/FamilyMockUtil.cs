@@ -120,7 +120,7 @@ public static class FamilyMockUtil
         response.Add(new FamilyTransactionResponse
         {
             Id = 3,
-            Amount = 400.00m,
+            Amount = 300.00m,
             Description = "Bills",
             TransactionDate = new DateOnly(2025, DateTime.Today.Month, 01),
             Category = new FamilyCategoryResponse
@@ -191,22 +191,43 @@ public static class FamilyMockUtil
         return response;
     }
 
-    public static FamilyYearlyStatisticsResponse GetFamilyStatisticsResponseMock()
+    public static FamilyYearlyStatisticsResponse GetFamilyStatisticsResponseMock(int year)
     {
-        List<MonthlyStatistics> monthlyStatistics = Enumerable.Range(1, 12).Select(x => new MonthlyStatistics
-            {
-                Month = x,
-                Income = 2000.00m,
-                Expense = Random.Shared.Next(1, 10) * 0.1m * 2000m
-            })
-            .ToList();
+        List<FamilyTransactionResponse> transactions = GetFamilyTransactionsMockResponse();
+
+        List <FamilyTransactionResponse> expenseTransactions = transactions.Where(x => x.Category.Type == "Expense").ToList();
+        
+        List<MonthlyStatistics> monthlyStatistics;
+        if (year == 2025)
+        {
+            monthlyStatistics = Enumerable.Range(1, 6).Select(x => new MonthlyStatistics
+                {
+                    Month = x,
+                    Income = 2000.00m,
+                    Expense = expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(100, 300)
+                })
+                .ToList();
+        }
+        else
+        {
+            monthlyStatistics = Enumerable.Range(1, 12).Select(x => new MonthlyStatistics
+                {
+                    Month = x,
+                    Income = 2000.00m,
+                    Expense = expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(100, 300)
+                })
+                .ToList();
+        }
 
         List<CategoryStatistics> categoryStatistics = GetFamilyCategoriesMockResponse()
             .Select(x => new CategoryStatistics
             {
                 CategoryId = x.Id,
                 CategoryName = x.Name,
-                TotalAmount = Random.Shared.Next(100, 500)
+                TotalAmount = transactions
+                    .Where(t => t.Category.Name == x.Name)
+                    .Sum(t => t.Amount) * (year == 2025 ? 6 : 12) + Random.Shared.Next(100, 200)
+
             }).ToList();
 
 

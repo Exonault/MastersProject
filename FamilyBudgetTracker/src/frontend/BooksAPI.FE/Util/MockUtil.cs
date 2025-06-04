@@ -253,7 +253,8 @@ public static class MockUtil
             CategoryName = x.Name,
             TotalAmount = mockTransactions
                 .Where(t => t.Category.Name == x.Name)
-                .Sum(t => t.Amount) * (year == 2025 ? 6 : 12) + Random.Shared.Next(100, 200)
+                .Sum(t => t.Amount) * (year == 2025 ? 6 : 12) 
+                          + (x.Type == "Income" ? 0 : Random.Shared.Next(100, 200))
         }).ToList();
 
 

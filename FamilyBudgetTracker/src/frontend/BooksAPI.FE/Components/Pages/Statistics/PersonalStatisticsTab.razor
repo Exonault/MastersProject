@@ -12,12 +12,14 @@
 <MudPaper Class="pa-4">
 
     <div class="d-flex justify-space-between mb-2">
-        <MudButton Variant="Variant.Outlined" OnClick="GoToPrevious">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="GoToPrevious">
             <MudIcon Icon="@Icons.Material.Filled.ChevronLeft"/>
             Previous
         </MudButton>
 
-        <MudButton Variant="Variant.Outlined" OnClick="GoToNext">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   OnClick="GoToNext">
             Next
             <MudIcon Icon="@Icons.Material.Filled.ChevronRight"/>
         </MudButton>
@@ -135,7 +137,7 @@
 
             if (selectedYear <= DateTime.Now)
                 return;
-            
+
             _centerYear = selectedYear;
             await BuildYearTabsAsync(_centerYear);
         }
@@ -174,12 +176,12 @@
     private async Task GoToNext()
     {
         var nextYear = _centerYear.AddYears(1);
-        
+
         if (nextYear > DateTime.Now)
             return;
 
         _centerYear = nextYear;
-        
+
         await BuildYearTabsAsync(_centerYear);
 
         await GeneratePersonalMonthChart(MockUtil.GetPersonalStatisticsResponseMock(_centerYear.Year));

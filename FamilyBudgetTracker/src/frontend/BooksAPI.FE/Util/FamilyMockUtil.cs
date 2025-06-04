@@ -203,7 +203,7 @@ public static class FamilyMockUtil
             monthlyStatistics = Enumerable.Range(1, 6).Select(x => new MonthlyStatistics
                 {
                     Month = x,
-                    Income = 2000.00m,
+                    Income = 1320.00m,
                     Expense = expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(100, 300)
                 })
                 .ToList();
@@ -213,7 +213,7 @@ public static class FamilyMockUtil
             monthlyStatistics = Enumerable.Range(1, 12).Select(x => new MonthlyStatistics
                 {
                     Month = x,
-                    Income = 2000.00m,
+                    Income = 1320.00m,
                     Expense = expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(100, 300)
                 })
                 .ToList();
@@ -226,7 +226,8 @@ public static class FamilyMockUtil
                 CategoryName = x.Name,
                 TotalAmount = transactions
                     .Where(t => t.Category.Name == x.Name)
-                    .Sum(t => t.Amount) * (year == 2025 ? 6 : 12) + Random.Shared.Next(100, 200)
+                    .Sum(t => t.Amount) * (year == 2025 ? 6 : 12) 
+                              + (x.Type == "Income" ? 0 : Random.Shared.Next(100, 200))
 
             }).ToList();
 

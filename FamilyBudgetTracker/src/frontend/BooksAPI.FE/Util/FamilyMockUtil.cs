@@ -200,7 +200,7 @@ public static class FamilyMockUtil
         List<MonthlyStatistics> monthlyStatistics;
         if (year == 2025)
         {
-            monthlyStatistics = Enumerable.Range(1, 6).Select(x => new MonthlyStatistics
+            monthlyStatistics = Enumerable.Range(1, 7).Select(x => new MonthlyStatistics
                 {
                     Month = x,
                     Income = 1320.00m,

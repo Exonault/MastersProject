@@ -223,13 +223,13 @@ public static class MockUtil
 
         if (year == 2025)
         {
-            monthlyStatistics = Enumerable.Range(1, 7)
+            monthlyStatistics = Enumerable.Range(1, 6)
                 .Select(x => new MonthlyStatistics
                 {
                     Month = x,
                     Income = 1000.00m,
                     // Expense = 200 + Random.Shared.Next(100, 500)
-                    Expense = expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(100, 300)
+                    Expense = x == 6 ? expenseTransactions.Sum(t => t.Amount) : expenseTransactions.Sum(t => t.Amount) + Random.Shared.Next(10, 100)
                 })
                 .ToList();
         }
@@ -254,7 +254,7 @@ public static class MockUtil
             TotalAmount = mockTransactions
                 .Where(t => t.Category.Name == x.Name)
                 .Sum(t => t.Amount) * (year == 2025 ? 6 : 12) 
-                          + (x.Type == "Income" ? 0 : Random.Shared.Next(100, 200))
+                          + (x.Type == "Income" ? 0 : Random.Shared.Next(10, 100))
         }).ToList();
 
 
